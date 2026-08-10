@@ -34,7 +34,7 @@ class VideoEmbedTest extends TestCase
             'tiktok' => [
                 'https://www.tiktok.com/@scout2015/video/6718339390042524933',
                 'tiktok',
-                'tiktok.com/embed/v2/6718339390042524933',
+                'tiktok.com/player/v1/6718339390042524933',
             ],
             'instagram reel' => [
                 'https://www.instagram.com/reel/CxyzABC1234/',

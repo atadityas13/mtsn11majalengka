@@ -130,7 +130,7 @@ class Video extends Model
             return $matches[1];
         }
 
-        if (preg_match('/tiktok\.com\/embed\/v2\/(\d+)/', $url, $matches)) {
+        if (preg_match('/tiktok\.com\/(?:embed\/v2|player\/v1)\/(\d+)/', $url, $matches)) {
             return $matches[1];
         }
 
@@ -145,7 +145,7 @@ class Video extends Model
 
         $url = (string) $this->video_url;
 
-        if (preg_match('/instagram\.com\/(?:reel|p|tv)\/([A-Za-z0-9_-]+)/', $url, $matches)) {
+        if (preg_match('/instagram\.com\/(?:reels?|p|tv)\/([A-Za-z0-9_-]+)/', $url, $matches)) {
             return $matches[1];
         }
 
@@ -223,7 +223,23 @@ class Video extends Model
     {
         $id = $this->tiktokId();
 
-        return $id ? 'https://www.tiktok.com/embed/v2/'.$id : null;
+        if (! $id) {
+            return null;
+        }
+
+        return 'https://www.tiktok.com/player/v1/'.$id.'?'.http_build_query([
+            'autoplay' => 1,
+            'loop' => 1,
+            'music_info' => 0,
+            'description' => 0,
+            'controls' => 1,
+            'progress_bar' => 1,
+            'play_button' => 1,
+            'volume_control' => 1,
+            'fullscreen_button' => 0,
+            'timestamp' => 0,
+            'rel' => 0,
+        ]);
     }
 
     protected function instagramEmbedUrl(): ?string
@@ -235,8 +251,8 @@ class Video extends Model
         }
 
         $url = strtolower((string) $this->video_url);
-        $kind = str_contains($url, '/reel/') ? 'reel' : (str_contains($url, '/tv/') ? 'tv' : 'p');
+        $kind = str_contains($url, '/reel') ? 'reel' : (str_contains($url, '/tv/') ? 'tv' : 'p');
 
-        return "https://www.instagram.com/{$kind}/{$code}/embed";
+        return "https://www.instagram.com/{$kind}/{$code}/embed/captioned/";
     }
 }

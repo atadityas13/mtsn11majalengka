@@ -449,6 +449,19 @@
         z-index: 0;
     }
 
+    .short-slide.is-playing .short-player {
+        z-index: 2;
+    }
+
+    .short-poster-fallback {
+        display: grid;
+        place-items: center;
+        background: #111;
+        color: rgb(255 255 255 / 0.7);
+        font-size: 0.875rem;
+        font-weight: 700;
+    }
+
     /* YouTube iframe = 16:9; scale to cover layar portrait seperti Reels/TikTok */
     .short-slide.platform-youtube .short-player iframe,
     .short-player iframe.is-youtube {
@@ -470,18 +483,51 @@
         height: 100%;
         border: 0;
         background: #000;
+        pointer-events: auto;
+        z-index: 1;
     }
 
     .short-slide.platform-instagram .short-player,
     .short-slide.platform-tiktok .short-player {
+        z-index: 2;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        background: #000;
+    }
+
+    .short-slide.platform-instagram .short-hit,
+    .short-slide.platform-tiktok .short-hit {
+        display: none;
+    }
+
+    .short-external-fallback {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
         display: grid;
-        place-items: center;
+        place-content: center;
+        gap: 0.75rem;
+        padding: 1.5rem;
+        text-align: center;
+        background: #0b0b0b;
+    }
+
+    .short-external-fallback a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        background: rgb(10 122 62 / 0.95);
+        color: white;
+        font-size: 0.875rem;
+        font-weight: 800;
+        padding: 0.75rem 1.25rem;
     }
 
     .short-hit {
         position: absolute;
         inset: 0;
-        z-index: 2;
+        z-index: 3;
         border: 0;
         background: transparent;
         cursor: pointer;

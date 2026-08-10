@@ -238,20 +238,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const loadIframeFallback = (slide, platform) => {
             const embed = slide.dataset.embed;
+            const external = slide.dataset.externalUrl;
             const player = slide.querySelector('[data-short-player]');
-            if (!embed || !player) {
+            const label = platform === 'instagram' ? 'Instagram' : platform === 'tiktok' ? 'TikTok' : 'sumber';
+            if (!player) {
                 return;
             }
 
             player.innerHTML = '';
+
+            if (!embed) {
+                const box = document.createElement('div');
+                box.className = 'short-external-fallback';
+                box.innerHTML = `
+                    <p>Embed ${label} tidak tersedia dari URL ini.</p>
+                    <p style="font-size:0.8rem;opacity:.7">Pakai URL lengkap (bukan link pendek), atau buka di aplikasi.</p>
+                    ${external ? `<a href="${external}" target="_blank" rel="noopener noreferrer">Buka di ${label}</a>` : ''}
+                `;
+                player.appendChild(box);
+                slide._shortController = {
+                    destroy: () => {
+                        player.innerHTML = '';
+                    },
+                };
+                return;
+            }
+
             const iframe = document.createElement('iframe');
             iframe.src = embed;
             iframe.title = 'Short video';
             iframe.allow =
                 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
             iframe.allowFullscreen = true;
+            iframe.referrerPolicy = 'strict-origin-when-cross-origin';
             iframe.setAttribute('playsinline', 'true');
-            iframe.setAttribute('scrolling', 'no');
+            iframe.setAttribute('allowfullscreen', 'true');
             iframe.className = `short-iframe is-${platform}`;
             player.appendChild(iframe);
 

@@ -39,27 +39,37 @@
                     data-platform="{{ $short->platform() }}"
                     data-youtube-id="{{ $short->youtubeId() }}"
                     data-embed="{{ $short->embedUrl(autoplay: true, mute: true, shortsUi: true) }}"
+                    data-external-url="{{ $short->video_url }}"
                 >
                     <div class="short-media">
                         @if ($thumb = $short->thumbnailUrl())
                             <img src="{{ $thumb }}" alt="" class="short-poster" data-short-poster>
                         @else
-                            <div class="short-poster short-poster-fallback pattern-mesh flex items-center justify-center text-sm font-bold text-white/70">
-                                {{ $short->platformLabel() }}
+                            <div class="short-poster short-poster-fallback" data-short-poster>
+                                <span>{{ $short->platformLabel() }}</span>
                             </div>
                         @endif
                         <div class="short-player" data-short-player></div>
-                        <button type="button" class="short-hit" data-short-hit aria-label="Pause atau putar"></button>
-                        <div class="short-play" data-short-play aria-hidden="true">
-                            <span>▶</span>
-                        </div>
+                        @if ($short->platform() === 'youtube')
+                            <button type="button" class="short-hit" data-short-hit aria-label="Pause atau putar"></button>
+                            <div class="short-play" data-short-play aria-hidden="true">
+                                <span>▶</span>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="short-actions">
-                        <button type="button" class="short-action-btn is-muted" data-short-mute aria-label="Nyalakan suara">
-                            <span data-mute-icon>OFF</span>
-                            <small>Suara</small>
-                        </button>
+                        @if ($short->platform() === 'youtube')
+                            <button type="button" class="short-action-btn is-muted" data-short-mute aria-label="Nyalakan suara">
+                                <span data-mute-icon>OFF</span>
+                                <small>Suara</small>
+                            </button>
+                        @else
+                            <a href="{{ $short->video_url }}" target="_blank" rel="noopener noreferrer" class="short-action-btn">
+                                <span>↗</span>
+                                <small>{{ $short->platformLabel() }}</small>
+                            </a>
+                        @endif
                     </div>
 
                     <div class="short-overlay">
