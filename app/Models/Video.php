@@ -204,6 +204,8 @@ class Video extends Model
             $params['disablekb'] = 1;
             $params['loop'] = 1;
             $params['playlist'] = $id;
+            $params['enablejsapi'] = 1;
+            $params['origin'] = rtrim((string) config('app.url'), '/');
         }
 
         if ($autoplay) {

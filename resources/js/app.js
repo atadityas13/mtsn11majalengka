@@ -142,6 +142,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (shortFeed) {
         const slides = [...shortFeed.querySelectorAll('[data-short-slide]')];
         let soundOn = false;
+        let ytApiPromise = null;
+
+        const loadYouTubeApi = () => {
+            if (window.YT?.Player) {
+                return Promise.resolve(window.YT);
+            }
+
+            if (ytApiPromise) {
+                return ytApiPromise;
+            }
+
+            ytApiPromise = new Promise((resolve) => {
+                const previous = window.onYouTubeIframeAPIReady;
+                window.onYouTubeIframeAPIReady = () => {
+                    if (typeof previous === 'function') {
+                        previous();
+                    }
+                    resolve(window.YT);
+                };
+
+                if (!document.querySelector('script[data-youtube-api]')) {
+                    const tag = document.createElement('script');
+                    tag.src = 'https://www.youtube.com/iframe_api';
+                    tag.async = true;
+                    tag.dataset.youtubeApi = '1';
+                    document.head.appendChild(tag);
+                }
+            });
+
+            return ytApiPromise;
+        };
 
         const setMuteUi = (slide, muted) => {
             const btn = slide.querySelector('[data-short-mute]');
@@ -154,27 +185,60 @@ document.addEventListener('DOMContentLoaded', () => {
             icon.textContent = muted ? 'OFF' : 'ON';
         };
 
+        const setPausedUi = (slide, paused) => {
+            slide.querySelector('[data-short-play]')?.classList.toggle('is-visible', paused);
+        };
+
+        const getController = (slide) => slide._shortController || null;
+
         const unload = (slide) => {
+            const controller = getController(slide);
+            if (controller?.destroy) {
+                try {
+                    controller.destroy();
+                } catch {
+                    // ignore destroy races
+                }
+            }
+            slide._shortController = null;
+
             const player = slide.querySelector('[data-short-player]');
             const poster = slide.querySelector('[data-short-poster]');
-            const playBtn = slide.querySelector('[data-short-play]');
             if (player) {
                 player.innerHTML = '';
             }
             poster?.classList.remove('is-hidden');
-            playBtn?.classList.remove('is-hidden');
             slide.classList.remove('is-playing', 'platform-youtube', 'platform-tiktok', 'platform-instagram');
-            setMuteUi(slide, true);
+            setPausedUi(slide, false);
+            setMuteUi(slide, !soundOn);
         };
 
-        const load = (slide, { withSound = soundOn } = {}) => {
-            const embed = withSound
-                ? slide.dataset.embedSound || slide.dataset.embed
-                : slide.dataset.embed;
-            const platform = slide.dataset.platform || 'youtube';
+        const applySound = (slide) => {
+            const controller = getController(slide);
+            if (!controller) {
+                return;
+            }
+            if (soundOn) {
+                controller.unMute?.();
+                controller.setVolume?.(100);
+            } else {
+                controller.mute?.();
+            }
+            setMuteUi(slide, !soundOn);
+        };
+
+        const togglePause = (slide) => {
+            const controller = getController(slide);
+            if (!controller?.togglePause) {
+                return;
+            }
+            const paused = controller.togglePause();
+            setPausedUi(slide, paused);
+        };
+
+        const loadIframeFallback = (slide, platform) => {
+            const embed = slide.dataset.embed;
             const player = slide.querySelector('[data-short-player]');
-            const poster = slide.querySelector('[data-short-poster]');
-            const playBtn = slide.querySelector('[data-short-play]');
             if (!embed || !player) {
                 return;
             }
@@ -190,11 +254,118 @@ document.addEventListener('DOMContentLoaded', () => {
             iframe.setAttribute('scrolling', 'no');
             iframe.className = `short-iframe is-${platform}`;
             player.appendChild(iframe);
-            poster?.classList.add('is-hidden');
-            playBtn?.classList.add('is-hidden');
-            slide.classList.add('is-playing');
+
+            slide._shortController = {
+                mute: () => {},
+                unMute: () => {},
+                togglePause: () => false,
+                destroy: () => {
+                    player.innerHTML = '';
+                },
+            };
+        };
+
+        const loadYouTube = async (slide) => {
+            const videoId = slide.dataset.youtubeId;
+            const playerHost = slide.querySelector('[data-short-player]');
+            if (!videoId || !playerHost) {
+                return;
+            }
+
+            const YT = await loadYouTubeApi();
+            const mount = document.createElement('div');
+            playerHost.innerHTML = '';
+            playerHost.appendChild(mount);
+
+            await new Promise((resolve) => {
+                const player = new YT.Player(mount, {
+                    videoId,
+                    width: '100%',
+                    height: '100%',
+                    playerVars: {
+                        autoplay: 1,
+                        mute: 1,
+                        controls: 0,
+                        rel: 0,
+                        modestbranding: 1,
+                        playsinline: 1,
+                        fs: 0,
+                        iv_load_policy: 3,
+                        disablekb: 1,
+                        loop: 1,
+                        playlist: videoId,
+                        origin: window.location.origin,
+                    },
+                    events: {
+                        onReady: (event) => {
+                            slide._shortController = {
+                                mute: () => event.target.mute(),
+                                unMute: () => event.target.unMute(),
+                                setVolume: (value) => event.target.setVolume(value),
+                                togglePause: () => {
+                                    const state = event.target.getPlayerState();
+                                    if (state === YT.PlayerState.PLAYING) {
+                                        event.target.pauseVideo();
+                                        return true;
+                                    }
+                                    event.target.playVideo();
+                                    return false;
+                                },
+                                destroy: () => {
+                                    try {
+                                        event.target.destroy();
+                                    } catch {
+                                        // ignore
+                                    }
+                                },
+                            };
+
+                            event.target.playVideo();
+                            applySound(slide);
+                            setPausedUi(slide, false);
+                            resolve();
+                        },
+                        onStateChange: (event) => {
+                            if (event.data === YT.PlayerState.PAUSED) {
+                                setPausedUi(slide, true);
+                            }
+                            if (event.data === YT.PlayerState.PLAYING) {
+                                setPausedUi(slide, false);
+                            }
+                        },
+                        onError: () => resolve(),
+                    },
+                });
+
+                // Keep reference even before onReady for cleanup.
+                slide._shortController = {
+                    destroy: () => {
+                        try {
+                            player.destroy();
+                        } catch {
+                            // ignore
+                        }
+                    },
+                };
+            });
+        };
+
+        const load = async (slide) => {
+            const platform = slide.dataset.platform || 'youtube';
+            const poster = slide.querySelector('[data-short-poster]');
+
+            unload(slide);
             slide.classList.add(`platform-${platform}`);
-            setMuteUi(slide, !withSound);
+            slide.classList.add('is-playing');
+            poster?.classList.add('is-hidden');
+            setMuteUi(slide, !soundOn);
+
+            if (platform === 'youtube' && slide.dataset.youtubeId) {
+                await loadYouTube(slide);
+                return;
+            }
+
+            loadIframeFallback(slide, platform);
         };
 
         const observer = new IntersectionObserver(
@@ -218,13 +389,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         slides.forEach((slide) => {
             observer.observe(slide);
-            slide.querySelector('[data-short-play]')?.addEventListener('click', () => {
-                load(slide, { withSound: soundOn });
+
+            slide.querySelector('[data-short-hit]')?.addEventListener('click', () => {
+                togglePause(slide);
             });
+
             slide.querySelector('[data-short-mute]')?.addEventListener('click', (event) => {
                 event.stopPropagation();
                 soundOn = !soundOn;
-                load(slide, { withSound: soundOn });
+                applySound(slide);
             });
         });
     }

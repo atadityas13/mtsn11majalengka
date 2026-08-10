@@ -37,8 +37,8 @@
                     class="short-slide"
                     data-short-slide
                     data-platform="{{ $short->platform() }}"
+                    data-youtube-id="{{ $short->youtubeId() }}"
                     data-embed="{{ $short->embedUrl(autoplay: true, mute: true, shortsUi: true) }}"
-                    data-embed-sound="{{ $short->embedUrl(autoplay: true, mute: false, shortsUi: true) }}"
                 >
                     <div class="short-media">
                         @if ($thumb = $short->thumbnailUrl())
@@ -49,9 +49,10 @@
                             </div>
                         @endif
                         <div class="short-player" data-short-player></div>
-                        <button type="button" class="short-play" data-short-play aria-label="Putar">
+                        <button type="button" class="short-hit" data-short-hit aria-label="Pause atau putar"></button>
+                        <div class="short-play" data-short-play aria-hidden="true">
                             <span>▶</span>
-                        </button>
+                        </div>
                     </div>
 
                     <div class="short-actions">
