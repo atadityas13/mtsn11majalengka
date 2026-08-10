@@ -28,6 +28,7 @@
         background-image:
             radial-gradient(ellipse 80% 50% at 100% -10%, rgb(10 122 62 / 0.08), transparent 55%),
             radial-gradient(ellipse 60% 40% at 0% 100%, rgb(212 160 23 / 0.06), transparent 50%);
+        animation: page-in 0.55s ease both;
     }
 
     [x-cloak] {
@@ -36,6 +37,18 @@
 
     ::selection {
         background: rgb(10 122 62 / 0.2);
+    }
+
+    a,
+    button {
+        transition:
+            color 0.25s ease,
+            background-color 0.25s ease,
+            border-color 0.25s ease,
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            opacity 0.25s ease,
+            filter 0.25s ease;
     }
 }
 
@@ -56,14 +69,15 @@
     .section-label::before {
         content: '';
         @apply h-2 w-2 rounded-full bg-gold;
+        animation: pulse-dot 2s ease-in-out infinite;
     }
 
     .btn-primary {
-        @apply inline-flex items-center justify-center gap-2 rounded-md bg-kemenag px-5 py-3 text-sm font-bold text-white transition hover:bg-kemenag-deep;
+        @apply inline-flex items-center justify-center gap-2 rounded-md bg-kemenag px-5 py-3 text-sm font-bold text-white transition hover:bg-kemenag-deep hover:-translate-y-0.5 hover:shadow-lg;
     }
 
     .btn-ghost {
-        @apply inline-flex items-center justify-center gap-2 rounded-md border border-white/40 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20;
+        @apply inline-flex items-center justify-center gap-2 rounded-md border border-white/40 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20 hover:-translate-y-0.5;
     }
 
     .news-meta {
@@ -78,12 +92,86 @@
             radial-gradient(circle at 20% 30%, rgb(212 160 23 / 0.18), transparent 28%),
             radial-gradient(circle at 80% 70%, rgb(255 255 255 / 0.08), transparent 32%);
         background-size: 28px 28px, 28px 28px, 100% 100%, 100% 100%;
+        animation: mesh-drift 18s linear infinite;
     }
 
     .ornament-arc {
         background:
             radial-gradient(circle at center, transparent 54%, rgb(212 160 23 / 0.35) 55%, rgb(212 160 23 / 0.35) 57%, transparent 58%),
             radial-gradient(circle at center, transparent 68%, rgb(255 255 255 / 0.12) 69%, rgb(255 255 255 / 0.12) 70%, transparent 71%);
+        animation: float-soft 8s ease-in-out infinite;
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+            opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: opacity, transform;
+    }
+
+    .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .reveal-left {
+        opacity: 0;
+        transform: translateX(-28px);
+        transition:
+            opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal-left.is-visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .reveal-scale {
+        opacity: 0;
+        transform: scale(0.96);
+        transition:
+            opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal-scale.is-visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .stagger > .reveal:nth-child(1) { transition-delay: 0.05s; }
+    .stagger > .reveal:nth-child(2) { transition-delay: 0.12s; }
+    .stagger > .reveal:nth-child(3) { transition-delay: 0.19s; }
+    .stagger > .reveal:nth-child(4) { transition-delay: 0.26s; }
+    .stagger > .reveal:nth-child(5) { transition-delay: 0.33s; }
+    .stagger > .reveal:nth-child(6) { transition-delay: 0.4s; }
+
+    .hover-lift {
+        @apply transition duration-300;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgb(4 63 31 / 0.12);
+    }
+
+    .img-zoom {
+        @apply transition duration-700 ease-out;
+    }
+
+    .group:hover .img-zoom {
+        transform: scale(1.06);
+    }
+
+    .site-header {
+        transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    .site-header.is-scrolled {
+        box-shadow: 0 8px 30px rgb(4 63 31 / 0.1);
     }
 }
 
@@ -103,6 +191,19 @@
     .animate-rise-delay-2 {
         animation: rise 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
     }
+
+    .animate-float {
+        animation: float-soft 6s ease-in-out infinite;
+    }
+
+    .animate-float-delay {
+        animation: float-soft 7.5s ease-in-out 0.8s infinite;
+    }
+
+    .delay-1 { transition-delay: 0.08s !important; }
+    .delay-2 { transition-delay: 0.16s !important; }
+    .delay-3 { transition-delay: 0.24s !important; }
+    .delay-4 { transition-delay: 0.32s !important; }
 }
 
 @keyframes rise {
@@ -113,5 +214,71 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes page-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes float-soft {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes mesh-drift {
+    0% {
+        background-position: 0 0, 0 0, 0 0, 0 0;
+    }
+    100% {
+        background-position: 56px 56px, -56px 56px, 0 0, 0 0;
+    }
+}
+
+@keyframes pulse-dot {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.35);
+        opacity: 0.65;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    body,
+    .animate-rise,
+    .animate-rise-delay,
+    .animate-rise-delay-2,
+    .animate-float,
+    .animate-float-delay,
+    .pattern-mesh,
+    .ornament-arc,
+    .section-label::before {
+        animation: none !important;
+    }
+
+    .reveal,
+    .reveal-left,
+    .reveal-scale {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
     }
 }

@@ -35,7 +35,7 @@
     </div>
 
     {{-- Main header --}}
-    <header class="sticky top-0 z-50 border-b border-kemenag/10 bg-white/95 shadow-sm backdrop-blur-md">
+    <header class="site-header sticky top-0 z-50 border-b border-kemenag/10 bg-white/95 backdrop-blur-md" data-site-header>
         <div class="site-container flex items-center justify-between gap-4 py-3">
             <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3">
                 @if ($site->logo)

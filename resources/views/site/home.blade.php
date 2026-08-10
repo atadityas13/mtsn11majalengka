@@ -6,8 +6,8 @@
 {{-- Hero institusional: brand first + grafis Kemenag-like --}}
 <section class="relative overflow-hidden text-white">
     <div class="absolute inset-0 pattern-mesh"></div>
-    <div class="absolute -right-24 -top-24 h-80 w-80 rounded-full ornament-arc opacity-40"></div>
-    <div class="absolute -bottom-32 -left-16 h-96 w-96 rounded-full ornament-arc opacity-30"></div>
+    <div class="absolute -right-24 -top-24 h-80 w-80 rounded-full ornament-arc opacity-40 animate-float"></div>
+    <div class="absolute -bottom-32 -left-16 h-96 w-96 rounded-full ornament-arc opacity-30 animate-float-delay"></div>
     @if ($site->hero_image)
         <img src="{{ asset('storage/'.$site->hero_image) }}" alt="" class="absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-luminosity">
     @endif
@@ -26,7 +26,7 @@
             </p>
             <div class="animate-rise-delay-2 mt-8 flex flex-wrap gap-3">
                 @if ($site->hero_cta_url)
-                    <a href="{{ $site->hero_cta_url }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-extrabold text-kemenag-dark transition hover:brightness-110">
+                    <a href="{{ $site->hero_cta_url }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-extrabold text-kemenag-dark transition hover:-translate-y-0.5 hover:brightness-110 hover:shadow-lg">
                         {{ $site->hero_cta_label ?: 'Info PPDB' }}
                     </a>
                 @endif
@@ -35,10 +35,10 @@
         </div>
 
         <div class="animate-rise-delay relative hidden md:block">
-            <div class="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-1 shadow-2xl backdrop-blur">
+            <div class="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-1 shadow-2xl backdrop-blur transition duration-500 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.35)]">
                 <div class="aspect-[4/5] overflow-hidden rounded-xl bg-kemenag-dark/40">
                     @if ($site->hero_image)
-                        <img src="{{ asset('storage/'.$site->hero_image) }}" alt="{{ $site->school_name }}" class="h-full w-full object-cover">
+                        <img src="{{ asset('storage/'.$site->hero_image) }}" alt="{{ $site->school_name }}" class="h-full w-full object-cover transition duration-700 hover:scale-105">
                     @else
                         <div class="flex h-full flex-col justify-between bg-[linear-gradient(160deg,#0a7a3e,#043f1f)] p-8">
                             <div class="h-24 w-24 rounded-full ornament-arc"></div>
@@ -51,7 +51,7 @@
                     @endif
                 </div>
             </div>
-            <div class="absolute -bottom-5 -left-5 rounded-xl bg-white px-4 py-3 text-kemenag-deep shadow-xl">
+            <div class="absolute -bottom-5 -left-5 animate-float rounded-xl bg-white px-4 py-3 text-kemenag-deep shadow-xl">
                 <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Status</p>
                 <p class="font-display text-2xl font-extrabold">Akreditasi {{ $site->accreditation_value ?: 'A' }}</p>
             </div>
@@ -59,9 +59,9 @@
     </div>
 </section>
 
-{{-- Featured news ala portal berita Kemenag --}}
+{{-- Featured news --}}
 <section class="site-container py-14 md:py-16">
-    <div class="mb-8 flex items-end justify-between gap-4">
+    <div class="mb-8 flex items-end justify-between gap-4" x-reveal>
         <div>
             <p class="section-label">Berita</p>
             <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">Berita Terbaru</h2>
@@ -73,10 +73,10 @@
 
     @if ($featured)
         <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-            <a href="{{ route('posts.show', $featured->slug) }}" class="group relative overflow-hidden rounded-2xl bg-kemenag-dark text-white shadow-lg">
+            <a href="{{ route('posts.show', $featured->slug) }}" class="group relative overflow-hidden rounded-2xl bg-kemenag-dark text-white shadow-lg hover-lift" x-reveal="reveal-scale">
                 <div class="aspect-[16/10] md:aspect-[16/9]">
                     @if ($featured->cover_image)
-                        <img src="{{ asset('storage/'.$featured->cover_image) }}" alt="{{ $featured->title }}" class="h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-105">
+                        <img src="{{ asset('storage/'.$featured->cover_image) }}" alt="{{ $featured->title }}" class="img-zoom h-full w-full object-cover opacity-70">
                     @else
                         <div class="h-full w-full pattern-mesh"></div>
                     @endif
@@ -84,17 +84,17 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-kemenag-dark via-kemenag-dark/40 to-transparent"></div>
                 <div class="absolute inset-x-0 bottom-0 p-6 md:p-8">
                     <p class="news-meta !text-gold">{{ optional($featured->published_at)->translatedFormat('d F Y') }}</p>
-                    <h3 class="mt-2 font-display text-2xl font-extrabold leading-snug md:text-3xl">{{ $featured->title }}</h3>
+                    <h3 class="mt-2 font-display text-2xl font-extrabold leading-snug transition group-hover:translate-x-1 md:text-3xl">{{ $featured->title }}</h3>
                     <p class="mt-3 line-clamp-2 max-w-2xl text-sm text-white/75">{{ $featured->excerpt }}</p>
                 </div>
             </a>
 
-            <div class="flex flex-col divide-y divide-kemenag/10 overflow-hidden rounded-2xl border border-kemenag/10 bg-white shadow-sm">
+            <div class="stagger flex flex-col divide-y divide-kemenag/10 overflow-hidden rounded-2xl border border-kemenag/10 bg-white shadow-sm" x-reveal>
                 @forelse ($rest as $post)
-                    <a href="{{ route('posts.show', $post->slug) }}" class="group flex gap-4 p-4 transition hover:bg-kemenag-soft/60">
+                    <a href="{{ route('posts.show', $post->slug) }}" class="reveal group flex gap-4 p-4 transition hover:bg-kemenag-soft/60 hover:pl-5">
                         <div class="h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-kemenag-soft">
                             @if ($post->cover_image)
-                                <img src="{{ asset('storage/'.$post->cover_image) }}" alt="" class="h-full w-full object-cover transition group-hover:scale-105">
+                                <img src="{{ asset('storage/'.$post->cover_image) }}" alt="" class="img-zoom h-full w-full object-cover">
                             @else
                                 <div class="flex h-full items-center justify-center bg-kemenag text-xs font-bold text-white">MTsN</div>
                             @endif
@@ -110,21 +110,21 @@
             </div>
         </div>
     @else
-        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada berita. Tambahkan dari panel admin.</p>
+        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted" x-reveal>Belum ada berita. Tambahkan dari panel admin.</p>
     @endif
 </section>
 
-{{-- Layanan cepat (hub Kemenag style) --}}
+{{-- Layanan cepat --}}
 <section class="bg-white py-12">
     <div class="site-container">
-        <div class="mb-8 flex items-end justify-between">
+        <div class="mb-8 flex items-end justify-between" x-reveal>
             <div>
                 <p class="section-label">Layanan</p>
                 <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep">Akses Layanan</h2>
             </div>
             <a href="{{ route('layanan') }}" class="text-sm font-bold text-kemenag hover:underline">Semua layanan →</a>
         </div>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ([
                 ['PPDB Online', $site->ppdb_url, 'Pendaftaran peserta didik baru', '01'],
                 ['Rapor Digital', $site->rdm_url, 'Portal RDM madrasah', '02'],
@@ -132,8 +132,8 @@
                 ['Kontak', route('contact'), 'Alamat & saluran komunikasi', '04'],
             ] as [$label, $url, $desc, $num])
                 @if ($url)
-                    <a href="{{ $url }}" @if(\Illuminate\Support\Str::startsWith($url, 'http')) target="_blank" rel="noopener" @endif class="group relative overflow-hidden rounded-2xl border border-kemenag/10 bg-surface p-5 transition hover:-translate-y-0.5 hover:border-kemenag/30 hover:shadow-md">
-                        <span class="font-display text-4xl font-extrabold text-kemenag/15 transition group-hover:text-kemenag/25">{{ $num }}</span>
+                    <a href="{{ $url }}" @if(\Illuminate\Support\Str::startsWith($url, 'http')) target="_blank" rel="noopener" @endif class="reveal hover-lift group relative overflow-hidden rounded-2xl border border-kemenag/10 bg-surface p-5" x-reveal>
+                        <span class="font-display text-4xl font-extrabold text-kemenag/15 transition duration-300 group-hover:scale-110 group-hover:text-kemenag/30">{{ $num }}</span>
                         <p class="mt-3 font-display text-xl font-extrabold text-kemenag-deep">{{ $label }}</p>
                         <p class="mt-1 text-sm text-muted">{{ $desc }}</p>
                     </a>
@@ -145,7 +145,7 @@
 
 {{-- Pengumuman + Agenda --}}
 <section class="site-container grid gap-6 py-14 md:grid-cols-2 md:py-16">
-    <div class="rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm md:p-8">
+    <div class="rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm md:p-8" x-reveal="reveal-left">
         <div class="flex items-center justify-between gap-3">
             <div>
                 <p class="section-label">Pengumuman</p>
@@ -155,7 +155,7 @@
         </div>
         <div class="mt-6 space-y-4">
             @forelse ($announcements as $item)
-                <article class="border-b border-kemenag/10 pb-4 last:border-0">
+                <article class="border-b border-kemenag/10 pb-4 last:border-0 transition hover:translate-x-1">
                     <div class="flex flex-wrap items-center gap-2">
                         @if ($item->is_pinned)
                             <span class="rounded bg-gold/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-kemenag-deep">Pinned</span>
@@ -171,7 +171,7 @@
         </div>
     </div>
 
-    <div class="rounded-2xl border border-kemenag/10 bg-kemenag-deep p-6 text-white shadow-sm md:p-8">
+    <div class="rounded-2xl border border-kemenag/10 bg-kemenag-deep p-6 text-white shadow-sm md:p-8" x-reveal>
         <div class="flex items-center justify-between gap-3">
             <div>
                 <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">Agenda</p>
@@ -181,7 +181,7 @@
         </div>
         <div class="mt-6 space-y-4">
             @forelse ($agendas as $item)
-                <article class="rounded-xl bg-white/10 p-4 backdrop-blur">
+                <article class="rounded-xl bg-white/10 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/15">
                     <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-gold">{{ $item->starts_at->translatedFormat('d F Y · H:i') }}</p>
                     <h3 class="mt-2 font-display text-xl font-bold">{{ $item->title }}</h3>
                     @if ($item->location)
@@ -198,20 +198,20 @@
 @if ($gallery->isNotEmpty())
 <section class="bg-white py-14 md:py-16">
     <div class="site-container">
-        <div class="mb-8 flex items-end justify-between gap-4">
+        <div class="mb-8 flex items-end justify-between gap-4" x-reveal>
             <div>
                 <p class="section-label">Galeri</p>
                 <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep">Dokumentasi</h2>
             </div>
             <a href="{{ route('gallery.index') }}" class="text-sm font-bold text-kemenag hover:underline">Lihat galeri →</a>
         </div>
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($gallery as $item)
-                <figure class="group overflow-hidden rounded-2xl">
+                <figure class="reveal group overflow-hidden rounded-2xl" x-reveal>
                     <div class="aspect-[4/3] overflow-hidden">
-                        <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->title }}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
+                        <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->title }}" class="img-zoom h-full w-full object-cover">
                     </div>
-                    <figcaption class="mt-3 px-1 font-display text-lg font-bold text-kemenag-deep">{{ $item->title }}</figcaption>
+                    <figcaption class="mt-3 px-1 font-display text-lg font-bold text-kemenag-deep transition group-hover:text-kemenag">{{ $item->title }}</figcaption>
                 </figure>
             @endforeach
         </div>
@@ -223,14 +223,14 @@
 <section class="relative overflow-hidden py-14 md:py-16">
     <div class="absolute inset-0 pattern-mesh opacity-95"></div>
     <div class="site-container relative grid items-center gap-8 md:grid-cols-[0.75fr_1.25fr]">
-        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-2xl">
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-2xl" x-reveal="reveal-left">
             @if ($site->headmaster_photo)
-                <img src="{{ asset('storage/'.$site->headmaster_photo) }}" alt="{{ $site->headmaster_name }}" class="h-full w-full object-cover">
+                <img src="{{ asset('storage/'.$site->headmaster_photo) }}" alt="{{ $site->headmaster_name }}" class="h-full w-full object-cover transition duration-700 hover:scale-105">
             @else
                 <div class="flex h-full items-center justify-center font-display text-5xl font-extrabold text-white/35">KM</div>
             @endif
         </div>
-        <div class="text-white">
+        <div class="text-white" x-reveal>
             <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">Sambutan Kepala Madrasah</p>
             <blockquote class="mt-4 font-display text-3xl font-bold leading-snug text-balance md:text-4xl">“{{ $site->headmaster_quote }}”</blockquote>
             <p class="mt-6 text-lg font-extrabold">{{ $site->headmaster_name }}</p>
