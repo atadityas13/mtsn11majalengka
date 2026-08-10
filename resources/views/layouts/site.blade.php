@@ -139,7 +139,7 @@
             <div>
                 <div class="flex items-center gap-3">
                     @if ($site->kemenag_logo)
-                        <img src="{{ asset('storage/'.$site->kemenag_logo) }}" alt="Kemenag" class="h-10 w-10 object-contain brightness-0 invert">
+                        <img src="{{ asset('storage/'.$site->kemenag_logo) }}" alt="Kemenag" class="h-10 w-10 object-contain">
                     @endif
                     @if ($site->logo)
                         <img src="{{ asset('storage/'.$site->logo) }}" alt="" class="h-10 w-10 object-contain">
