@@ -110,46 +110,39 @@
             @mouseenter="stop()"
             @mouseleave="start()"
         >
-            <div class="relative overflow-hidden rounded-2xl bg-kemenag-dark text-white shadow-lg" x-reveal="reveal-scale">
-                @foreach ($posts as $index => $post)
-                    <div
-                        x-show="active === {{ $index }}"
-                        x-transition:enter="transition ease-out duration-500"
-                        x-transition:enter-start="opacity-0"
-                        x-transition:enter-end="opacity-100"
-                        x-transition:leave="transition ease-in duration-300"
-                        x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0"
-                        class="{{ $index === 0 ? 'relative' : 'absolute inset-0' }}"
-                        @if($index !== 0) style="display: none;" @endif
-                    >
-                        <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                            <div class="aspect-[16/10] md:aspect-[16/9]">
+            <div class="relative overflow-hidden rounded-2xl bg-kemenag-dark text-white shadow-lg">
+                <div class="relative aspect-[16/10] md:aspect-[16/9]">
+                    @foreach ($posts as $index => $post)
+                        <div
+                            class="absolute inset-0 transition-opacity duration-500 ease-out"
+                            :class="active === {{ $index }} ? 'opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0'"
+                        >
+                            <a href="{{ route('posts.show', $post->slug) }}" class="group relative block h-full">
                                 @if ($post->cover_image)
                                     <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-105">
                                 @else
                                     <div class="h-full w-full pattern-mesh"></div>
                                 @endif
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-kemenag-dark via-kemenag-dark/45 to-transparent"></div>
-                            <div class="absolute inset-x-0 bottom-0 p-6 md:p-8">
-                                @if ($post->category)
-                                    <span class="mb-2 inline-block rounded bg-gold/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
-                                @endif
-                                <p class="news-meta !text-gold">{{ optional($post->published_at)->translatedFormat('d F Y') }}</p>
-                                <h3 class="mt-2 font-display text-2xl font-extrabold leading-snug md:text-3xl">{{ $post->title }}</h3>
-                                <p class="mt-3 line-clamp-2 max-w-2xl text-sm text-white/75">{{ $post->excerpt }}</p>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
+                                <div class="absolute inset-0 bg-gradient-to-t from-kemenag-dark via-kemenag-dark/45 to-transparent"></div>
+                                <div class="absolute inset-x-0 bottom-0 p-6 md:p-8">
+                                    @if ($post->category)
+                                        <span class="mb-2 inline-block rounded bg-gold/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
+                                    @endif
+                                    <p class="news-meta !text-gold">{{ optional($post->published_at)->translatedFormat('d F Y') }}</p>
+                                    <h3 class="mt-2 font-display text-2xl font-extrabold leading-snug md:text-3xl">{{ $post->title }}</h3>
+                                    <p class="mt-3 line-clamp-2 max-w-2xl text-sm text-white/75">{{ $post->excerpt }}</p>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
 
                 @if ($posts->count() > 1)
                     <div class="absolute bottom-4 right-4 z-10 flex items-center gap-2">
                         <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" @click="prev()" aria-label="Sebelumnya">‹</button>
                         <div class="flex gap-1.5 px-1">
                             @foreach ($posts as $index => $post)
-                                <button type="button" class="h-2 w-2 rounded-full transition" :class="active === {{ $index }} ? 'bg-gold w-5' : 'bg-white/40'" @click="go({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
+                                <button type="button" class="h-2 rounded-full transition-all" :class="active === {{ $index }} ? 'w-5 bg-gold' : 'w-2 bg-white/40'" @click="go({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
                             @endforeach
                         </div>
                         <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" @click="next()" aria-label="Berikutnya">›</button>
