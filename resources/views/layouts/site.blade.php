@@ -55,10 +55,10 @@
         </div>
     </div>
 
-    {{-- Main header --}}
+    {{-- Main header: baris 1 identitas, baris 2 menu (supaya nama & nav muat) --}}
     <header class="site-header no-print sticky top-0 z-50 border-b border-kemenag/10 bg-white/95 backdrop-blur-md" data-site-header>
-        <div class="site-container flex items-center justify-between gap-4 py-3">
-            <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-2.5 sm:gap-3">
+        <div class="site-container flex items-center justify-between gap-3 py-3">
+            <a href="{{ route('home') }}" class="flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3">
                 @if ($site->kemenag_logo)
                     <img src="{{ asset('storage/'.$site->kemenag_logo) }}" alt="Kementerian Agama" class="hidden h-11 w-11 shrink-0 object-contain sm:block">
                 @endif
@@ -71,37 +71,39 @@
                     </span>
                 @endif
                 <span class="min-w-0">
-                    <span class="block truncate font-display text-lg font-extrabold leading-tight text-kemenag-deep md:text-xl">{{ $site->school_name }}</span>
-                    <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-muted">Madrasah Tsanawiyah Negeri</span>
+                    <span class="block font-display text-base font-extrabold leading-tight text-kemenag-deep sm:text-lg md:text-xl">{{ $site->school_name }}</span>
+                    <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">Madrasah Tsanawiyah Negeri</span>
                 </span>
             </a>
 
-            <nav class="hidden items-center gap-1 text-sm font-semibold text-ink/80 xl:flex">
-                @forelse ($headerMenus as $item)
-                    <a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif class="rounded-md px-3 py-2 transition hover:bg-kemenag-soft hover:text-kemenag-deep">{{ $item->label }}</a>
-                @empty
-                    <a href="{{ route('home') }}" class="rounded-md px-3 py-2 hover:bg-kemenag-soft hover:text-kemenag-deep">Beranda</a>
-                    <a href="{{ route('posts.index') }}" class="rounded-md px-3 py-2 hover:bg-kemenag-soft hover:text-kemenag-deep">Berita</a>
-                    <a href="{{ route('announcements.index') }}" class="rounded-md px-3 py-2 hover:bg-kemenag-soft hover:text-kemenag-deep">Pengumuman</a>
-                    <a href="{{ route('gallery.index') }}" class="rounded-md px-3 py-2 hover:bg-kemenag-soft hover:text-kemenag-deep">Galeri</a>
-                    <a href="{{ route('layanan') }}" class="rounded-md px-3 py-2 hover:bg-kemenag-soft hover:text-kemenag-deep">Layanan</a>
-                    <a href="{{ route('contact') }}" class="rounded-md px-3 py-2 hover:bg-kemenag-soft hover:text-kemenag-deep">Kontak</a>
-                @endforelse
-            </nav>
-
-            <div class="flex items-center gap-2">
+            <div class="flex shrink-0 items-center gap-2">
                 <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-kemenag/20 text-kemenag-deep" aria-label="Cari berita" @click="searchOpen = !searchOpen">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3.5-3.5"/></svg>
                 </button>
                 @if ($site->ppdb_url)
                     <a href="{{ $site->ppdb_url }}" target="_blank" rel="noopener" class="btn-primary hidden sm:inline-flex">PPDB</a>
                 @endif
-                <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-kemenag/20 text-kemenag-deep xl:hidden" aria-label="Buka menu" @click="open = !open" :aria-expanded="open.toString()">
+                <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-kemenag/20 text-kemenag-deep lg:hidden" aria-label="Buka menu" @click="open = !open" :aria-expanded="open.toString()">
                     <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
                     <svg x-cloak x-show="open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
                 </button>
             </div>
         </div>
+
+        <nav class="hidden border-t border-kemenag/10 bg-kemenag-soft/40 lg:block">
+            <div class="site-container flex flex-wrap items-center gap-x-1 gap-y-1 py-2 text-[13px] font-semibold text-ink/80">
+                @forelse ($headerMenus as $item)
+                    <a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif class="rounded-md px-2.5 py-1.5 transition hover:bg-white hover:text-kemenag-deep">{{ $item->label }}</a>
+                @empty
+                    <a href="{{ route('home') }}" class="rounded-md px-2.5 py-1.5 hover:bg-white hover:text-kemenag-deep">Beranda</a>
+                    <a href="{{ route('posts.index') }}" class="rounded-md px-2.5 py-1.5 hover:bg-white hover:text-kemenag-deep">Berita</a>
+                    <a href="{{ route('announcements.index') }}" class="rounded-md px-2.5 py-1.5 hover:bg-white hover:text-kemenag-deep">Pengumuman</a>
+                    <a href="{{ route('gallery.index') }}" class="rounded-md px-2.5 py-1.5 hover:bg-white hover:text-kemenag-deep">Galeri</a>
+                    <a href="{{ route('layanan') }}" class="rounded-md px-2.5 py-1.5 hover:bg-white hover:text-kemenag-deep">Layanan</a>
+                    <a href="{{ route('contact') }}" class="rounded-md px-2.5 py-1.5 hover:bg-white hover:text-kemenag-deep">Kontak</a>
+                @endforelse
+            </div>
+        </nav>
 
         <div x-cloak x-show="searchOpen" x-transition class="border-t border-kemenag/10 bg-white">
             <form action="{{ route('posts.index') }}" method="get" class="site-container flex gap-2 py-3">
@@ -110,7 +112,7 @@
             </form>
         </div>
 
-        <div x-cloak x-show="open" x-transition class="border-t border-kemenag/10 bg-white xl:hidden">
+        <div x-cloak x-show="open" x-transition class="border-t border-kemenag/10 bg-white lg:hidden">
             <nav class="site-container flex flex-col gap-1 py-3 text-sm font-semibold">
                 @forelse ($headerMenus as $item)
                     <a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif class="rounded-md px-3 py-3 hover:bg-kemenag-soft" @click="open = false">{{ $item->label }}</a>
