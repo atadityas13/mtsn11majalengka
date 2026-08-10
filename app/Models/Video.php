@@ -39,6 +39,12 @@ class Video extends Model
             if (blank($video->type) && filled($video->video_url)) {
                 $video->type = $video->suggestsShort() ? 'short' : 'video';
             }
+
+            if ($video->requiresCoverImage() && blank($video->cover_image)) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'cover_image' => 'Cover wajib diisi untuk video TikTok dan Instagram.',
+                ]);
+            }
         });
     }
 
@@ -181,6 +187,11 @@ class Video extends Model
             'instagram' => 'Instagram',
             default => 'Video',
         };
+    }
+
+    public function requiresCoverImage(): bool
+    {
+        return in_array($this->platform(), ['tiktok', 'instagram'], true);
     }
 
     protected function youtubeEmbedUrl(bool $autoplay, bool $mute, bool $shortsUi = false): ?string

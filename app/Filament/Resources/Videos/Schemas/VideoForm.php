@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Videos\Schemas;
 
+use App\Models\Video;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -49,7 +51,7 @@ class VideoForm
                             return;
                         }
 
-                        $probe = new \App\Models\Video(['video_url' => $state]);
+                        $probe = new Video(['video_url' => $state]);
                         if ($probe->suggestsShort() && $get('type') !== 'video') {
                             $set('type', 'short');
                         }
@@ -61,7 +63,11 @@ class VideoForm
                     ->image()
                     ->directory('videos')
                     ->disk('public')
-                    ->helperText('Disarankan untuk TikTok & Instagram (thumbnail otomatis hanya YouTube)')
+                    ->required(fn (Get $get): bool => self::urlRequiresCover($get('video_url')))
+                    ->markAsRequired(fn (Get $get): bool => self::urlRequiresCover($get('video_url')))
+                    ->helperText(fn (Get $get): string => self::urlRequiresCover($get('video_url'))
+                        ? 'Wajib untuk TikTok & Instagram (tidak ada thumbnail otomatis).'
+                        : 'Opsional untuk YouTube (jika kosong pakai thumbnail YouTube).')
                     ->columnSpanFull(),
                 Textarea::make('description')
                     ->label('Deskripsi')
@@ -80,5 +86,14 @@ class VideoForm
                     ->default(true),
             ])
             ->columns(2);
+    }
+
+    protected static function urlRequiresCover(?string $url): bool
+    {
+        if (blank($url)) {
+            return false;
+        }
+
+        return (new Video(['video_url' => $url]))->requiresCoverImage();
     }
 }

@@ -72,4 +72,33 @@ class VideoEmbedTest extends TestCase
         $this->assertTrue((new Video(['video_url' => 'https://www.instagram.com/reel/abc/']))->suggestsShort());
         $this->assertFalse((new Video(['video_url' => 'https://www.youtube.com/watch?v=abc123']))->suggestsShort());
     }
+
+    public function test_tiktok_and_instagram_require_cover(): void
+    {
+        $this->assertTrue((new Video([
+            'video_url' => 'https://www.tiktok.com/@u/video/1',
+        ]))->requiresCoverImage());
+
+        $this->assertTrue((new Video([
+            'video_url' => 'https://www.instagram.com/reel/abc/',
+        ]))->requiresCoverImage());
+
+        $this->assertFalse((new Video([
+            'video_url' => 'https://www.youtube.com/shorts/abc123',
+        ]))->requiresCoverImage());
+    }
+
+    public function test_saving_tiktok_without_cover_fails(): void
+    {
+        $this->expectException(\Illuminate\Validation\ValidationException::class);
+
+        Video::query()->create([
+            'title' => 'Tanpa Cover',
+            'slug' => 'tanpa-cover-tiktok',
+            'type' => 'short',
+            'video_url' => 'https://www.tiktok.com/@u/video/1234567890123456789',
+            'is_published' => true,
+            'published_at' => now(),
+        ]);
+    }
 }
