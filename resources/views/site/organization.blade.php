@@ -20,69 +20,84 @@
     @if ($nodes->isEmpty())
         <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada data struktur. Tambahkan dari panel admin.</p>
     @else
-        <div class="org-chart overflow-x-auto pb-4" x-reveal>
-            {{-- Level 0: Komite sejajar Kamad --}}
-            <div class="org-row org-row-top">
-                @foreach (['komite-madrasah', 'kepala-madrasah'] as $slug)
-                    @if ($node = $n($slug))
-                        @include('site.partials.org-node', ['node' => $node, 'variant' => 'top'])
-                    @endif
-                @endforeach
-            </div>
+        <div class="org-chart overflow-x-auto pb-2" x-reveal>
+            <div class="org-tree">
+                {{-- Puncak: Komite sejajar Kamad --}}
+                <div class="org-level org-level-peer">
+                    @foreach (['komite-madrasah', 'kepala-madrasah'] as $slug)
+                        @if ($node = $n($slug))
+                            @include('site.partials.org-node', ['node' => $node, 'variant' => 'top'])
+                        @endif
+                    @endforeach
+                </div>
 
-            <div class="org-spine" aria-hidden="true"></div>
+                <div class="org-vline" aria-hidden="true"></div>
 
-            {{-- Level 1: Kaur di tengah + 4 Waka --}}
-            <div class="org-row org-row-mid">
-                @foreach (['kaur-tata-usaha', 'waka-kurikulum', 'waka-kesiswaan', 'waka-sarpras', 'waka-humas'] as $slug)
-                    @if ($node = $n($slug))
-                        @include('site.partials.org-node', ['node' => $node, 'variant' => $slug === 'kaur-tata-usaha' ? 'kaur' : 'waka'])
-                    @endif
-                @endforeach
-            </div>
+                {{-- Cabang: Kaur + 4 Waka, anak langsung di bawah masing-masing --}}
+                <div class="org-branches">
+                    <div class="org-hline" aria-hidden="true"></div>
 
-            <div class="org-spine org-spine-soft" aria-hidden="true"></div>
+                    <div class="org-branch">
+                        @if ($node = $n('kaur-tata-usaha'))
+                            @include('site.partials.org-node', ['node' => $node, 'variant' => 'kaur'])
+                        @endif
+                        <div class="org-vline org-vline-sm" aria-hidden="true"></div>
+                        <div class="org-children">
+                            @foreach (['bendahara', 'staf-tu'] as $slug)
+                                @if ($node = $n($slug))
+                                    @include('site.partials.org-node', ['node' => $node, 'variant' => 'staff'])
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
 
-            {{-- Level 2: staf Kaur + unit di bawah Waka --}}
-            <div class="org-row org-row-staff">
-                <div class="org-group">
-                    <p class="org-group-label">Di bawah Kaur TU</p>
-                    <div class="org-group-nodes">
-                        @foreach (['bendahara', 'staf-tu'] as $slug)
-                            @if ($node = $n($slug))
+                    <div class="org-branch">
+                        @if ($node = $n('waka-kurikulum'))
+                            @include('site.partials.org-node', ['node' => $node, 'variant' => 'waka'])
+                        @endif
+                        <div class="org-vline org-vline-sm" aria-hidden="true"></div>
+                        <div class="org-children">
+                            @foreach (['kepala-laboratorium', 'kepala-perpustakaan'] as $slug)
+                                @if ($node = $n($slug))
+                                    @include('site.partials.org-node', ['node' => $node, 'variant' => 'staff'])
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="org-branch">
+                        @if ($node = $n('waka-kesiswaan'))
+                            @include('site.partials.org-node', ['node' => $node, 'variant' => 'waka'])
+                        @endif
+                        <div class="org-vline org-vline-sm" aria-hidden="true"></div>
+                        <div class="org-children">
+                            @if ($node = $n('kepala-asrama'))
                                 @include('site.partials.org-node', ['node' => $node, 'variant' => 'staff'])
                             @endif
-                        @endforeach
+                        </div>
                     </div>
-                </div>
-                <div class="org-group">
-                    <p class="org-group-label">Di bawah Waka Kurikulum</p>
-                    <div class="org-group-nodes">
-                        @foreach (['kepala-laboratorium', 'kepala-perpustakaan'] as $slug)
-                            @if ($node = $n($slug))
-                                @include('site.partials.org-node', ['node' => $node, 'variant' => 'staff'])
-                            @endif
-                        @endforeach
+
+                    <div class="org-branch">
+                        @if ($node = $n('waka-sarpras'))
+                            @include('site.partials.org-node', ['node' => $node, 'variant' => 'waka'])
+                        @endif
                     </div>
-                </div>
-                <div class="org-group">
-                    <p class="org-group-label">Di bawah Waka Kesiswaan</p>
-                    <div class="org-group-nodes">
-                        @if ($node = $n('kepala-asrama'))
-                            @include('site.partials.org-node', ['node' => $node, 'variant' => 'staff'])
+
+                    <div class="org-branch">
+                        @if ($node = $n('waka-humas'))
+                            @include('site.partials.org-node', ['node' => $node, 'variant' => 'waka'])
                         @endif
                     </div>
                 </div>
+
+                <div class="org-vline" aria-hidden="true"></div>
+
+                @if ($node = $n('guru-wali-kelas'))
+                    <div class="org-level org-level-collective">
+                        @include('site.partials.org-node', ['node' => $node, 'variant' => 'collective'])
+                    </div>
+                @endif
             </div>
-
-            <div class="org-spine" aria-hidden="true"></div>
-
-            {{-- Level 3: Guru kolektif --}}
-            @if ($node = $n('guru-wali-kelas'))
-                <div class="org-row org-row-collective">
-                    @include('site.partials.org-node', ['node' => $node, 'variant' => 'collective'])
-                </div>
-            @endif
         </div>
 
         <div class="mt-6 text-center text-sm text-muted">
