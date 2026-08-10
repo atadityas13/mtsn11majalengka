@@ -176,13 +176,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const setMuteUi = (slide, muted) => {
             const btn = slide.querySelector('[data-short-mute]');
-            const icon = slide.querySelector('[data-mute-icon]');
-            if (!btn || !icon) {
+            if (!btn) {
                 return;
             }
             btn.classList.toggle('is-muted', muted);
             btn.setAttribute('aria-label', muted ? 'Nyalakan suara' : 'Matikan suara');
-            icon.textContent = muted ? 'OFF' : 'ON';
         };
 
         const setPausedUi = (slide, paused) => {
@@ -214,10 +212,26 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const applySound = (slide) => {
+            const platform = slide.dataset.platform || 'youtube';
             const controller = getController(slide);
-            if (!controller) {
+
+            if (platform === 'tiktok') {
+                const iframe = slide.querySelector('[data-short-player] iframe');
+                const nextSrc = soundOn
+                    ? slide.dataset.embedSound || slide.dataset.embed
+                    : slide.dataset.embed;
+                if (iframe && nextSrc) {
+                    iframe.src = nextSrc;
+                }
+                setMuteUi(slide, !soundOn);
                 return;
             }
+
+            if (!controller) {
+                setMuteUi(slide, !soundOn);
+                return;
+            }
+
             if (soundOn) {
                 controller.unMute?.();
                 controller.setVolume?.(100);
@@ -237,7 +251,10 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const loadIframeFallback = (slide, platform) => {
-            const embed = slide.dataset.embed;
+            const embed =
+                platform === 'tiktok' && soundOn
+                    ? slide.dataset.embedSound || slide.dataset.embed
+                    : slide.dataset.embed;
             const external = slide.dataset.externalUrl;
             const player = slide.querySelector('[data-short-player]');
             const label = platform === 'instagram' ? 'Instagram' : platform === 'tiktok' ? 'TikTok' : 'sumber';
@@ -284,6 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     player.innerHTML = '';
                 },
             };
+
+            setMuteUi(slide, !soundOn);
         };
 
         const loadYouTube = async (slide) => {

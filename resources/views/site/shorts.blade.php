@@ -33,12 +33,16 @@
     @else
         <div class="short-feed" data-short-feed>
             @foreach ($shorts as $index => $short)
+                @php
+                    $platform = $short->platform();
+                @endphp
                 <section
                     class="short-slide"
                     data-short-slide
-                    data-platform="{{ $short->platform() }}"
+                    data-platform="{{ $platform }}"
                     data-youtube-id="{{ $short->youtubeId() }}"
                     data-embed="{{ $short->embedUrl(autoplay: true, mute: true, shortsUi: true) }}"
+                    data-embed-sound="{{ $short->embedUrl(autoplay: true, mute: false, shortsUi: true) }}"
                     data-external-url="{{ $short->video_url }}"
                 >
                     <div class="short-media">
@@ -50,7 +54,13 @@
                             </div>
                         @endif
                         <div class="short-player" data-short-player></div>
-                        @if ($short->platform() === 'youtube')
+
+                        {{-- Lapisan transparan: gesture geser ke feed, bukan ke iframe --}}
+                        @if (in_array($platform, ['tiktok', 'instagram'], true))
+                            <div class="short-scroll-layer" aria-hidden="true"></div>
+                        @endif
+
+                        @if ($platform === 'youtube')
                             <button type="button" class="short-hit" data-short-hit aria-label="Pause atau putar"></button>
                             <div class="short-play" data-short-play aria-hidden="true">
                                 <span>▶</span>
@@ -59,15 +69,32 @@
                     </div>
 
                     <div class="short-actions">
-                        @if ($short->platform() === 'youtube')
+                        @if (in_array($platform, ['youtube', 'tiktok'], true))
                             <button type="button" class="short-action-btn is-muted" data-short-mute aria-label="Nyalakan suara">
-                                <span data-mute-icon>OFF</span>
-                                <small>Suara</small>
+                                <span class="short-speaker" aria-hidden="true">
+                                    <svg class="speaker-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"></polygon>
+                                        <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+                                        <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+                                    </svg>
+                                    <svg class="speaker-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"></polygon>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                </span>
                             </button>
-                        @else
-                            <a href="{{ $short->video_url }}" target="_blank" rel="noopener noreferrer" class="short-action-btn">
-                                <span>↗</span>
-                                <small>{{ $short->platformLabel() }}</small>
+                        @endif
+
+                        @if ($platform === 'instagram')
+                            <a href="{{ $short->video_url }}" target="_blank" rel="noopener noreferrer" class="short-action-btn" aria-label="Buka di Instagram">
+                                <span class="short-speaker" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                </span>
                             </a>
                         @endif
                     </div>

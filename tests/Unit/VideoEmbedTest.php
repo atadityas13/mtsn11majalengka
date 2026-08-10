@@ -49,6 +49,17 @@ class VideoEmbedTest extends TestCase
         ];
     }
 
+    public function test_tiktok_embed_respects_mute_flag(): void
+    {
+        $video = new Video([
+            'video_url' => 'https://www.tiktok.com/@scout2015/video/6718339390042524933',
+            'type' => 'short',
+        ]);
+
+        $this->assertStringContainsString('muted=1', (string) $video->embedUrl(autoplay: true, mute: true));
+        $this->assertStringContainsString('muted=0', (string) $video->embedUrl(autoplay: true, mute: false));
+    }
+
     public function test_suggests_short_for_vertical_platforms(): void
     {
         $this->assertTrue((new Video(['video_url' => 'https://www.youtube.com/shorts/abc123']))->suggestsShort());

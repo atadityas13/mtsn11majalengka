@@ -156,7 +156,7 @@ class Video extends Model
     {
         return match ($this->platform()) {
             'youtube' => $this->youtubeEmbedUrl($autoplay, $mute, $shortsUi),
-            'tiktok' => $this->tiktokEmbedUrl(),
+            'tiktok' => $this->tiktokEmbedUrl($mute),
             'instagram' => $this->instagramEmbedUrl(),
             default => null,
         };
@@ -219,7 +219,7 @@ class Video extends Model
         return 'https://www.youtube.com/embed/'.$id.'?'.http_build_query($params);
     }
 
-    protected function tiktokEmbedUrl(): ?string
+    protected function tiktokEmbedUrl(bool $mute = true): ?string
     {
         $id = $this->tiktokId();
 
@@ -230,12 +230,13 @@ class Video extends Model
         return 'https://www.tiktok.com/player/v1/'.$id.'?'.http_build_query([
             'autoplay' => 1,
             'loop' => 1,
+            'muted' => $mute ? 1 : 0,
             'music_info' => 0,
             'description' => 0,
-            'controls' => 1,
+            'controls' => 0,
             'progress_bar' => 1,
-            'play_button' => 1,
-            'volume_control' => 1,
+            'play_button' => 0,
+            'volume_control' => 0,
             'fullscreen_button' => 0,
             'timestamp' => 0,
             'rel' => 0,
