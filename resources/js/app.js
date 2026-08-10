@@ -356,17 +356,37 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const loadInstagram = (slide) => {
-            // Meta memblokir putar Reels di iframe situs lain.
-            // Tampilkan cover + CTA "Putar di Instagram" (link native di blade).
-            const poster = slide.querySelector('[data-short-poster]');
+            const embed = slide.dataset.embed;
+            const external = slide.dataset.externalUrl;
             const player = slide.querySelector('[data-short-player]');
-            poster?.classList.remove('is-hidden');
-            if (player) {
-                player.innerHTML = '';
+            const poster = slide.querySelector('[data-short-poster]');
+            if (!player) {
+                return;
             }
-            setInteractive(slide, false);
+
+            player.innerHTML = '';
+
+            if (!embed) {
+                const box = document.createElement('div');
+                box.className = 'short-external-fallback';
+                box.innerHTML = `
+                    <p>URL Instagram belum bisa dibaca.</p>
+                    ${external ? `<a href="${external}" target="_blank" rel="noopener noreferrer">Buka di Instagram</a>` : ''}
+                `;
+                player.appendChild(box);
+                poster?.classList.add('is-hidden');
+                return;
+            }
+
+            // Kembalikan embed interaktif (bisa di-play), scroll via strip atas/bawah + tombol next.
+            const iframe = createEmbedIframe('instagram', embed);
+            player.appendChild(iframe);
+            poster?.classList.add('is-hidden');
+
             slide._shortController = {
-                destroy: () => {},
+                destroy: () => {
+                    player.innerHTML = '';
+                },
             };
         };
 

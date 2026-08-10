@@ -475,8 +475,7 @@
         pointer-events: none;
     }
 
-    .short-player iframe.is-tiktok,
-    .short-player iframe.is-instagram {
+    .short-player iframe.is-tiktok {
         position: absolute;
         inset: 0;
         width: 100%;
@@ -487,9 +486,15 @@
         z-index: 1;
     }
 
-    .short-slide.is-interactive .short-player iframe.is-instagram,
-    .short-slide.is-interactive .short-player iframe.is-tiktok {
+    .short-player iframe.is-instagram {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #000;
         pointer-events: auto;
+        z-index: 1;
     }
 
     .short-slide.platform-instagram .short-player,
@@ -499,8 +504,9 @@
         background: #000;
     }
 
-    .short-slide.platform-instagram.is-interactive .short-player {
-        z-index: 4;
+    .short-slide.platform-instagram .short-player {
+        /* Biarkan area tengah Reels bisa diklik untuk play */
+        z-index: 2;
     }
 
     .short-scroll-layer {
@@ -511,8 +517,25 @@
         background: transparent;
     }
 
-    .short-slide.is-interactive .short-scroll-layer {
-        display: none;
+    .short-scroll-strip {
+        position: absolute;
+        left: 0;
+        right: 4.75rem;
+        z-index: 4;
+        touch-action: pan-y;
+        background: transparent;
+    }
+
+    .short-scroll-strip-top {
+        top: 0;
+        height: 16vh;
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .short-scroll-strip-bottom {
+        bottom: 0;
+        height: 24vh;
+        padding-bottom: env(safe-area-inset-bottom);
     }
 
     .short-external-fallback {
@@ -569,47 +592,6 @@
 
     .short-play.is-visible {
         opacity: 1;
-    }
-
-    .short-play[data-ig-play] {
-        pointer-events: auto;
-        z-index: 4;
-        cursor: pointer;
-    }
-
-    .short-ig-cta {
-        position: absolute;
-        inset: 0;
-        z-index: 4;
-        display: grid;
-        place-content: center;
-        gap: 0.75rem;
-        padding: 1.5rem;
-        text-align: center;
-        text-decoration: none;
-        color: white;
-        background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0.25));
-    }
-
-    .short-ig-cta-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-inline: auto;
-        border-radius: 9999px;
-        background: rgb(10 122 62 / 0.95);
-        padding: 0.85rem 1.35rem;
-        font-size: 0.95rem;
-        font-weight: 800;
-        box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
-    }
-
-    .short-ig-cta-note {
-        max-width: 16rem;
-        margin-inline: auto;
-        font-size: 0.75rem;
-        line-height: 1.4;
-        color: rgb(255 255 255 / 0.75);
     }
 
     .short-play span {

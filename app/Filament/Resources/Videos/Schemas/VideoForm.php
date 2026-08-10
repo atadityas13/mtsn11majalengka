@@ -54,14 +54,14 @@ class VideoForm
                             $set('type', 'short');
                         }
                     })
-                    ->helperText('YouTube/Shorts & TikTok diputar di situs. Instagram Reels dibuka di aplikasi/web Instagram (Meta memblokir putar langsung di situs lain).')
+                    ->helperText('YouTube/Shorts & TikTok diputar di situs. Instagram Reels: ketuk tengah untuk putar, geser di area atas/bawah untuk pindah short.')
                     ->columnSpanFull(),
                 FileUpload::make('cover_image')
                     ->label('Cover')
                     ->image()
                     ->directory('videos')
                     ->disk('public')
-                    ->helperText('Sangat disarankan untuk TikTok & Instagram (thumbnail otomatis hanya YouTube)')
+                    ->helperText('Disarankan untuk TikTok & Instagram (thumbnail otomatis hanya YouTube)')
                     ->columnSpanFull(),
                 Textarea::make('description')
                     ->label('Deskripsi')

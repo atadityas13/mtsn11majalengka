@@ -59,24 +59,17 @@
                             <div class="short-scroll-layer" data-short-scroll-layer aria-hidden="true"></div>
                         @endif
 
+                        {{-- Zona geser untuk Reels: tengah iframe bisa diklik putar, atas/bawah untuk scroll --}}
+                        @if ($platform === 'instagram')
+                            <div class="short-scroll-strip short-scroll-strip-top" aria-hidden="true"></div>
+                            <div class="short-scroll-strip short-scroll-strip-bottom" aria-hidden="true"></div>
+                        @endif
+
                         @if ($platform === 'youtube')
                             <button type="button" class="short-hit" data-short-hit aria-label="Pause atau putar"></button>
                             <div class="short-play" data-short-play aria-hidden="true">
                                 <span>▶</span>
                             </div>
-                        @endif
-
-                        @if ($platform === 'instagram')
-                            <a
-                                href="{{ $short->video_url }}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="short-ig-cta"
-                                data-ig-open
-                            >
-                                <span class="short-ig-cta-btn">▶ Putar di Instagram</span>
-                                <span class="short-ig-cta-note">Reels tidak bisa diputar langsung di situs (batasan Meta)</span>
-                            </a>
                         @endif
                     </div>
 
@@ -125,7 +118,9 @@
                         <div class="short-meta">
                             <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-gold">{{ $short->platformLabel() }} · {{ $site->school_name }}</p>
                             <h1 class="mt-1 font-display text-xl font-extrabold leading-snug">{{ $short->title }}</h1>
-                            @if ($short->description)
+                            @if ($platform === 'instagram')
+                                <p class="mt-2 text-xs text-white/70">Ketuk tengah untuk putar · geser di area atas/bawah untuk short berikutnya</p>
+                            @elseif ($short->description)
                                 <p class="mt-2 line-clamp-3 text-sm text-white/75">{{ $short->description }}</p>
                             @endif
                         </div>
