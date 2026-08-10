@@ -90,32 +90,13 @@
     </div>
 
     @if ($posts->isNotEmpty())
-        <div
-            class="grid gap-6 lg:grid-cols-[1.4fr_1fr]"
-            x-data="{
-                active: 0,
-                total: {{ $posts->count() }},
-                timer: null,
-                start() {
-                    this.stop();
-                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || this.total < 2) return;
-                    this.timer = setInterval(() => { this.active = (this.active + 1) % this.total }, 5500);
-                },
-                stop() { if (this.timer) clearInterval(this.timer) },
-                go(i) { this.active = i; this.start() },
-                next() { this.active = (this.active + 1) % this.total; this.start() },
-                prev() { this.active = (this.active - 1 + this.total) % this.total; this.start() }
-            }"
-            x-init="start()"
-            @mouseenter="stop()"
-            @mouseleave="start()"
-        >
+        <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]" data-news-slider data-interval="4000">
             <div class="relative overflow-hidden rounded-2xl bg-kemenag-dark text-white shadow-lg">
                 <div class="relative aspect-[16/10] md:aspect-[16/9]">
                     @foreach ($posts as $index => $post)
                         <div
-                            class="absolute inset-0 transition-opacity duration-500 ease-out"
-                            :class="active === {{ $index }} ? 'opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0'"
+                            class="news-slide absolute inset-0 transition-opacity duration-500 ease-out {{ $index === 0 ? 'is-active opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0' }}"
+                            data-slide="{{ $index }}"
                         >
                             <a href="{{ route('posts.show', $post->slug) }}" class="group relative block h-full">
                                 @if ($post->cover_image)
@@ -139,13 +120,18 @@
 
                 @if ($posts->count() > 1)
                     <div class="absolute bottom-4 right-4 z-10 flex items-center gap-2">
-                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" @click="prev()" aria-label="Sebelumnya">‹</button>
-                        <div class="flex gap-1.5 px-1">
+                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" data-slider-prev aria-label="Sebelumnya">‹</button>
+                        <div class="flex gap-1.5 px-1" data-slider-dots>
                             @foreach ($posts as $index => $post)
-                                <button type="button" class="h-2 rounded-full transition-all" :class="active === {{ $index }} ? 'w-5 bg-gold' : 'w-2 bg-white/40'" @click="go({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
+                                <button
+                                    type="button"
+                                    class="news-dot h-2 rounded-full transition-all {{ $index === 0 ? 'w-5 bg-gold' : 'w-2 bg-white/40' }}"
+                                    data-slider-dot="{{ $index }}"
+                                    aria-label="Slide {{ $index + 1 }}"
+                                ></button>
                             @endforeach
                         </div>
-                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" @click="next()" aria-label="Berikutnya">›</button>
+                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" data-slider-next aria-label="Berikutnya">›</button>
                     </div>
                 @endif
             </div>
@@ -154,9 +140,8 @@
                 @foreach ($posts as $index => $post)
                     <button
                         type="button"
-                        class="group flex w-full gap-4 p-4 text-left transition hover:bg-kemenag-soft/60"
-                        :class="active === {{ $index }} ? 'bg-kemenag-soft/80' : ''"
-                        @click="go({{ $index }})"
+                        class="news-list-item group flex w-full gap-4 p-4 text-left transition hover:bg-kemenag-soft/60 {{ $index === 0 ? 'bg-kemenag-soft/80' : '' }}"
+                        data-slider-item="{{ $index }}"
                     >
                         <div class="h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-kemenag-soft">
                             @if ($post->cover_image)
@@ -167,8 +152,8 @@
                         </div>
                         <div class="min-w-0 flex-1">
                             <p class="news-meta">{{ optional($post->published_at)->translatedFormat('d M Y') }}</p>
-                            <h3 class="mt-1 line-clamp-2 font-display text-lg font-bold leading-snug text-kemenag-deep group-hover:text-kemenag" :class="active === {{ $index }} ? 'text-kemenag' : ''">{{ $post->title }}</h3>
-                            <a href="{{ route('posts.show', $post->slug) }}" class="mt-2 inline-block text-xs font-bold text-kemenag hover:underline" @click.stop>Baca →</a>
+                            <h3 class="news-list-title mt-1 line-clamp-2 font-display text-lg font-bold leading-snug text-kemenag-deep group-hover:text-kemenag {{ $index === 0 ? 'text-kemenag' : '' }}">{{ $post->title }}</h3>
+                            <a href="{{ route('posts.show', $post->slug) }}" class="mt-2 inline-block text-xs font-bold text-kemenag hover:underline" data-slider-link>Baca →</a>
                         </div>
                     </button>
                 @endforeach
