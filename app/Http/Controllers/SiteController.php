@@ -25,7 +25,7 @@ class SiteController extends Controller
     public function home(): View
     {
         return view('site.home', [
-            'posts' => Post::published()->with('category')->latest('published_at')->take(6)->get(),
+            'posts' => Post::published()->with('category')->latest('published_at')->take(5)->get(),
             'announcements' => Announcement::published()->orderByDesc('is_pinned')->latest('published_on')->take(5)->get(),
             'agendas' => Agenda::published()->where('starts_at', '>=', now()->subDay())->orderBy('starts_at')->take(4)->get(),
             'gallery' => GalleryItem::published()->orderBy('sort_order')->take(6)->get(),
