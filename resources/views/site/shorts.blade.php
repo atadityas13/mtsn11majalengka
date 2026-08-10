@@ -55,7 +55,7 @@
                         @endif
                         <div class="short-player" data-short-player></div>
 
-                        @if (in_array($platform, ['tiktok', 'instagram'], true))
+                        @if ($platform === 'tiktok')
                             <div class="short-scroll-layer" data-short-scroll-layer aria-hidden="true"></div>
                         @endif
 
@@ -67,9 +67,16 @@
                         @endif
 
                         @if ($platform === 'instagram')
-                            <button type="button" class="short-play is-visible" data-ig-play aria-label="Putar Reels">
-                                <span>▶</span>
-                            </button>
+                            <a
+                                href="{{ $short->video_url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="short-ig-cta"
+                                data-ig-open
+                            >
+                                <span class="short-ig-cta-btn">▶ Putar di Instagram</span>
+                                <span class="short-ig-cta-note">Reels tidak bisa diputar langsung di situs (batasan Meta)</span>
+                            </a>
                         @endif
                     </div>
 

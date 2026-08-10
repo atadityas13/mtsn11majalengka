@@ -55,7 +55,16 @@
         @forelse ($videos as $video)
             <article class="overflow-hidden rounded-2xl border border-kemenag/10 bg-white shadow-sm">
                 <div class="{{ in_array($video->platform(), ['tiktok', 'instagram'], true) ? 'aspect-[9/16] max-h-[28rem] mx-auto' : 'aspect-video' }} overflow-hidden bg-kemenag-dark">
-                    @if ($embed = $video->embedUrl())
+                    @if ($video->platform() === 'instagram')
+                        <a href="{{ $video->video_url }}" target="_blank" rel="noopener noreferrer" class="relative block h-full w-full">
+                            @if ($thumb = $video->thumbnailUrl())
+                                <img src="{{ $thumb }}" alt="{{ $video->title }}" class="h-full w-full object-cover">
+                            @else
+                                <div class="flex h-full items-center justify-center bg-kemenag text-white">Instagram</div>
+                            @endif
+                            <span class="absolute inset-x-4 bottom-4 rounded-md bg-black/70 px-3 py-2 text-center text-xs font-bold text-white">Putar di Instagram →</span>
+                        </a>
+                    @elseif ($embed = $video->embedUrl())
                         <iframe
                             src="{{ $embed }}"
                             title="{{ $video->title }}"

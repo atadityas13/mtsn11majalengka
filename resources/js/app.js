@@ -229,12 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const player = slide.querySelector('[data-short-player]');
             const poster = slide.querySelector('[data-short-poster]');
-            const igPlay = slide.querySelector('[data-ig-play]');
             if (player) {
                 player.innerHTML = '';
             }
             poster?.classList.remove('is-hidden');
-            igPlay?.classList.add('is-visible');
             slide.classList.remove(
                 'is-playing',
                 'is-interactive',
@@ -357,48 +355,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 800);
         };
 
-        const loadInstagram = (slide, { interactive = false } = {}) => {
-            const embed = slide.dataset.embed;
-            const external = slide.dataset.externalUrl;
-            const player = slide.querySelector('[data-short-player]');
+        const loadInstagram = (slide) => {
+            // Meta memblokir putar Reels di iframe situs lain.
+            // Tampilkan cover + CTA "Putar di Instagram" (link native di blade).
             const poster = slide.querySelector('[data-short-poster]');
-            const igPlay = slide.querySelector('[data-ig-play]');
-            if (!player) {
-                return;
-            }
-
-            if (!embed) {
+            const player = slide.querySelector('[data-short-player]');
+            poster?.classList.remove('is-hidden');
+            if (player) {
                 player.innerHTML = '';
-                const box = document.createElement('div');
-                box.className = 'short-external-fallback';
-                box.innerHTML = `
-                    <p>Embed Instagram tidak tersedia dari URL ini.</p>
-                    ${external ? `<a href="${external}" target="_blank" rel="noopener noreferrer">Buka di Instagram</a>` : ''}
-                `;
-                player.appendChild(box);
-                return;
             }
-
-            player.innerHTML = '';
-            const iframe = createEmbedIframe('instagram', embed);
-            player.appendChild(iframe);
-
+            setInteractive(slide, false);
             slide._shortController = {
-                destroy: () => {
-                    player.innerHTML = '';
-                },
+                destroy: () => {},
             };
-
-            if (interactive) {
-                poster?.classList.add('is-hidden');
-                igPlay?.classList.remove('is-visible');
-                setInteractive(slide, true);
-            } else {
-                // Tunggu user ketuk Putar — poster tetap terlihat.
-                poster?.classList.remove('is-hidden');
-                igPlay?.classList.add('is-visible');
-                setInteractive(slide, false);
-            }
         };
 
         const loadYouTube = async (slide) => {
@@ -507,8 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (platform === 'instagram') {
-                // Jangan auto-play iframe IG (sering blank). Tunggu tombol Putar.
-                loadInstagram(slide, { interactive: false });
+                loadInstagram(slide);
                 return;
             }
         };
@@ -555,31 +523,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 applySound(slide);
             });
 
-            slide.querySelector('[data-ig-play]')?.addEventListener('click', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                // Aktifkan iframe interaktif agar tombol play IG bisa diklik.
-                loadInstagram(slide, { interactive: true });
-            });
-
             slide.querySelector('[data-short-next]')?.addEventListener('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
                 goNext(slide);
             });
-
-            // Geser mouse wheel tetap memindah short walau iframe IG aktif.
-            slide.addEventListener(
-                'wheel',
-                (event) => {
-                    if (!slide.classList.contains('is-interactive')) {
-                        return;
-                    }
-                    shortFeed.scrollTop += event.deltaY;
-                    event.preventDefault();
-                },
-                { passive: false }
-            );
         });
     }
 });
