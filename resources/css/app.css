@@ -1,0 +1,36 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --color-madrasah: #1b5e3b;
+    --color-madrasah-dark: #0f3d26;
+    --color-gold: #c4a35a;
+    --color-cream: #f3efe6;
+    --color-ink: #1c241c;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-cream text-ink antialiased;
+    }
+}
+
+@layer utilities {
+    .font-display {
+        font-family: var(--font-display);
+    }
+
+    .text-balance {
+        text-wrap: balance;
+    }
+}
