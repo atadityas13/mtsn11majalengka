@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->brandName('MTsN 11 CMS')
             ->colors([
-                'primary' => Color::hex('#1B5E3B'),
+                'primary' => Color::hex('#0a7a3e'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

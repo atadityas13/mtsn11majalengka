@@ -43,8 +43,8 @@ class SiteSetting extends Model
         return static::query()->firstOrCreate([], [
             'school_name' => 'MTsN 11 Majalengka',
             'tagline' => 'Madrasah Tsanawiyah Negeri — Membentuk Generasi Beriman, Berilmu, dan Berakhlak',
-            'primary_color' => '#1B5E3B',
-            'accent_color' => '#C4A35A',
+            'primary_color' => '#0a7a3e',
+            'accent_color' => '#d4a017',
             'hero_title' => 'MTsN 11 Majalengka',
             'hero_subtitle' => 'Madrasah negeri di bawah Kementerian Agama RI yang berkomitmen mencetak generasi Qur\'ani, berprestasi, dan berkarakter.',
             'hero_cta_label' => 'Info PPDB',

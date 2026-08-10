@@ -3,135 +3,215 @@
 @section('title', $site->school_name.' — '.$site->tagline)
 
 @section('content')
-<section class="relative min-h-[92vh] overflow-hidden bg-madrasah-dark text-white">
-    <div class="absolute inset-0">
-        @if ($site->hero_image)
-            <img src="{{ asset('storage/'.$site->hero_image) }}" alt="" class="h-full w-full object-cover opacity-45">
-        @else
-            <div class="h-full w-full bg-[radial-gradient(circle_at_20%_20%,#2f7a52_0%,transparent_45%),radial-gradient(circle_at_80%_10%,#c4a35a33_0%,transparent_35%),linear-gradient(160deg,#0f3d26,#1b5e3b_45%,#0b2818)]"></div>
-        @endif
-        <div class="absolute inset-0 bg-gradient-to-t from-madrasah-dark via-madrasah-dark/55 to-madrasah-dark/25"></div>
-    </div>
+{{-- Hero institusional: brand first + grafis Kemenag-like --}}
+<section class="relative overflow-hidden text-white">
+    <div class="absolute inset-0 pattern-mesh"></div>
+    <div class="absolute -right-24 -top-24 h-80 w-80 rounded-full ornament-arc opacity-40"></div>
+    <div class="absolute -bottom-32 -left-16 h-96 w-96 rounded-full ornament-arc opacity-30"></div>
+    @if ($site->hero_image)
+        <img src="{{ asset('storage/'.$site->hero_image) }}" alt="" class="absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-luminosity">
+    @endif
+    <div class="absolute inset-0 bg-gradient-to-r from-kemenag-dark/95 via-kemenag-deep/80 to-transparent"></div>
 
-    <div class="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-end px-4 pb-16 pt-32 md:px-6 md:pb-20">
-        <p class="animate-[fadeUp_0.8s_ease_both] text-xs font-semibold uppercase tracking-[0.28em] text-[var(--accent)]">Madrasah Tsanawiyah Negeri</p>
-        <h1 class="animate-[fadeUp_1s_ease_both] mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-balance md:text-7xl">
-            {{ $site->hero_title ?: $site->school_name }}
-        </h1>
-        <p class="animate-[fadeUp_1.2s_ease_both] mt-5 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
-            {{ $site->hero_subtitle ?: $site->tagline }}
-        </p>
-        <div class="animate-[fadeUp_1.35s_ease_both] mt-8 flex flex-wrap gap-3">
-            @if ($site->hero_cta_url)
-                <a href="{{ $site->hero_cta_url }}" target="_blank" rel="noopener" class="rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-madrasah-dark transition hover:brightness-105">
-                    {{ $site->hero_cta_label ?: 'Info PPDB' }}
-                </a>
-            @endif
-            <a href="{{ route('posts.index') }}" class="rounded-full border border-white/35 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
-                Lihat Berita
-            </a>
-        </div>
-    </div>
-</section>
-
-<section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-    <div class="flex items-end justify-between gap-4">
+    <div class="site-container relative grid min-h-[78vh] items-center gap-10 py-16 md:grid-cols-[1.15fr_0.85fr] md:py-20">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-madrasah">Berita Terbaru</p>
-            <h2 class="mt-2 font-display text-4xl text-madrasah-dark md:text-5xl">Kabar Madrasah</h2>
+            <p class="animate-rise section-label !text-gold">
+                <span class="text-gold">Portal Resmi Madrasah</span>
+            </p>
+            <h1 class="animate-rise-delay mt-5 max-w-3xl font-display text-5xl font-extrabold leading-[1.02] text-balance md:text-6xl lg:text-7xl">
+                {{ $site->hero_title ?: $site->school_name }}
+            </h1>
+            <p class="animate-rise-delay-2 mt-5 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
+                {{ $site->hero_subtitle ?: $site->tagline }}
+            </p>
+            <div class="animate-rise-delay-2 mt-8 flex flex-wrap gap-3">
+                @if ($site->hero_cta_url)
+                    <a href="{{ $site->hero_cta_url }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-extrabold text-kemenag-dark transition hover:brightness-110">
+                        {{ $site->hero_cta_label ?: 'Info PPDB' }}
+                    </a>
+                @endif
+                <a href="{{ route('posts.index') }}" class="btn-ghost">Berita Terbaru</a>
+            </div>
         </div>
-        <a href="{{ route('posts.index') }}" class="text-sm font-semibold text-madrasah hover:underline">Semua berita</a>
-    </div>
 
-    <div class="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        @forelse ($posts as $post)
-            <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                <div class="aspect-[16/10] overflow-hidden bg-madrasah/10">
-                    @if ($post->cover_image)
-                        <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
+        <div class="animate-rise-delay relative hidden md:block">
+            <div class="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-1 shadow-2xl backdrop-blur">
+                <div class="aspect-[4/5] overflow-hidden rounded-xl bg-kemenag-dark/40">
+                    @if ($site->hero_image)
+                        <img src="{{ asset('storage/'.$site->hero_image) }}" alt="{{ $site->school_name }}" class="h-full w-full object-cover">
                     @else
-                        <div class="flex h-full items-center justify-center bg-gradient-to-br from-madrasah to-madrasah-dark font-display text-3xl text-white/80">MTsN 11</div>
+                        <div class="flex h-full flex-col justify-between bg-[linear-gradient(160deg,#0a7a3e,#043f1f)] p-8">
+                            <div class="h-24 w-24 rounded-full ornament-arc"></div>
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-[0.2em] text-gold">MTsN 11</p>
+                                <p class="mt-2 font-display text-3xl font-extrabold leading-tight">Majalengka</p>
+                                <p class="mt-3 text-sm text-white/70">Cingambul · Jawa Barat</p>
+                            </div>
+                        </div>
                     @endif
                 </div>
-                <p class="mt-4 text-xs uppercase tracking-[0.16em] text-madrasah/70">
-                    {{ optional($post->published_at)->translatedFormat('d F Y') }}
-                    @if ($post->author_name) · {{ $post->author_name }} @endif
-                </p>
-                <h3 class="mt-2 font-display text-2xl leading-snug text-madrasah-dark transition group-hover:text-madrasah">{{ $post->title }}</h3>
-                <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-ink/70">{{ $post->excerpt }}</p>
-            </a>
-        @empty
-            <p class="text-ink/60">Belum ada berita. Tambahkan dari panel admin.</p>
-        @endforelse
+            </div>
+            <div class="absolute -bottom-5 -left-5 rounded-xl bg-white px-4 py-3 text-kemenag-deep shadow-xl">
+                <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Status</p>
+                <p class="font-display text-2xl font-extrabold">Akreditasi {{ $site->accreditation_value ?: 'A' }}</p>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="border-y border-madrasah/10 bg-white/60">
-    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-[1fr_1.1fr] md:px-6 md:py-20">
+{{-- Featured news ala portal berita Kemenag --}}
+<section class="site-container py-14 md:py-16">
+    <div class="mb-8 flex items-end justify-between gap-4">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-madrasah">Pengumuman</p>
-            <h2 class="mt-2 font-display text-4xl text-madrasah-dark">Informasi penting</h2>
-            <a href="{{ route('announcements.index') }}" class="mt-4 inline-block text-sm font-semibold text-madrasah hover:underline">Lihat semua</a>
+            <p class="section-label">Berita</p>
+            <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">Berita Terbaru</h2>
         </div>
-        <div class="space-y-5">
+        <a href="{{ route('posts.index') }}" class="text-sm font-bold text-kemenag hover:underline">Lihat semua →</a>
+    </div>
+
+    @php $featured = $posts->first(); $rest = $posts->skip(1)->take(4); @endphp
+
+    @if ($featured)
+        <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+            <a href="{{ route('posts.show', $featured->slug) }}" class="group relative overflow-hidden rounded-2xl bg-kemenag-dark text-white shadow-lg">
+                <div class="aspect-[16/10] md:aspect-[16/9]">
+                    @if ($featured->cover_image)
+                        <img src="{{ asset('storage/'.$featured->cover_image) }}" alt="{{ $featured->title }}" class="h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-105">
+                    @else
+                        <div class="h-full w-full pattern-mesh"></div>
+                    @endif
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-kemenag-dark via-kemenag-dark/40 to-transparent"></div>
+                <div class="absolute inset-x-0 bottom-0 p-6 md:p-8">
+                    <p class="news-meta !text-gold">{{ optional($featured->published_at)->translatedFormat('d F Y') }}</p>
+                    <h3 class="mt-2 font-display text-2xl font-extrabold leading-snug md:text-3xl">{{ $featured->title }}</h3>
+                    <p class="mt-3 line-clamp-2 max-w-2xl text-sm text-white/75">{{ $featured->excerpt }}</p>
+                </div>
+            </a>
+
+            <div class="flex flex-col divide-y divide-kemenag/10 overflow-hidden rounded-2xl border border-kemenag/10 bg-white shadow-sm">
+                @forelse ($rest as $post)
+                    <a href="{{ route('posts.show', $post->slug) }}" class="group flex gap-4 p-4 transition hover:bg-kemenag-soft/60">
+                        <div class="h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-kemenag-soft">
+                            @if ($post->cover_image)
+                                <img src="{{ asset('storage/'.$post->cover_image) }}" alt="" class="h-full w-full object-cover transition group-hover:scale-105">
+                            @else
+                                <div class="flex h-full items-center justify-center bg-kemenag text-xs font-bold text-white">MTsN</div>
+                            @endif
+                        </div>
+                        <div class="min-w-0">
+                            <p class="news-meta">{{ optional($post->published_at)->translatedFormat('d M Y') }}</p>
+                            <h3 class="mt-1 line-clamp-2 font-display text-lg font-bold leading-snug text-kemenag-deep group-hover:text-kemenag">{{ $post->title }}</h3>
+                        </div>
+                    </a>
+                @empty
+                    <p class="p-6 text-sm text-muted">Tambahkan berita lain dari panel admin.</p>
+                @endforelse
+            </div>
+        </div>
+    @else
+        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada berita. Tambahkan dari panel admin.</p>
+    @endif
+</section>
+
+{{-- Layanan cepat (hub Kemenag style) --}}
+<section class="bg-white py-12">
+    <div class="site-container">
+        <div class="mb-8 flex items-end justify-between">
+            <div>
+                <p class="section-label">Layanan</p>
+                <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep">Akses Layanan</h2>
+            </div>
+            <a href="{{ route('layanan') }}" class="text-sm font-bold text-kemenag hover:underline">Semua layanan →</a>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            @foreach ([
+                ['PPDB Online', $site->ppdb_url, 'Pendaftaran peserta didik baru', '01'],
+                ['Rapor Digital', $site->rdm_url, 'Portal RDM madrasah', '02'],
+                ['Kemenag RI', $site->kemenag_url, 'Portal Kementerian Agama', '03'],
+                ['Kontak', route('contact'), 'Alamat & saluran komunikasi', '04'],
+            ] as [$label, $url, $desc, $num])
+                @if ($url)
+                    <a href="{{ $url }}" @if(\Illuminate\Support\Str::startsWith($url, 'http')) target="_blank" rel="noopener" @endif class="group relative overflow-hidden rounded-2xl border border-kemenag/10 bg-surface p-5 transition hover:-translate-y-0.5 hover:border-kemenag/30 hover:shadow-md">
+                        <span class="font-display text-4xl font-extrabold text-kemenag/15 transition group-hover:text-kemenag/25">{{ $num }}</span>
+                        <p class="mt-3 font-display text-xl font-extrabold text-kemenag-deep">{{ $label }}</p>
+                        <p class="mt-1 text-sm text-muted">{{ $desc }}</p>
+                    </a>
+                @endif
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- Pengumuman + Agenda --}}
+<section class="site-container grid gap-6 py-14 md:grid-cols-2 md:py-16">
+    <div class="rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm md:p-8">
+        <div class="flex items-center justify-between gap-3">
+            <div>
+                <p class="section-label">Pengumuman</p>
+                <h2 class="mt-2 font-display text-2xl font-extrabold text-kemenag-deep">Informasi penting</h2>
+            </div>
+            <a href="{{ route('announcements.index') }}" class="text-sm font-bold text-kemenag hover:underline">Semua</a>
+        </div>
+        <div class="mt-6 space-y-4">
             @forelse ($announcements as $item)
-                <article class="border-b border-madrasah/10 pb-5">
-                    <div class="flex items-center gap-3 text-xs uppercase tracking-[0.14em] text-madrasah/70">
-                        @if ($item->is_pinned)<span class="rounded-full bg-[var(--accent)]/20 px-2 py-0.5 text-madrasah-dark">Pinned</span>@endif
-                        <span>{{ optional($item->published_on)->translatedFormat('d M Y') }}</span>
+                <article class="border-b border-kemenag/10 pb-4 last:border-0">
+                    <div class="flex flex-wrap items-center gap-2">
+                        @if ($item->is_pinned)
+                            <span class="rounded bg-gold/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-kemenag-deep">Pinned</span>
+                        @endif
+                        <span class="news-meta">{{ optional($item->published_on)->translatedFormat('d M Y') }}</span>
                     </div>
-                    <h3 class="mt-2 font-display text-2xl text-madrasah-dark">{{ $item->title }}</h3>
-                    <div class="prose prose-sm mt-2 max-w-none text-ink/70">{!! \Illuminate\Support\Str::limit(strip_tags($item->body), 160) !!}</div>
+                    <h3 class="mt-2 font-display text-xl font-bold text-kemenag-deep">{{ $item->title }}</h3>
+                    <p class="mt-1 text-sm text-muted">{{ \Illuminate\Support\Str::limit(strip_tags($item->body), 120) }}</p>
                 </article>
             @empty
-                <p class="text-ink/60">Belum ada pengumuman.</p>
+                <p class="text-sm text-muted">Belum ada pengumuman.</p>
+            @endforelse
+        </div>
+    </div>
+
+    <div class="rounded-2xl border border-kemenag/10 bg-kemenag-deep p-6 text-white shadow-sm md:p-8">
+        <div class="flex items-center justify-between gap-3">
+            <div>
+                <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">Agenda</p>
+                <h2 class="mt-2 font-display text-2xl font-extrabold">Kegiatan mendatang</h2>
+            </div>
+            <a href="{{ route('agendas.index') }}" class="text-sm font-bold text-gold hover:underline">Semua</a>
+        </div>
+        <div class="mt-6 space-y-4">
+            @forelse ($agendas as $item)
+                <article class="rounded-xl bg-white/10 p-4 backdrop-blur">
+                    <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-gold">{{ $item->starts_at->translatedFormat('d F Y · H:i') }}</p>
+                    <h3 class="mt-2 font-display text-xl font-bold">{{ $item->title }}</h3>
+                    @if ($item->location)
+                        <p class="mt-1 text-sm text-white/70">{{ $item->location }}</p>
+                    @endif
+                </article>
+            @empty
+                <p class="text-sm text-white/70">Belum ada agenda terjadwal.</p>
             @endforelse
         </div>
     </div>
 </section>
 
-<section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-    <div class="flex items-end justify-between gap-4">
-        <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-madrasah">Agenda</p>
-            <h2 class="mt-2 font-display text-4xl text-madrasah-dark">Kegiatan mendatang</h2>
-        </div>
-        <a href="{{ route('agendas.index') }}" class="text-sm font-semibold text-madrasah hover:underline">Semua agenda</a>
-    </div>
-    <div class="mt-8 grid gap-4 md:grid-cols-2">
-        @forelse ($agendas as $item)
-            <article class="border border-madrasah/10 bg-white/70 p-5">
-                <p class="text-xs uppercase tracking-[0.14em] text-madrasah/70">
-                    {{ $item->starts_at->translatedFormat('d F Y · H:i') }}
-                </p>
-                <h3 class="mt-2 font-display text-2xl text-madrasah-dark">{{ $item->title }}</h3>
-                @if ($item->location)
-                    <p class="mt-2 text-sm text-ink/65">{{ $item->location }}</p>
-                @endif
-            </article>
-        @empty
-            <p class="text-ink/60">Belum ada agenda terjadwal.</p>
-        @endforelse
-    </div>
-</section>
-
 @if ($gallery->isNotEmpty())
-<section class="border-y border-madrasah/10 bg-white/50">
-    <div class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-        <div class="flex items-end justify-between gap-4">
+<section class="bg-white py-14 md:py-16">
+    <div class="site-container">
+        <div class="mb-8 flex items-end justify-between gap-4">
             <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.22em] text-madrasah">Galeri</p>
-                <h2 class="mt-2 font-display text-4xl text-madrasah-dark">Dokumentasi kegiatan</h2>
+                <p class="section-label">Galeri</p>
+                <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep">Dokumentasi</h2>
             </div>
-            <a href="{{ route('gallery.index') }}" class="text-sm font-semibold text-madrasah hover:underline">Lihat galeri</a>
+            <a href="{{ route('gallery.index') }}" class="text-sm font-bold text-kemenag hover:underline">Lihat galeri →</a>
         </div>
-        <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($gallery as $item)
-                <figure class="group overflow-hidden">
-                    <div class="aspect-[4/3] overflow-hidden bg-madrasah/10">
+                <figure class="group overflow-hidden rounded-2xl">
+                    <div class="aspect-[4/3] overflow-hidden">
                         <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->title }}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
                     </div>
-                    <figcaption class="mt-3 font-display text-xl text-madrasah-dark">{{ $item->title }}</figcaption>
+                    <figcaption class="mt-3 px-1 font-display text-lg font-bold text-kemenag-deep">{{ $item->title }}</figcaption>
                 </figure>
             @endforeach
         </div>
@@ -139,56 +219,24 @@
 </section>
 @endif
 
-<section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-madrasah">Layanan</p>
-    <h2 class="mt-2 font-display text-4xl text-madrasah-dark">Akses cepat</h2>
-    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        @foreach ([
-            ['label' => 'PPDB Online', 'url' => $site->ppdb_url, 'desc' => 'Pendaftaran peserta didik baru'],
-            ['label' => 'Rapor Digital', 'url' => $site->rdm_url, 'desc' => 'Portal RDM madrasah'],
-            ['label' => 'Kemenag RI', 'url' => $site->kemenag_url, 'desc' => 'Portal Kementerian Agama'],
-            ['label' => 'Kontak', 'url' => route('contact'), 'desc' => 'Alamat dan saluran komunikasi'],
-        ] as $service)
-            @if ($service['url'])
-                <a href="{{ $service['url'] }}" @if(\Illuminate\Support\Str::startsWith($service['url'], 'http')) target="_blank" rel="noopener" @endif class="border border-madrasah/15 bg-white/70 p-5 transition hover:border-madrasah/40 hover:bg-white">
-                    <p class="font-display text-2xl text-madrasah-dark">{{ $service['label'] }}</p>
-                    <p class="mt-2 text-sm text-ink/65">{{ $service['desc'] }}</p>
-                </a>
-            @endif
-        @endforeach
-    </div>
-</section>
-
 @if ($site->headmaster_name)
-<section class="bg-madrasah text-white">
-    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-[0.8fr_1.2fr] md:px-6 md:py-20">
-        <div class="aspect-[4/5] overflow-hidden bg-white/10">
+<section class="relative overflow-hidden py-14 md:py-16">
+    <div class="absolute inset-0 pattern-mesh opacity-95"></div>
+    <div class="site-container relative grid items-center gap-8 md:grid-cols-[0.75fr_1.25fr]">
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-2xl">
             @if ($site->headmaster_photo)
                 <img src="{{ asset('storage/'.$site->headmaster_photo) }}" alt="{{ $site->headmaster_name }}" class="h-full w-full object-cover">
             @else
-                <div class="flex h-full items-center justify-center font-display text-5xl text-white/40">KM</div>
+                <div class="flex h-full items-center justify-center font-display text-5xl font-extrabold text-white/35">KM</div>
             @endif
         </div>
-        <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--accent)]">Sambutan</p>
-            <blockquote class="mt-4 font-display text-3xl leading-snug text-balance md:text-4xl">“{{ $site->headmaster_quote }}”</blockquote>
-            <p class="mt-6 text-lg font-semibold">{{ $site->headmaster_name }}</p>
+        <div class="text-white">
+            <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">Sambutan Kepala Madrasah</p>
+            <blockquote class="mt-4 font-display text-3xl font-bold leading-snug text-balance md:text-4xl">“{{ $site->headmaster_quote }}”</blockquote>
+            <p class="mt-6 text-lg font-extrabold">{{ $site->headmaster_name }}</p>
             <p class="text-sm text-white/70">{{ $site->headmaster_title }}</p>
-            @if ($site->accreditation_value)
-                <p class="mt-8 inline-flex items-center gap-3 border border-white/20 px-4 py-2 text-sm">
-                    <span class="text-[var(--accent)]">{{ $site->accreditation_label ?: 'Akreditasi' }}</span>
-                    <span class="font-display text-2xl">{{ $site->accreditation_value }}</span>
-                </p>
-            @endif
         </div>
     </div>
 </section>
 @endif
-
-<style>
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-</style>
 @endsection
