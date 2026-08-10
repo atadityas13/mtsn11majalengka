@@ -91,6 +91,55 @@
 </section>
 
 <section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+    <div class="flex items-end justify-between gap-4">
+        <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-madrasah">Agenda</p>
+            <h2 class="mt-2 font-display text-4xl text-madrasah-dark">Kegiatan mendatang</h2>
+        </div>
+        <a href="{{ route('agendas.index') }}" class="text-sm font-semibold text-madrasah hover:underline">Semua agenda</a>
+    </div>
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+        @forelse ($agendas as $item)
+            <article class="border border-madrasah/10 bg-white/70 p-5">
+                <p class="text-xs uppercase tracking-[0.14em] text-madrasah/70">
+                    {{ $item->starts_at->translatedFormat('d F Y · H:i') }}
+                </p>
+                <h3 class="mt-2 font-display text-2xl text-madrasah-dark">{{ $item->title }}</h3>
+                @if ($item->location)
+                    <p class="mt-2 text-sm text-ink/65">{{ $item->location }}</p>
+                @endif
+            </article>
+        @empty
+            <p class="text-ink/60">Belum ada agenda terjadwal.</p>
+        @endforelse
+    </div>
+</section>
+
+@if ($gallery->isNotEmpty())
+<section class="border-y border-madrasah/10 bg-white/50">
+    <div class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+        <div class="flex items-end justify-between gap-4">
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.22em] text-madrasah">Galeri</p>
+                <h2 class="mt-2 font-display text-4xl text-madrasah-dark">Dokumentasi kegiatan</h2>
+            </div>
+            <a href="{{ route('gallery.index') }}" class="text-sm font-semibold text-madrasah hover:underline">Lihat galeri</a>
+        </div>
+        <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach ($gallery as $item)
+                <figure class="group overflow-hidden">
+                    <div class="aspect-[4/3] overflow-hidden bg-madrasah/10">
+                        <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->title }}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
+                    </div>
+                    <figcaption class="mt-3 font-display text-xl text-madrasah-dark">{{ $item->title }}</figcaption>
+                </figure>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+<section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
     <p class="text-xs font-semibold uppercase tracking-[0.22em] text-madrasah">Layanan</p>
     <h2 class="mt-2 font-display text-4xl text-madrasah-dark">Akses cepat</h2>
     <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
