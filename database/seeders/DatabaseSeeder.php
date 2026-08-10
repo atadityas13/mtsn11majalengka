@@ -2,12 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\Achievement;
 use App\Models\Agenda;
 use App\Models\Announcement;
+use App\Models\Category;
 use App\Models\MenuItem;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\SiteSetting;
+use App\Models\StaffMember;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -31,11 +34,13 @@ class DatabaseSeeder extends Seeder
             ['label' => 'Berita', 'url' => '/berita', 'sort_order' => 2],
             ['label' => 'Pengumuman', 'url' => '/pengumuman', 'sort_order' => 3],
             ['label' => 'Agenda', 'url' => '/agenda', 'sort_order' => 4],
-            ['label' => 'Galeri', 'url' => '/galeri', 'sort_order' => 5],
-            ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 6],
-            ['label' => 'Akademik', 'url' => '/halaman/akademik', 'sort_order' => 7],
-            ['label' => 'Layanan', 'url' => '/layanan', 'sort_order' => 8],
-            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 9],
+            ['label' => 'Prestasi', 'url' => '/prestasi', 'sort_order' => 5],
+            ['label' => 'Galeri', 'url' => '/galeri', 'sort_order' => 6],
+            ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 7],
+            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 8],
+            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 9],
+            ['label' => 'Layanan', 'url' => '/layanan', 'sort_order' => 10],
+            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 11],
         ];
 
         foreach ($headerMenus as $menu) {
@@ -47,9 +52,10 @@ class DatabaseSeeder extends Seeder
 
         $footerMenus = [
             ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 1],
-            ['label' => 'Akademik', 'url' => '/halaman/akademik', 'sort_order' => 2],
-            ['label' => 'Info PPDB', 'url' => '/halaman/ppdb', 'sort_order' => 3],
-            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 4],
+            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 2],
+            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 3],
+            ['label' => 'Info PPDB', 'url' => '/halaman/ppdb', 'sort_order' => 4],
+            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 5],
         ];
 
         foreach ($footerMenus as $menu) {
@@ -58,6 +64,19 @@ class DatabaseSeeder extends Seeder
                 [...$menu, 'location' => 'footer', 'is_visible' => true, 'open_in_new_tab' => false]
             );
         }
+
+        $kegiatan = Category::query()->updateOrCreate(
+            ['slug' => 'kegiatan'],
+            ['name' => 'Kegiatan', 'color' => '#0a7a3e', 'is_active' => true]
+        );
+        $keagamaan = Category::query()->updateOrCreate(
+            ['slug' => 'keagamaan'],
+            ['name' => 'Keagamaan', 'color' => '#d4a017', 'is_active' => true]
+        );
+        $prestasiCat = Category::query()->updateOrCreate(
+            ['slug' => 'prestasi'],
+            ['name' => 'Prestasi', 'color' => '#065c2e', 'is_active' => true]
+        );
 
         Page::query()->updateOrCreate(
             ['slug' => 'profil'],
@@ -92,6 +111,7 @@ class DatabaseSeeder extends Seeder
         Post::query()->updateOrCreate(
             ['slug' => 'upacara-bendera-semarakkan-awal-pekan'],
             [
+                'category_id' => $kegiatan->id,
                 'title' => 'Upacara Bendera Semarakkan Awal Pekan, Tingkatkan Nasionalisme',
                 'excerpt' => 'Upacara bendera rutin mingguan dilaksanakan di MTsN 11 Majalengka bersama seluruh warga madrasah.',
                 'body' => '<p>Upacara bendera rutin mingguan kembali dilaksanakan di MTs Negeri 11 Majalengka. Kegiatan diikuti oleh seluruh siswa, guru, dan tenaga kependidikan sebagai bagian dari pembinaan karakter dan nasionalisme.</p>',
@@ -104,6 +124,7 @@ class DatabaseSeeder extends Seeder
         Post::query()->updateOrCreate(
             ['slug' => 'kegiatan-qiroah-rutin-generasi-qurani'],
             [
+                'category_id' => $keagamaan->id,
                 'title' => 'Bentuk Generasi Qur\'ani, MTsN 11 Gelar Qiro\'ah Rutin',
                 'excerpt' => 'Program pembelajaran Al-Qur\'an digelar secara konsisten setiap pekan untuk memperkuat literasi Qur\'ani siswa.',
                 'body' => '<p>Dalam upaya mencetak generasi muda yang Qur\'ani, MTsN 11 Majalengka secara konsisten menggelar program pembelajaran Al-Qur\'an atau qiro\'ah sebagai pembiasaan ibadah dan literasi keagamaan.</p>',
@@ -116,6 +137,7 @@ class DatabaseSeeder extends Seeder
         Post::query()->updateOrCreate(
             ['slug' => 'apresiasi-prestasi-jambore-cingambul'],
             [
+                'category_id' => $prestasiCat->id,
                 'title' => 'Kepala Madrasah Apresiasi Prestasi Siswa di Jambore Kecamatan',
                 'excerpt' => 'Kepala Madrasah memberikan apresiasi kepada siswa-siswi berprestasi pada jambore tingkat ranting Kecamatan Cingambul.',
                 'body' => '<p>Kepala Madrasah MTsN 11 Majalengka memberikan apresiasi kepada para siswa yang menorehkan prestasi pada kegiatan jambore tingkat ranting Kecamatan Cingambul.</p>',
@@ -142,6 +164,48 @@ class DatabaseSeeder extends Seeder
                 'location' => 'Ruang Guru MTsN 11 Majalengka',
                 'starts_at' => now()->addDays(2)->setTime(9, 0),
                 'ends_at' => now()->addDays(2)->setTime(11, 0),
+                'is_published' => true,
+            ]
+        );
+
+        Achievement::query()->updateOrCreate(
+            ['title' => 'Juara 1 Lomba Voli Putra Kecamatan'],
+            [
+                'level' => 'Kecamatan',
+                'winner_name' => 'Tim Voli MTsN 11 Majalengka',
+                'achieved_on' => now()->subMonths(2)->toDateString(),
+                'description' => 'Contoh prestasi — ganti foto dan detail dari panel admin.',
+                'sort_order' => 1,
+                'is_published' => true,
+            ]
+        );
+
+        Achievement::query()->updateOrCreate(
+            ['title' => 'Apresiasi Jambore Ranting Cingambul'],
+            [
+                'level' => 'Kecamatan',
+                'winner_name' => 'Pramuka MTsN 11',
+                'achieved_on' => now()->subMonths(4)->toDateString(),
+                'description' => 'Prestasi kepramukaan tingkat ranting.',
+                'sort_order' => 2,
+                'is_published' => true,
+            ]
+        );
+
+        StaffMember::query()->updateOrCreate(
+            ['name' => 'H. Jajang Gunawan, S.Ag., M.Pd.I'],
+            [
+                'role' => 'Kepala Madrasah',
+                'sort_order' => 1,
+                'is_published' => true,
+            ]
+        );
+
+        StaffMember::query()->updateOrCreate(
+            ['name' => 'Contoh Guru Mapel'],
+            [
+                'role' => 'Guru Mapel',
+                'sort_order' => 2,
                 'is_published' => true,
             ]
         );

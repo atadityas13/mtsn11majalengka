@@ -10,6 +10,7 @@ class SiteSetting extends Model
         'school_name',
         'tagline',
         'logo',
+        'kemenag_logo',
         'favicon',
         'primary_color',
         'accent_color',
@@ -25,8 +26,13 @@ class SiteSetting extends Model
         'accreditation_label',
         'accreditation_value',
         'npsn',
+        'students_count',
+        'teachers_count',
+        'classes_count',
+        'founded_year',
         'address',
         'phone',
+        'whatsapp_number',
         'email',
         'map_embed_url',
         'ppdb_url',
@@ -35,6 +41,7 @@ class SiteSetting extends Model
         'facebook_url',
         'instagram_url',
         'youtube_url',
+        'profile_video_url',
         'footer_text',
     ];
 
@@ -55,13 +62,48 @@ class SiteSetting extends Model
             'accreditation_label' => 'Akreditasi',
             'accreditation_value' => 'A',
             'npsn' => '20278893',
+            'students_count' => 420,
+            'teachers_count' => 32,
+            'classes_count' => 15,
+            'founded_year' => 2015,
             'address' => 'Kp. Sindanghurip RT 05/04 No. 21, Maniis, Cingambul, Majalengka 45467',
             'phone' => '(0233) 8319182',
+            'whatsapp_number' => '6281234567890',
             'email' => 'mtsn11majalengka@gmail.com',
             'ppdb_url' => 'https://ppdb.mtsn11majalengka.sch.id/',
             'rdm_url' => 'https://rdm.mtsn11majalengka.sch.id/',
             'kemenag_url' => 'https://kemenag.go.id/',
+            'profile_video_url' => null,
             'footer_text' => 'MTsN 11 Majalengka — Naungan Kementerian Agama Republik Indonesia',
         ]);
+    }
+
+    public function whatsappLink(?string $message = null): ?string
+    {
+        if (blank($this->whatsapp_number)) {
+            return null;
+        }
+
+        $number = preg_replace('/\D+/', '', $this->whatsapp_number);
+        $text = $message ?: 'Assalamu\'alaikum, saya ingin bertanya tentang MTsN 11 Majalengka.';
+
+        return 'https://wa.me/'.$number.'?text='.urlencode($text);
+    }
+
+    public function youtubeEmbedUrl(): ?string
+    {
+        if (blank($this->profile_video_url)) {
+            return null;
+        }
+
+        if (str_contains($this->profile_video_url, 'youtube.com/embed/')) {
+            return $this->profile_video_url;
+        }
+
+        if (preg_match('/(?:youtu\.be\/|v=)([^&]+)/', $this->profile_video_url, $matches)) {
+            return 'https://www.youtube.com/embed/'.$matches[1];
+        }
+
+        return $this->profile_video_url;
     }
 }

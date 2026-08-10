@@ -9,14 +9,17 @@
         <p class="mt-3 max-w-2xl text-white/75">Akses layanan digital madrasah dan tautan resmi terkait.</p>
     </div>
 </div>
-<section class="site-container grid gap-4 py-12 sm:grid-cols-2">
+<section class="site-container grid gap-4 py-12 sm:grid-cols-2 lg:grid-cols-3">
     @foreach ([
-        ['PPDB Online', $settings->ppdb_url, 'Portal penerimaan peserta didik baru'],
-        ['Rapor Digital Madrasah', $settings->rdm_url, 'Login rapor digital siswa'],
-        ['Kementerian Agama', $settings->kemenag_url, 'Portal resmi Kemenag RI'],
-    ] as [$label, $url, $desc])
+        ['PPDB Online', $settings->ppdb_url, 'Portal penerimaan peserta didik baru', true],
+        ['Rapor Digital Madrasah', $settings->rdm_url, 'Login rapor digital siswa', true],
+        ['Kementerian Agama', $settings->kemenag_url, 'Portal resmi Kemenag RI', true],
+        ['Unduhan Dokumen', route('downloads.index'), 'Berkas dan dokumen madrasah', false],
+        ['Guru & Tendik', route('staff.index'), 'Profil tenaga pendidik', false],
+        ['Prestasi', route('achievements.index'), 'Capaian siswa dan madrasah', false],
+    ] as [$label, $url, $desc, $external])
         @if ($url)
-            <a href="{{ $url }}" target="_blank" rel="noopener" class="rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-kemenag/30 hover:shadow-md">
+            <a href="{{ $url }}" @if($external) target="_blank" rel="noopener" @endif class="rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-kemenag/30 hover:shadow-md">
                 <h2 class="font-display text-2xl font-extrabold text-kemenag-deep">{{ $label }}</h2>
                 <p class="mt-2 text-sm text-muted">{{ $desc }}</p>
             </a>

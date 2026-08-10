@@ -59,6 +59,26 @@
     </div>
 </section>
 
+{{-- Statistik singkat --}}
+<section class="border-b border-kemenag/10 bg-white">
+    <div class="site-container grid grid-cols-2 gap-4 py-8 md:grid-cols-4 md:gap-6" x-reveal>
+        @foreach ([
+            ['Siswa', $site->students_count, 'Peserta didik aktif'],
+            ['Guru', $site->teachers_count, 'Tenaga pendidik'],
+            ['Rombel', $site->classes_count, 'Kelas belajar'],
+            ['Berdiri', $site->founded_year, 'Tahun berdiri'],
+        ] as [$label, $value, $hint])
+            @if ($value)
+                <div class="rounded-2xl border border-kemenag/10 bg-surface px-4 py-5 text-center">
+                    <p class="font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">{{ $value }}</p>
+                    <p class="mt-1 text-sm font-bold text-kemenag">{{ $label }}</p>
+                    <p class="mt-1 text-xs text-muted">{{ $hint }}</p>
+                </div>
+            @endif
+        @endforeach
+    </div>
+</section>
+
 {{-- Featured news --}}
 <section class="site-container py-14 md:py-16">
     <div class="mb-8 flex items-end justify-between gap-4" x-reveal>
@@ -213,6 +233,64 @@
                     </div>
                     <figcaption class="mt-3 px-1 font-display text-lg font-bold text-kemenag-deep transition group-hover:text-kemenag">{{ $item->title }}</figcaption>
                 </figure>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- Video profil --}}
+@if ($site->youtubeEmbedUrl())
+<section class="site-container py-14 md:py-16">
+    <div class="mb-8" x-reveal>
+        <p class="section-label">Profil</p>
+        <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">Video Profil Madrasah</h2>
+        <p class="mt-2 max-w-2xl text-sm text-muted">Video dapat diganti kapan saja dari panel admin (Pengaturan Situs).</p>
+    </div>
+    <div class="overflow-hidden rounded-2xl border border-kemenag/10 bg-kemenag-dark shadow-lg" x-reveal="reveal-scale">
+        <div class="aspect-video">
+            <iframe
+                src="{{ $site->youtubeEmbedUrl() }}"
+                title="Video profil {{ $site->school_name }}"
+                class="h-full w-full"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+            ></iframe>
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- Prestasi --}}
+@if ($achievements->isNotEmpty())
+<section class="bg-white py-14 md:py-16">
+    <div class="site-container">
+        <div class="mb-8 flex items-end justify-between gap-4" x-reveal>
+            <div>
+                <p class="section-label">Prestasi</p>
+                <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep">Capaian Madrasah</h2>
+            </div>
+            <a href="{{ route('achievements.index') }}" class="text-sm font-bold text-kemenag hover:underline">Semua prestasi →</a>
+        </div>
+        <div class="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach ($achievements as $item)
+                <article class="reveal overflow-hidden rounded-2xl border border-kemenag/10 bg-surface" x-reveal>
+                    @if ($item->image)
+                        <div class="aspect-[16/10] overflow-hidden">
+                            <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->title }}" class="img-zoom h-full w-full object-cover">
+                        </div>
+                    @endif
+                    <div class="p-5">
+                        @if ($item->level)
+                            <p class="news-meta text-kemenag">{{ $item->level }}</p>
+                        @endif
+                        <h3 class="mt-2 font-display text-xl font-extrabold text-kemenag-deep">{{ $item->title }}</h3>
+                        @if ($item->winner_name)
+                            <p class="mt-2 text-sm text-muted">{{ $item->winner_name }}</p>
+                        @endif
+                    </div>
+                </article>
             @endforeach
         </div>
     </div>

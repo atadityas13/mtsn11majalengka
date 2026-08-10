@@ -67,8 +67,25 @@ class ManageSiteSettings extends Page
                                     TextInput::make('accreditation_value')
                                         ->label('Nilai akreditasi')
                                         ->maxLength(50),
+                                    TextInput::make('founded_year')
+                                        ->label('Tahun berdiri')
+                                        ->numeric(),
+                                    TextInput::make('students_count')
+                                        ->label('Jumlah siswa')
+                                        ->numeric(),
+                                    TextInput::make('teachers_count')
+                                        ->label('Jumlah guru')
+                                        ->numeric(),
+                                    TextInput::make('classes_count')
+                                        ->label('Jumlah rombel')
+                                        ->numeric(),
                                     FileUpload::make('logo')
-                                        ->label('Logo')
+                                        ->label('Logo madrasah (bisa diganti)')
+                                        ->image()
+                                        ->directory('settings')
+                                        ->disk('public'),
+                                    FileUpload::make('kemenag_logo')
+                                        ->label('Logo Kemenag (bisa diganti)')
                                         ->image()
                                         ->directory('settings')
                                         ->disk('public'),
@@ -79,10 +96,10 @@ class ManageSiteSettings extends Page
                                         ->disk('public'),
                                     TextInput::make('primary_color')
                                         ->label('Warna utama')
-                                        ->default('#1B5E3B'),
+                                        ->default('#0a7a3e'),
                                     TextInput::make('accent_color')
                                         ->label('Warna aksen')
-                                        ->default('#C4A35A'),
+                                        ->default('#d4a017'),
                                 ])
                                 ->columns(2),
                             Tab::make('Hero Beranda')
@@ -132,6 +149,9 @@ class ManageSiteSettings extends Page
                                         ->rows(2)
                                         ->columnSpanFull(),
                                     TextInput::make('phone')->label('Telepon'),
+                                    TextInput::make('whatsapp_number')
+                                        ->label('WhatsApp (628...)')
+                                        ->helperText('Format internasional tanpa +, contoh 6281234567890'),
                                     TextInput::make('email')->label('Email')->email(),
                                     Textarea::make('map_embed_url')
                                         ->label('URL embed peta')
@@ -142,7 +162,11 @@ class ManageSiteSettings extends Page
                                     TextInput::make('kemenag_url')->label('URL Kemenag'),
                                     TextInput::make('facebook_url')->label('Facebook'),
                                     TextInput::make('instagram_url')->label('Instagram'),
-                                    TextInput::make('youtube_url')->label('YouTube'),
+                                    TextInput::make('youtube_url')->label('YouTube channel'),
+                                    TextInput::make('profile_video_url')
+                                        ->label('Video profil (YouTube URL)')
+                                        ->helperText('Tempel link YouTube — bisa diganti kapan saja')
+                                        ->columnSpanFull(),
                                     Textarea::make('footer_text')
                                         ->label('Teks footer')
                                         ->rows(2)

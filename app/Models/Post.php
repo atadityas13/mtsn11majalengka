@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class Post extends Model
 {
     protected $fillable = [
+        'category_id',
         'title',
         'slug',
         'excerpt',
@@ -34,6 +36,11 @@ class Post extends Model
                 $post->slug = Str::slug($post->title);
             }
         });
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function scopePublished(Builder $query): Builder

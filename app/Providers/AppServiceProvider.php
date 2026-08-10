@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        View::composer('site.*', function ($view): void {
+        View::composer(['layouts.site', 'site.*'], function ($view): void {
             $view->with('site', SiteSetting::current());
             $view->with('headerMenus', MenuItem::visible()->header()->orderBy('sort_order')->get());
             $view->with('footerMenus', MenuItem::visible()->where('location', 'footer')->orderBy('sort_order')->get());

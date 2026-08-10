@@ -173,6 +173,26 @@
     .site-header.is-scrolled {
         box-shadow: 0 8px 30px rgb(4 63 31 / 0.1);
     }
+
+    .wa-float {
+        @apply fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg;
+        animation: float-soft 5s ease-in-out infinite;
+    }
+
+    .wa-float:hover {
+        transform: translateY(-3px) scale(1.04);
+        filter: brightness(1.05);
+    }
+
+    .skeleton {
+        @apply animate-pulse rounded-md bg-kemenag/10;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
 }
 
 @layer utilities {
@@ -270,7 +290,8 @@
     .animate-float-delay,
     .pattern-mesh,
     .ornament-arc,
-    .section-label::before {
+    .section-label::before,
+    .wa-float {
         animation: none !important;
     }
 
@@ -280,5 +301,34 @@
         opacity: 1 !important;
         transform: none !important;
         transition: none !important;
+    }
+}
+
+@media print {
+    .no-print,
+    .wa-float,
+    header,
+    footer,
+    nav {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+        animation: none !important;
+    }
+
+    main {
+        max-width: 100% !important;
+    }
+
+    a {
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+
+    .print-only {
+        display: block !important;
     }
 }

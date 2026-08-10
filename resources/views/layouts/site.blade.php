@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', $site->school_name)</title>
     <meta name="description" content="@yield('description', $site->tagline)">
+    <meta name="theme-color" content="{{ $site->primary_color ?: '#0a7a3e' }}">
+    <link rel="manifest" href="{{ route('manifest') }}">
+    @php
+        $ogTitle = trim($__env->yieldContent('og_title', $__env->yieldContent('title', $site->school_name)));
+        $ogDescription = trim($__env->yieldContent('og_description', $__env->yieldContent('description', $site->tagline)));
+        $ogImage = trim($__env->yieldContent('og_image', $site->hero_image ? asset('storage/'.$site->hero_image) : ($site->logo ? asset('storage/'.$site->logo) : '')));
+    @endphp
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:site_name" content="{{ $site->school_name }}">
+    <meta property="og:title" content="{{ $ogTitle }}">
+    <meta property="og:description" content="{{ $ogDescription }}">
+    @if ($ogImage)
+        <meta property="og:image" content="{{ $ogImage }}">
+    @endif
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $ogTitle }}">
+    <meta name="twitter:description" content="{{ $ogDescription }}">
+    @if ($ogImage)
+        <meta name="twitter:image" content="{{ $ogImage }}">
+    @endif
     @if ($site->favicon)
         <link rel="icon" href="{{ asset('storage/'.$site->favicon) }}">
     @endif
@@ -19,9 +40,9 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col" x-data="{ open: false }">
+<body class="min-h-screen flex flex-col" x-data="{ open: false, searchOpen: false }">
     {{-- Top utility bar ala portal Kemenag --}}
-    <div class="bg-kemenag-dark text-[11px] text-white/85">
+    <div class="no-print bg-kemenag-dark text-[11px] text-white/85">
         <div class="site-container flex flex-wrap items-center justify-between gap-2 py-2">
             <p class="font-semibold tracking-wide">Naungan Kementerian Agama Republik Indonesia</p>
             <div class="flex flex-wrap items-center gap-4 font-medium">
@@ -35,9 +56,12 @@
     </div>
 
     {{-- Main header --}}
-    <header class="site-header sticky top-0 z-50 border-b border-kemenag/10 bg-white/95 backdrop-blur-md" data-site-header>
+    <header class="site-header no-print sticky top-0 z-50 border-b border-kemenag/10 bg-white/95 backdrop-blur-md" data-site-header>
         <div class="site-container flex items-center justify-between gap-4 py-3">
-            <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3">
+            <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-2.5 sm:gap-3">
+                @if ($site->kemenag_logo)
+                    <img src="{{ asset('storage/'.$site->kemenag_logo) }}" alt="Kementerian Agama" class="hidden h-11 w-11 shrink-0 object-contain sm:block">
+                @endif
                 @if ($site->logo)
                     <img src="{{ asset('storage/'.$site->logo) }}" alt="{{ $site->school_name }}" class="h-12 w-12 shrink-0 object-contain">
                 @else
@@ -66,6 +90,9 @@
             </nav>
 
             <div class="flex items-center gap-2">
+                <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-kemenag/20 text-kemenag-deep" aria-label="Cari berita" @click="searchOpen = !searchOpen">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3.5-3.5"/></svg>
+                </button>
                 @if ($site->ppdb_url)
                     <a href="{{ $site->ppdb_url }}" target="_blank" rel="noopener" class="btn-primary hidden sm:inline-flex">PPDB</a>
                 @endif
@@ -74,6 +101,13 @@
                     <svg x-cloak x-show="open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
                 </button>
             </div>
+        </div>
+
+        <div x-cloak x-show="searchOpen" x-transition class="border-t border-kemenag/10 bg-white">
+            <form action="{{ route('posts.index') }}" method="get" class="site-container flex gap-2 py-3">
+                <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari berita..." class="w-full rounded-md border border-kemenag/20 px-4 py-2.5 text-sm outline-none focus:border-kemenag focus:ring-2 focus:ring-kemenag/20" autofocus>
+                <button type="submit" class="btn-primary shrink-0">Cari</button>
+            </form>
         </div>
 
         <div x-cloak x-show="open" x-transition class="border-t border-kemenag/10 bg-white xl:hidden">
@@ -98,10 +132,18 @@
         @yield('content')
     </main>
 
-    <footer class="mt-auto bg-kemenag-dark text-white">
+    <footer class="no-print mt-auto bg-kemenag-dark text-white">
         <div class="site-container grid gap-10 py-14 md:grid-cols-[1.5fr_1fr_1fr]">
             <div>
-                <p class="font-display text-2xl font-extrabold">{{ $site->school_name }}</p>
+                <div class="flex items-center gap-3">
+                    @if ($site->kemenag_logo)
+                        <img src="{{ asset('storage/'.$site->kemenag_logo) }}" alt="Kemenag" class="h-10 w-10 object-contain brightness-0 invert">
+                    @endif
+                    @if ($site->logo)
+                        <img src="{{ asset('storage/'.$site->logo) }}" alt="" class="h-10 w-10 object-contain">
+                    @endif
+                </div>
+                <p class="mt-4 font-display text-2xl font-extrabold">{{ $site->school_name }}</p>
                 <p class="mt-3 max-w-md text-sm leading-relaxed text-white/70">{{ $site->footer_text ?: $site->tagline }}</p>
                 <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-gold">
                     Portal Madrasah · Kemenag RI
@@ -126,6 +168,9 @@
                     @if ($site->address)<p>{{ $site->address }}</p>@endif
                     @if ($site->phone)<p>{{ $site->phone }}</p>@endif
                     @if ($site->email)<p>{{ $site->email }}</p>@endif
+                    @if ($site->whatsappLink())
+                        <a href="{{ $site->whatsappLink() }}" target="_blank" rel="noopener" class="inline-flex font-semibold text-gold hover:underline">Chat WhatsApp</a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -133,5 +178,19 @@
             &copy; {{ date('Y') }} {{ $site->school_name }}. Seluruh hak dilindungi · Naungan Kementerian Agama RI.
         </div>
     </footer>
+
+    @if ($wa = $site->whatsappLink())
+        <a href="{{ $wa }}" target="_blank" rel="noopener" class="wa-float no-print" aria-label="Chat WhatsApp">
+            <svg viewBox="0 0 24 24" class="h-7 w-7 fill-current" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2zm0 1.82c4.46 0 8.09 3.63 8.09 8.09 0 4.46-3.63 8.09-8.09 8.09-1.42 0-2.8-.37-4.01-1.07l-.29-.17-3.12.82.83-3.04-.19-.31a8.05 8.05 0 0 1-1.23-4.32c0-4.46 3.63-8.09 8.09-8.09zm4.52 10.44c-.25-.12-1.47-.72-1.7-.8-.23-.09-.39-.12-.56.12-.17.25-.64.8-.79.96-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.41-.56-.42h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.88 2.4 1 2.56.12.17 1.75 2.67 4.24 3.74 1.49.64 1.87.7 2.54.59.41-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>
+        </a>
+    @endif
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
+        }
+    </script>
 </body>
 </html>

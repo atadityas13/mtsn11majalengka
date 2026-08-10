@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Posts\Schemas;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -20,6 +21,15 @@ class PostForm
             ->components([
                 Section::make('Konten berita')
                     ->schema([
+                        Select::make('category_id')
+                            ->label('Kategori')
+                            ->relationship('category', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->createOptionForm([
+                                TextInput::make('name')->required(),
+                                TextInput::make('slug'),
+                            ]),
                         TextInput::make('title')
                             ->label('Judul')
                             ->required()
@@ -48,7 +58,7 @@ class PostForm
                 Section::make('Publikasi')
                     ->schema([
                         FileUpload::make('cover_image')
-                            ->label('Gambar sampul')
+                            ->label('Gambar sampul (bisa diganti nanti)')
                             ->image()
                             ->directory('posts')
                             ->disk('public')
