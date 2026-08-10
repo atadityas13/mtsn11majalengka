@@ -193,6 +193,116 @@
         grid-template-columns: repeat(7, minmax(0, 1fr));
         gap: 0.5rem;
     }
+
+    .org-chart {
+        @apply rounded-2xl border border-kemenag/10 bg-white p-4 md:p-8;
+        min-width: 720px;
+    }
+
+    .org-row {
+        @apply flex flex-wrap items-stretch justify-center gap-3 md:gap-4;
+    }
+
+    .org-row-top .org-node {
+        min-width: 200px;
+    }
+
+    .org-row-mid .org-node {
+        min-width: 150px;
+        max-width: 180px;
+    }
+
+    .org-row-collective .org-node {
+        min-width: min(100%, 420px);
+    }
+
+    .org-spine {
+        @apply mx-auto my-3 h-6 w-px bg-kemenag/30;
+    }
+
+    .org-spine-soft {
+        @apply bg-kemenag/20;
+    }
+
+    .org-group {
+        @apply flex min-w-[160px] flex-col items-center gap-2 rounded-xl border border-dashed border-kemenag/15 bg-kemenag-soft/40 p-3;
+    }
+
+    .org-group-label {
+        @apply text-center text-[10px] font-bold uppercase tracking-[0.14em] text-muted;
+    }
+
+    .org-group-nodes {
+        @apply flex flex-wrap justify-center gap-2;
+    }
+
+    .org-row-staff {
+        @apply items-start gap-4;
+    }
+
+    .org-node {
+        @apply flex flex-col items-center rounded-xl border border-kemenag/15 bg-surface p-3 text-center shadow-sm transition;
+    }
+
+    .org-node:hover {
+        @apply -translate-y-0.5 border-kemenag/30 shadow-md;
+    }
+
+    .org-node-top {
+        @apply border-kemenag/25 bg-white;
+    }
+
+    .org-node-kaur {
+        @apply border-gold/40 bg-white ring-1 ring-gold/30;
+    }
+
+    .org-node-waka {
+        @apply bg-white;
+    }
+
+    .org-node-staff {
+        @apply max-w-[150px] bg-white p-2.5;
+    }
+
+    .org-node-collective {
+        @apply w-full max-w-xl border-kemenag/20 bg-kemenag-deep text-white;
+    }
+
+    .org-node-collective .org-node-title {
+        @apply text-gold;
+    }
+
+    .org-node-collective .org-node-name {
+        @apply text-white/85;
+    }
+
+    .org-node-photo {
+        @apply mb-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-kemenag-soft text-sm font-extrabold text-kemenag;
+    }
+
+    .org-node-staff .org-node-photo {
+        @apply h-12 w-12 text-xs;
+    }
+
+    .org-node-top .org-node-photo {
+        @apply h-16 w-16 text-base;
+    }
+
+    .org-node-collective .org-node-photo {
+        @apply bg-white/15 text-gold;
+    }
+
+    .org-node-photo img {
+        @apply h-full w-full object-cover;
+    }
+
+    .org-node-title {
+        @apply text-[10px] font-bold uppercase tracking-[0.12em] text-kemenag;
+    }
+
+    .org-node-name {
+        @apply mt-1 text-sm font-bold leading-snug text-kemenag-deep;
+    }
 }
 
 @layer utilities {

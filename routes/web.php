@@ -13,6 +13,7 @@ Route::get('/prestasi', [SiteController::class, 'achievements'])->name('achievem
 Route::get('/unduhan', [SiteController::class, 'downloads'])->name('downloads.index');
 Route::get('/unduhan/{download}/file', [SiteController::class, 'downloadFile'])->name('downloads.file');
 Route::get('/tenaga-pendidik', [SiteController::class, 'staff'])->name('staff.index');
+Route::get('/struktur-organisasi', [SiteController::class, 'organization'])->name('organization.index');
 Route::get('/layanan', [SiteController::class, 'layanan'])->name('layanan');
 Route::get('/kontak', [SiteController::class, 'contact'])->name('contact');
 Route::post('/kontak', [SiteController::class, 'contactStore'])->name('contact.store');

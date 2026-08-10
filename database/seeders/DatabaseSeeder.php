@@ -7,6 +7,7 @@ use App\Models\Agenda;
 use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\MenuItem;
+use App\Models\OrganizationNode;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\SiteSetting;
@@ -37,10 +38,11 @@ class DatabaseSeeder extends Seeder
             ['label' => 'Prestasi', 'url' => '/prestasi', 'sort_order' => 5],
             ['label' => 'Galeri', 'url' => '/galeri', 'sort_order' => 6],
             ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 7],
-            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 8],
-            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 9],
-            ['label' => 'Layanan', 'url' => '/layanan', 'sort_order' => 10],
-            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 11],
+            ['label' => 'Struktur Organisasi', 'url' => '/struktur-organisasi', 'sort_order' => 8],
+            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 9],
+            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 10],
+            ['label' => 'Layanan', 'url' => '/layanan', 'sort_order' => 11],
+            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 12],
         ];
 
         foreach ($headerMenus as $menu) {
@@ -52,10 +54,11 @@ class DatabaseSeeder extends Seeder
 
         $footerMenus = [
             ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 1],
-            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 2],
-            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 3],
-            ['label' => 'Info PPDB', 'url' => '/halaman/ppdb', 'sort_order' => 4],
-            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 5],
+            ['label' => 'Struktur Organisasi', 'url' => '/struktur-organisasi', 'sort_order' => 2],
+            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 3],
+            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 4],
+            ['label' => 'Info PPDB', 'url' => '/halaman/ppdb', 'sort_order' => 5],
+            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 6],
         ];
 
         foreach ($footerMenus as $menu) {
@@ -209,5 +212,117 @@ class DatabaseSeeder extends Seeder
                 'is_published' => true,
             ]
         );
+
+        $settings = SiteSetting::current();
+
+        $seedNode = function (string $slug, array $attrs, ?string $parentSlug = null) use (&$seedNode): OrganizationNode {
+            $parentId = $parentSlug
+                ? OrganizationNode::query()->where('slug', $parentSlug)->value('id')
+                : null;
+
+            return OrganizationNode::query()->updateOrCreate(
+                ['slug' => $slug],
+                [
+                    ...$attrs,
+                    'slug' => $slug,
+                    'parent_id' => $parentId,
+                    'is_published' => true,
+                ]
+            );
+        };
+
+        $seedNode('komite-madrasah', [
+            'title' => 'Komite Madrasah',
+            'name' => null,
+            'lane' => 'peer_top',
+            'sort_order' => 1,
+            'description' => 'Mitra masyarakat yang mendukung kebijakan dan pengembangan madrasah.',
+        ]);
+
+        $seedNode('kepala-madrasah', [
+            'title' => 'Kepala Madrasah / Plt. Kamad',
+            'name' => $settings->headmaster_name,
+            'lane' => 'peer_top',
+            'sort_order' => 2,
+            'description' => 'Pimpinan satuan pendidikan; educator, manager, administrator, dan supervisor.',
+        ]);
+
+        $seedNode('kaur-tata-usaha', [
+            'title' => 'Kepala Urusan Tata Usaha',
+            'lane' => 'line',
+            'sort_order' => 10,
+            'description' => 'Mengelola ketatausahaan, administrasi, dan staf pendukung.',
+        ], 'kepala-madrasah');
+
+        $seedNode('waka-kurikulum', [
+            'title' => 'Waka Kurikulum',
+            'lane' => 'line',
+            'sort_order' => 20,
+            'description' => 'Mengelola kurikulum, jadwal, perangkat pembelajaran, dan evaluasi.',
+        ], 'kepala-madrasah');
+
+        $seedNode('waka-kesiswaan', [
+            'title' => 'Waka Kesiswaan',
+            'lane' => 'line',
+            'sort_order' => 21,
+            'description' => 'Pembinaan kesiswaan, disiplin, OSIM, dan kegiatan siswa.',
+        ], 'kepala-madrasah');
+
+        $seedNode('waka-sarpras', [
+            'title' => 'Waka Sarana & Prasarana',
+            'lane' => 'line',
+            'sort_order' => 22,
+            'description' => 'Pengadaan, pemeliharaan, dan pengelolaan sarana prasarana.',
+        ], 'kepala-madrasah');
+
+        $seedNode('waka-humas', [
+            'title' => 'Waka Humas',
+            'lane' => 'line',
+            'sort_order' => 23,
+            'description' => 'Hubungan masyarakat, publikasi, dan kemitraan eksternal.',
+        ], 'kepala-madrasah');
+
+        $seedNode('bendahara', [
+            'title' => 'Bendahara',
+            'lane' => 'staff',
+            'sort_order' => 30,
+            'description' => 'Pengelolaan keuangan madrasah di bawah Kaur Tata Usaha.',
+        ], 'kaur-tata-usaha');
+
+        $seedNode('staf-tu', [
+            'title' => 'Staf Tata Usaha',
+            'lane' => 'staff',
+            'sort_order' => 31,
+            'description' => 'Pelayanan administrasi perkantoran dan kearsipan.',
+        ], 'kaur-tata-usaha');
+
+        $seedNode('kepala-laboratorium', [
+            'title' => 'Kepala Laboratorium',
+            'lane' => 'staff',
+            'sort_order' => 40,
+            'description' => 'Pengelolaan laboratorium pembelajaran (di bawah Waka Kurikulum).',
+        ], 'waka-kurikulum');
+
+        $seedNode('kepala-perpustakaan', [
+            'title' => 'Kepala Perpustakaan',
+            'lane' => 'staff',
+            'sort_order' => 41,
+            'description' => 'Pengelolaan perpustakaan dan literasi (di bawah Waka Kurikulum).',
+        ], 'waka-kurikulum');
+
+        $seedNode('kepala-asrama', [
+            'title' => 'Kepala Asrama',
+            'lane' => 'staff',
+            'sort_order' => 42,
+            'description' => 'Pembinaan santri asrama/boarding (di bawah Waka Kesiswaan).',
+        ], 'waka-kesiswaan');
+
+        $seedNode('guru-wali-kelas', [
+            'title' => 'Guru & Wali Kelas',
+            'name' => 'Seluruh tenaga pendidik',
+            'lane' => 'collective',
+            'sort_order' => 50,
+            'description' => 'Melaksanakan pembelajaran dan pembimbingan di bawah koordinasi seluruh Waka.',
+        ], 'kepala-madrasah');
     }
 }

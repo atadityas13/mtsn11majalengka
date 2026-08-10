@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\ContactMessage;
 use App\Models\Download;
 use App\Models\GalleryItem;
+use App\Models\OrganizationNode;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\SiteSetting;
@@ -169,6 +170,19 @@ class SiteController extends Controller
     {
         return view('site.staff', [
             'staff' => StaffMember::published()->orderBy('sort_order')->orderBy('name')->get(),
+        ]);
+    }
+
+    public function organization(): View
+    {
+        $nodes = OrganizationNode::published()
+            ->orderBy('sort_order')
+            ->get()
+            ->keyBy('slug');
+
+        return view('site.organization', [
+            'nodes' => $nodes,
+            'cards' => OrganizationNode::published()->orderBy('sort_order')->get(),
         ]);
     }
 

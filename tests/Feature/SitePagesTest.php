@@ -57,6 +57,14 @@ class SitePagesTest extends TestCase
         $this->get(route('achievements.index'))->assertOk()->assertSee('Prestasi');
     }
 
+    public function test_struktur_organisasi_ok(): void
+    {
+        $this->get(route('organization.index'))
+            ->assertOk()
+            ->assertSee('Struktur Organisasi')
+            ->assertSee('Kepala Madrasah');
+    }
+
     public function test_staff_ok(): void
     {
         $this->get(route('staff.index'))->assertOk()->assertSee('Guru');
