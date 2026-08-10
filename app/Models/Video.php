@@ -227,10 +227,12 @@ class Video extends Model
             return null;
         }
 
+        // Penting: jangan pakai muted=1 di URL — itu mengunci volume dan unMute via postMessage gagal.
+        // Mute/unmute dikontrol lewat postMessage setelah player siap.
         return 'https://www.tiktok.com/player/v1/'.$id.'?'.http_build_query([
             'autoplay' => 1,
             'loop' => 1,
-            'muted' => $mute ? 1 : 0,
+            'muted' => 0,
             'music_info' => 0,
             'description' => 0,
             'controls' => 0,
@@ -254,6 +256,7 @@ class Video extends Model
         $url = strtolower((string) $this->video_url);
         $kind = str_contains($url, '/reel') ? 'reel' : (str_contains($url, '/tv/') ? 'tv' : 'p');
 
-        return "https://www.instagram.com/{$kind}/{$code}/embed/captioned/";
+        // Embed sederhana (tanpa captioned) lebih sering bisa di-play di iframe.
+        return "https://www.instagram.com/{$kind}/{$code}/embed/";
     }
 }

@@ -56,8 +56,13 @@ class VideoEmbedTest extends TestCase
             'type' => 'short',
         ]);
 
-        $this->assertStringContainsString('muted=1', (string) $video->embedUrl(autoplay: true, mute: true));
-        $this->assertStringContainsString('muted=0', (string) $video->embedUrl(autoplay: true, mute: false));
+        // muted=1 mengunci volume di player TikTok; mute dikontrol via postMessage.
+        $muted = (string) $video->embedUrl(autoplay: true, mute: true);
+        $sound = (string) $video->embedUrl(autoplay: true, mute: false);
+
+        $this->assertStringContainsString('muted=0', $muted);
+        $this->assertStringContainsString('muted=0', $sound);
+        $this->assertStringContainsString('tiktok.com/player/v1/', $muted);
     }
 
     public function test_suggests_short_for_vertical_platforms(): void

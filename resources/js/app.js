@@ -144,6 +144,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let soundOn = false;
         let ytApiPromise = null;
 
+        const tiktokMessage = (iframe, type, value = null) => {
+            if (!iframe?.contentWindow) {
+                return;
+            }
+            iframe.contentWindow.postMessage(
+                {
+                    'x-tiktok-player': true,
+                    type,
+                    value,
+                },
+                '*'
+            );
+        };
+
         const loadYouTubeApi = () => {
             if (window.YT?.Player) {
                 return Promise.resolve(window.YT);
@@ -187,9 +201,22 @@ document.addEventListener('DOMContentLoaded', () => {
             slide.querySelector('[data-short-play]')?.classList.toggle('is-visible', paused);
         };
 
+        const setInteractive = (slide, on) => {
+            slide.classList.toggle('is-interactive', on);
+            const layer = slide.querySelector('[data-short-scroll-layer]');
+            if (layer) {
+                layer.style.display = on ? 'none' : '';
+            }
+        };
+
         const getController = (slide) => slide._shortController || null;
 
         const unload = (slide) => {
+            if (slide._tiktokReadyHandler) {
+                window.removeEventListener('message', slide._tiktokReadyHandler);
+                slide._tiktokReadyHandler = null;
+            }
+
             const controller = getController(slide);
             if (controller?.destroy) {
                 try {
@@ -202,11 +229,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const player = slide.querySelector('[data-short-player]');
             const poster = slide.querySelector('[data-short-poster]');
+            const igPlay = slide.querySelector('[data-ig-play]');
             if (player) {
                 player.innerHTML = '';
             }
             poster?.classList.remove('is-hidden');
-            slide.classList.remove('is-playing', 'platform-youtube', 'platform-tiktok', 'platform-instagram');
+            igPlay?.classList.add('is-visible');
+            slide.classList.remove(
+                'is-playing',
+                'is-interactive',
+                'platform-youtube',
+                'platform-tiktok',
+                'platform-instagram'
+            );
+            setInteractive(slide, false);
             setPausedUi(slide, false);
             setMuteUi(slide, !soundOn);
         };
@@ -217,11 +253,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (platform === 'tiktok') {
                 const iframe = slide.querySelector('[data-short-player] iframe');
-                const nextSrc = soundOn
-                    ? slide.dataset.embedSound || slide.dataset.embed
-                    : slide.dataset.embed;
-                if (iframe && nextSrc) {
-                    iframe.src = nextSrc;
+                if (iframe) {
+                    if (soundOn) {
+                        // Harus synchronous di click handler agar browser izinkan suara.
+                        tiktokMessage(iframe, 'unMute');
+                        tiktokMessage(iframe, 'play');
+                    } else {
+                        tiktokMessage(iframe, 'mute');
+                    }
                 }
                 setMuteUi(slide, !soundOn);
                 return;
@@ -250,39 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setPausedUi(slide, paused);
         };
 
-        const loadIframeFallback = (slide, platform) => {
-            const embed =
-                platform === 'tiktok' && soundOn
-                    ? slide.dataset.embedSound || slide.dataset.embed
-                    : slide.dataset.embed;
-            const external = slide.dataset.externalUrl;
-            const player = slide.querySelector('[data-short-player]');
-            const label = platform === 'instagram' ? 'Instagram' : platform === 'tiktok' ? 'TikTok' : 'sumber';
-            if (!player) {
-                return;
-            }
-
-            player.innerHTML = '';
-
-            if (!embed) {
-                const box = document.createElement('div');
-                box.className = 'short-external-fallback';
-                box.innerHTML = `
-                    <p>Embed ${label} tidak tersedia dari URL ini.</p>
-                    <p style="font-size:0.8rem;opacity:.7">Pakai URL lengkap (bukan link pendek), atau buka di aplikasi.</p>
-                    ${external ? `<a href="${external}" target="_blank" rel="noopener noreferrer">Buka di ${label}</a>` : ''}
-                `;
-                player.appendChild(box);
-                slide._shortController = {
-                    destroy: () => {
-                        player.innerHTML = '';
-                    },
-                };
-                return;
-            }
-
+        const createEmbedIframe = (platform, src) => {
             const iframe = document.createElement('iframe');
-            iframe.src = embed;
+            iframe.src = src;
             iframe.title = 'Short video';
             iframe.allow =
                 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
@@ -291,18 +300,105 @@ document.addEventListener('DOMContentLoaded', () => {
             iframe.setAttribute('playsinline', 'true');
             iframe.setAttribute('allowfullscreen', 'true');
             iframe.className = `short-iframe is-${platform}`;
+            return iframe;
+        };
+
+        const loadTikTok = (slide) => {
+            const embed = slide.dataset.embed;
+            const player = slide.querySelector('[data-short-player]');
+            if (!embed || !player) {
+                return;
+            }
+
+            player.innerHTML = '';
+            const iframe = createEmbedIframe('tiktok', embed);
+            player.appendChild(iframe);
+
+            const onReady = (event) => {
+                if (event.origin !== 'https://www.tiktok.com') {
+                    return;
+                }
+                const data = event.data;
+                if (!data || data['x-tiktok-player'] !== true) {
+                    return;
+                }
+                if (data.type === 'onPlayerReady') {
+                    if (!soundOn) {
+                        tiktokMessage(iframe, 'mute');
+                    } else {
+                        tiktokMessage(iframe, 'unMute');
+                    }
+                    tiktokMessage(iframe, 'play');
+                    setMuteUi(slide, !soundOn);
+                }
+            };
+
+            slide._tiktokReadyHandler = onReady;
+            window.addEventListener('message', onReady);
+
+            slide._shortController = {
+                mute: () => tiktokMessage(iframe, 'mute'),
+                unMute: () => {
+                    tiktokMessage(iframe, 'unMute');
+                    tiktokMessage(iframe, 'play');
+                },
+                togglePause: () => false,
+                destroy: () => {
+                    window.removeEventListener('message', onReady);
+                    player.innerHTML = '';
+                },
+            };
+
+            // Fallback jika onPlayerReady terlambat/tidak datang.
+            window.setTimeout(() => {
+                if (!soundOn) {
+                    tiktokMessage(iframe, 'mute');
+                }
+            }, 800);
+        };
+
+        const loadInstagram = (slide, { interactive = false } = {}) => {
+            const embed = slide.dataset.embed;
+            const external = slide.dataset.externalUrl;
+            const player = slide.querySelector('[data-short-player]');
+            const poster = slide.querySelector('[data-short-poster]');
+            const igPlay = slide.querySelector('[data-ig-play]');
+            if (!player) {
+                return;
+            }
+
+            if (!embed) {
+                player.innerHTML = '';
+                const box = document.createElement('div');
+                box.className = 'short-external-fallback';
+                box.innerHTML = `
+                    <p>Embed Instagram tidak tersedia dari URL ini.</p>
+                    ${external ? `<a href="${external}" target="_blank" rel="noopener noreferrer">Buka di Instagram</a>` : ''}
+                `;
+                player.appendChild(box);
+                return;
+            }
+
+            player.innerHTML = '';
+            const iframe = createEmbedIframe('instagram', embed);
             player.appendChild(iframe);
 
             slide._shortController = {
-                mute: () => {},
-                unMute: () => {},
-                togglePause: () => false,
                 destroy: () => {
                     player.innerHTML = '';
                 },
             };
 
-            setMuteUi(slide, !soundOn);
+            if (interactive) {
+                poster?.classList.add('is-hidden');
+                igPlay?.classList.remove('is-visible');
+                setInteractive(slide, true);
+            } else {
+                // Tunggu user ketuk Putar — poster tetap terlihat.
+                poster?.classList.remove('is-hidden');
+                igPlay?.classList.add('is-visible');
+                setInteractive(slide, false);
+            }
         };
 
         const loadYouTube = async (slide) => {
@@ -377,7 +473,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                 });
 
-                // Keep reference even before onReady for cleanup.
                 slide._shortController = {
                     destroy: () => {
                         try {
@@ -397,15 +492,34 @@ document.addEventListener('DOMContentLoaded', () => {
             unload(slide);
             slide.classList.add(`platform-${platform}`);
             slide.classList.add('is-playing');
-            poster?.classList.add('is-hidden');
             setMuteUi(slide, !soundOn);
 
             if (platform === 'youtube' && slide.dataset.youtubeId) {
+                poster?.classList.add('is-hidden');
                 await loadYouTube(slide);
                 return;
             }
 
-            loadIframeFallback(slide, platform);
+            if (platform === 'tiktok') {
+                poster?.classList.add('is-hidden');
+                loadTikTok(slide);
+                return;
+            }
+
+            if (platform === 'instagram') {
+                // Jangan auto-play iframe IG (sering blank). Tunggu tombol Putar.
+                loadInstagram(slide, { interactive: false });
+                return;
+            }
+        };
+
+        const goNext = (slide) => {
+            const index = slides.indexOf(slide);
+            const next = slides[index + 1];
+            if (!next) {
+                return;
+            }
+            next.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         const observer = new IntersectionObserver(
@@ -435,10 +549,37 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             slide.querySelector('[data-short-mute]')?.addEventListener('click', (event) => {
+                event.preventDefault();
                 event.stopPropagation();
                 soundOn = !soundOn;
                 applySound(slide);
             });
+
+            slide.querySelector('[data-ig-play]')?.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                // Aktifkan iframe interaktif agar tombol play IG bisa diklik.
+                loadInstagram(slide, { interactive: true });
+            });
+
+            slide.querySelector('[data-short-next]')?.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                goNext(slide);
+            });
+
+            // Geser mouse wheel tetap memindah short walau iframe IG aktif.
+            slide.addEventListener(
+                'wheel',
+                (event) => {
+                    if (!slide.classList.contains('is-interactive')) {
+                        return;
+                    }
+                    shortFeed.scrollTop += event.deltaY;
+                    event.preventDefault();
+                },
+                { passive: false }
+            );
         });
     }
 });

@@ -55,9 +55,8 @@
                         @endif
                         <div class="short-player" data-short-player></div>
 
-                        {{-- Lapisan transparan: gesture geser ke feed, bukan ke iframe --}}
                         @if (in_array($platform, ['tiktok', 'instagram'], true))
-                            <div class="short-scroll-layer" aria-hidden="true"></div>
+                            <div class="short-scroll-layer" data-short-scroll-layer aria-hidden="true"></div>
                         @endif
 
                         @if ($platform === 'youtube')
@@ -65,6 +64,12 @@
                             <div class="short-play" data-short-play aria-hidden="true">
                                 <span>▶</span>
                             </div>
+                        @endif
+
+                        @if ($platform === 'instagram')
+                            <button type="button" class="short-play is-visible" data-ig-play aria-label="Putar Reels">
+                                <span>▶</span>
+                            </button>
                         @endif
                     </div>
 
@@ -96,6 +101,16 @@
                                     </svg>
                                 </span>
                             </a>
+                        @endif
+
+                        @if ($index < $shorts->count() - 1)
+                            <button type="button" class="short-action-btn" data-short-next aria-label="Short berikutnya">
+                                <span class="short-speaker" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </button>
                         @endif
                     </div>
 

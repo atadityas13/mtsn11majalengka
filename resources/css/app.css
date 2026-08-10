@@ -487,11 +487,20 @@
         z-index: 1;
     }
 
+    .short-slide.is-interactive .short-player iframe.is-instagram,
+    .short-slide.is-interactive .short-player iframe.is-tiktok {
+        pointer-events: auto;
+    }
+
     .short-slide.platform-instagram .short-player,
     .short-slide.platform-tiktok .short-player {
         z-index: 2;
         overflow: hidden;
         background: #000;
+    }
+
+    .short-slide.platform-instagram.is-interactive .short-player {
+        z-index: 4;
     }
 
     .short-scroll-layer {
@@ -502,8 +511,7 @@
         background: transparent;
     }
 
-    .short-slide.platform-instagram .short-hit,
-    .short-slide.platform-tiktok .short-hit {
+    .short-slide.is-interactive .short-scroll-layer {
         display: none;
     }
 
@@ -561,6 +569,12 @@
 
     .short-play.is-visible {
         opacity: 1;
+    }
+
+    .short-play[data-ig-play] {
+        pointer-events: auto;
+        z-index: 4;
+        cursor: pointer;
     }
 
     .short-play span {
