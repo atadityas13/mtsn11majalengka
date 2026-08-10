@@ -17,6 +17,7 @@
         ['Unduhan Dokumen', route('downloads.index'), 'Berkas dan dokumen madrasah', false],
         ['Guru & Tendik', route('staff.index'), 'Profil tenaga pendidik', false],
         ['Struktur Organisasi', route('organization.index'), 'Bagan pejabat struktural madrasah', false],
+        ['Video & Short', route('videos.index'), 'Dokumentasi video dan short', false],
         ['Prestasi', route('achievements.index'), 'Capaian siswa dan madrasah', false],
     ] as [$label, $url, $desc, $external])
         @if ($url)

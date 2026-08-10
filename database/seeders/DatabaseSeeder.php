@@ -13,6 +13,7 @@ use App\Models\Post;
 use App\Models\SiteSetting;
 use App\Models\StaffMember;
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -37,12 +38,14 @@ class DatabaseSeeder extends Seeder
             ['label' => 'Agenda', 'url' => '/agenda', 'sort_order' => 4],
             ['label' => 'Prestasi', 'url' => '/prestasi', 'sort_order' => 5],
             ['label' => 'Galeri', 'url' => '/galeri', 'sort_order' => 6],
-            ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 7],
-            ['label' => 'Struktur Organisasi', 'url' => '/struktur-organisasi', 'sort_order' => 8],
-            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 9],
-            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 10],
-            ['label' => 'Layanan', 'url' => '/layanan', 'sort_order' => 11],
-            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 12],
+            ['label' => 'Short', 'url' => '/short', 'sort_order' => 7],
+            ['label' => 'Video', 'url' => '/video', 'sort_order' => 8],
+            ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 9],
+            ['label' => 'Struktur Organisasi', 'url' => '/struktur-organisasi', 'sort_order' => 10],
+            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 11],
+            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 12],
+            ['label' => 'Layanan', 'url' => '/layanan', 'sort_order' => 13],
+            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 14],
         ];
 
         foreach ($headerMenus as $menu) {
@@ -324,5 +327,31 @@ class DatabaseSeeder extends Seeder
             'sort_order' => 50,
             'description' => 'Melaksanakan pembelajaran dan pembimbingan di bawah koordinasi seluruh Waka.',
         ], 'kepala-madrasah');
+
+        Video::query()->updateOrCreate(
+            ['slug' => 'contoh-short-kegiatan-madrasah'],
+            [
+                'title' => 'Contoh Short Kegiatan Madrasah',
+                'type' => 'short',
+                'video_url' => 'https://www.youtube.com/shorts/aqz-KE-bpKQ',
+                'description' => 'Contoh short — ganti URL YouTube Shorts dari panel admin.',
+                'sort_order' => 1,
+                'is_published' => true,
+                'published_at' => now()->subDay(),
+            ]
+        );
+
+        Video::query()->updateOrCreate(
+            ['slug' => 'contoh-video-profil'],
+            [
+                'title' => 'Contoh Video Profil',
+                'type' => 'video',
+                'video_url' => 'https://www.youtube.com/watch?v=aqz-KE-bpKQ',
+                'description' => 'Contoh video horizontal — ganti dari panel admin.',
+                'sort_order' => 1,
+                'is_published' => true,
+                'published_at' => now()->subDays(2),
+            ]
+        );
     }
 }

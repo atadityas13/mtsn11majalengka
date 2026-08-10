@@ -14,6 +14,8 @@ Route::get('/unduhan', [SiteController::class, 'downloads'])->name('downloads.in
 Route::get('/unduhan/{download}/file', [SiteController::class, 'downloadFile'])->name('downloads.file');
 Route::get('/tenaga-pendidik', [SiteController::class, 'staff'])->name('staff.index');
 Route::get('/struktur-organisasi', [SiteController::class, 'organization'])->name('organization.index');
+Route::get('/short', [SiteController::class, 'shorts'])->name('shorts.index');
+Route::get('/video', [SiteController::class, 'videos'])->name('videos.index');
 Route::get('/layanan', [SiteController::class, 'layanan'])->name('layanan');
 Route::get('/kontak', [SiteController::class, 'contact'])->name('contact');
 Route::post('/kontak', [SiteController::class, 'contactStore'])->name('contact.store');

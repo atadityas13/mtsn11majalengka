@@ -137,4 +137,67 @@ document.addEventListener('DOMContentLoaded', () => {
         paint(0);
         start();
     });
+
+    const shortFeed = document.querySelector('[data-short-feed]');
+    if (shortFeed) {
+        const slides = [...shortFeed.querySelectorAll('[data-short-slide]')];
+
+        const unload = (slide) => {
+            const player = slide.querySelector('[data-short-player]');
+            const poster = slide.querySelector('[data-short-poster]');
+            const playBtn = slide.querySelector('[data-short-play]');
+            if (player) {
+                player.innerHTML = '';
+            }
+            poster?.classList.remove('is-hidden');
+            playBtn?.classList.remove('is-hidden');
+            slide.classList.remove('is-playing');
+        };
+
+        const load = (slide) => {
+            const embed = slide.dataset.embed;
+            const player = slide.querySelector('[data-short-player]');
+            const poster = slide.querySelector('[data-short-poster]');
+            const playBtn = slide.querySelector('[data-short-play]');
+            if (!embed || !player || player.childElementCount) {
+                return;
+            }
+
+            const iframe = document.createElement('iframe');
+            iframe.src = embed;
+            iframe.title = 'Short video';
+            iframe.allow =
+                'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            iframe.allowFullscreen = true;
+            iframe.setAttribute('playsinline', 'true');
+            player.appendChild(iframe);
+            poster?.classList.add('is-hidden');
+            playBtn?.classList.add('is-hidden');
+            slide.classList.add('is-playing');
+        };
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    const slide = entry.target;
+                    if (entry.isIntersecting && entry.intersectionRatio > 0.65) {
+                        slides.forEach((other) => {
+                            if (other !== slide) {
+                                unload(other);
+                            }
+                        });
+                        load(slide);
+                    } else if (!entry.isIntersecting) {
+                        unload(slide);
+                    }
+                });
+            },
+            { threshold: [0.65, 0.9] }
+        );
+
+        slides.forEach((slide) => {
+            observer.observe(slide);
+            slide.querySelector('[data-short-play]')?.addEventListener('click', () => load(slide));
+        });
+    }
 });

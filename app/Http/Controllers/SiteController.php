@@ -14,6 +14,7 @@ use App\Models\Page;
 use App\Models\Post;
 use App\Models\SiteSetting;
 use App\Models\StaffMember;
+use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,6 +32,8 @@ class SiteController extends Controller
             'agendas' => Agenda::published()->where('starts_at', '>=', now()->subDay())->orderBy('starts_at')->take(4)->get(),
             'gallery' => GalleryItem::published()->orderBy('sort_order')->take(6)->get(),
             'achievements' => Achievement::published()->orderBy('sort_order')->latest('achieved_on')->take(6)->get(),
+            'shorts' => Video::published()->shorts()->orderBy('sort_order')->latest('published_at')->take(8)->get(),
+            'homeVideos' => Video::published()->longVideos()->orderBy('sort_order')->latest('published_at')->take(3)->get(),
         ]);
     }
 
@@ -183,6 +186,21 @@ class SiteController extends Controller
         return view('site.organization', [
             'nodes' => $nodes,
             'cards' => OrganizationNode::published()->orderBy('sort_order')->get(),
+        ]);
+    }
+
+    public function shorts(): View
+    {
+        return view('site.shorts', [
+            'shorts' => Video::published()->shorts()->orderBy('sort_order')->latest('published_at')->get(),
+        ]);
+    }
+
+    public function videos(): View
+    {
+        return view('site.videos', [
+            'videos' => Video::published()->longVideos()->orderBy('sort_order')->latest('published_at')->paginate(12),
+            'shorts' => Video::published()->shorts()->orderBy('sort_order')->latest('published_at')->take(8)->get(),
         ]);
     }
 

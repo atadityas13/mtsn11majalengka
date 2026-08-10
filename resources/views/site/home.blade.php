@@ -269,6 +269,62 @@
 </section>
 @endif
 
+@if ($shorts->isNotEmpty() || $homeVideos->isNotEmpty())
+<section class="bg-white py-14 md:py-16">
+    <div class="site-container">
+        @if ($shorts->isNotEmpty())
+            <div class="mb-5 flex items-end justify-between gap-3" x-reveal>
+                <div>
+                    <p class="section-label">Short</p>
+                    <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep">Short Video</h2>
+                    <p class="mt-2 text-sm text-muted">Geser vertikal seperti YouTube Shorts / TikTok.</p>
+                </div>
+                <a href="{{ route('shorts.index') }}" class="text-sm font-bold text-kemenag hover:underline">Buka feed →</a>
+            </div>
+            <div class="shorts-rail mb-12" x-reveal>
+                @foreach ($shorts as $short)
+                    <a href="{{ route('shorts.index') }}" class="shorts-rail-card">
+                        <div class="shorts-rail-thumb">
+                            @if ($thumb = $short->thumbnailUrl())
+                                <img src="{{ $thumb }}" alt="{{ $short->title }}">
+                            @else
+                                <div class="flex h-full items-center justify-center bg-kemenag text-white">▶</div>
+                            @endif
+                            <span class="shorts-rail-badge">Short</span>
+                        </div>
+                        <p class="mt-2 line-clamp-2 text-sm font-bold text-kemenag-deep">{{ $short->title }}</p>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
+        @if ($homeVideos->isNotEmpty())
+            <div class="mb-5 flex items-end justify-between gap-3" x-reveal>
+                <div>
+                    <p class="section-label">Video</p>
+                    <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep">Video Terbaru</h2>
+                </div>
+                <a href="{{ route('videos.index') }}" class="text-sm font-bold text-kemenag hover:underline">Semua video →</a>
+            </div>
+            <div class="grid gap-4 md:grid-cols-3">
+                @foreach ($homeVideos as $video)
+                    <a href="{{ route('videos.index') }}" class="group overflow-hidden rounded-2xl border border-kemenag/10 bg-surface" x-reveal>
+                        <div class="aspect-video overflow-hidden bg-kemenag-soft">
+                            @if ($thumb = $video->thumbnailUrl())
+                                <img src="{{ $thumb }}" alt="{{ $video->title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-display text-lg font-extrabold text-kemenag-deep group-hover:text-kemenag">{{ $video->title }}</h3>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</section>
+@endif
+
 {{-- Video profil --}}
 @if ($site->youtubeEmbedUrl())
 <section class="site-container py-14 md:py-16">

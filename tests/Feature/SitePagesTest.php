@@ -65,6 +65,20 @@ class SitePagesTest extends TestCase
             ->assertSee('Kepala Madrasah');
     }
 
+    public function test_shorts_feed_ok(): void
+    {
+        $this->get(route('shorts.index'))
+            ->assertOk()
+            ->assertSee('Short');
+    }
+
+    public function test_videos_index_ok(): void
+    {
+        $this->get(route('videos.index'))
+            ->assertOk()
+            ->assertSee('Video');
+    }
+
     public function test_staff_ok(): void
     {
         $this->get(route('staff.index'))->assertOk()->assertSee('Guru');

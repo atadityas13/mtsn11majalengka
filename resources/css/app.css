@@ -362,6 +362,120 @@
         color: #065c2e;
     }
 
+    .shorts-rail {
+        @apply flex gap-3 overflow-x-auto pb-2;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .shorts-rail-card {
+        @apply w-36 shrink-0 sm:w-40;
+        scroll-snap-align: start;
+    }
+
+    .shorts-rail-thumb {
+        @apply relative aspect-[9/16] overflow-hidden rounded-2xl bg-kemenag-dark;
+    }
+
+    .shorts-rail-thumb img {
+        @apply h-full w-full object-cover;
+    }
+
+    .shorts-rail-badge {
+        @apply absolute left-2 top-2 rounded bg-black/55 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white;
+    }
+
+    .short-topbar {
+        @apply fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 px-3 py-3;
+        padding-top: max(0.75rem, env(safe-area-inset-top));
+        background: linear-gradient(to bottom, rgb(0 0 0 / 0.72), transparent);
+    }
+
+    .short-topbar-btn {
+        @apply inline-flex h-10 min-w-10 items-center justify-center rounded-full bg-white/10 px-3 text-sm font-bold text-white backdrop-blur;
+    }
+
+    .short-feed {
+        height: 100dvh;
+        overflow-y: auto;
+        scroll-snap-type: y mandatory;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .short-slide {
+        position: relative;
+        height: 100dvh;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        background: #000;
+    }
+
+    .short-media {
+        position: absolute;
+        inset: 0;
+    }
+
+    .short-poster,
+    .short-player,
+    .short-player iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        object-fit: cover;
+    }
+
+    .short-poster.is-hidden,
+    .short-play.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .short-play {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        background: rgb(0 0 0 / 0.2);
+        border: 0;
+        color: white;
+    }
+
+    .short-play span {
+        display: grid;
+        place-items: center;
+        width: 4.25rem;
+        height: 4.25rem;
+        border-radius: 9999px;
+        background: rgb(10 122 62 / 0.92);
+        font-size: 1.35rem;
+        box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+    }
+
+    .short-overlay {
+        position: absolute;
+        inset: auto 0 0 0;
+        z-index: 3;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.25rem 1rem calc(1.25rem + env(safe-area-inset-bottom));
+        background: linear-gradient(to top, rgb(0 0 0 / 0.78), transparent);
+        pointer-events: none;
+    }
+
+    .short-meta {
+        max-width: 75%;
+    }
+
+    .short-index {
+        @apply rounded-full bg-white/15 px-2.5 py-1 text-xs font-bold text-white/90 backdrop-blur;
+    }
+
     @media (max-width: 900px) {
         .org-shell {
             overflow: visible;
