@@ -35,6 +35,10 @@ class Video extends Model
             if (blank($video->slug) && filled($video->title)) {
                 $video->slug = Str::slug($video->title);
             }
+
+            if (blank($video->type) && filled($video->video_url)) {
+                $video->type = $video->suggestsShort() ? 'short' : 'video';
+            }
         });
     }
 
@@ -58,9 +62,54 @@ class Video extends Model
         return $query->where('type', 'video');
     }
 
+    /**
+     * @return 'youtube'|'tiktok'|'instagram'|null
+     */
+    public function platform(): ?string
+    {
+        $url = strtolower((string) $this->video_url);
+
+        if ($url === '') {
+            return null;
+        }
+
+        if (str_contains($url, 'tiktok.com') || str_contains($url, 'vm.tiktok.com')) {
+            return 'tiktok';
+        }
+
+        if (str_contains($url, 'instagram.com') || str_contains($url, 'instagr.am')) {
+            return 'instagram';
+        }
+
+        if (
+            str_contains($url, 'youtube.com')
+            || str_contains($url, 'youtu.be')
+            || str_contains($url, 'youtube-nocookie.com')
+        ) {
+            return 'youtube';
+        }
+
+        return null;
+    }
+
+    public function suggestsShort(): bool
+    {
+        $url = strtolower((string) $this->video_url);
+
+        return match ($this->platform()) {
+            'tiktok', 'instagram' => true,
+            'youtube' => str_contains($url, '/shorts/'),
+            default => false,
+        };
+    }
+
     public function youtubeId(): ?string
     {
-        $url = $this->video_url;
+        if ($this->platform() !== 'youtube') {
+            return null;
+        }
+
+        $url = (string) $this->video_url;
 
         if (preg_match('/(?:youtu\.be\/|v=|shorts\/|embed\/)([A-Za-z0-9_-]{6,})/', $url, $matches)) {
             return $matches[1];
@@ -69,7 +118,72 @@ class Video extends Model
         return null;
     }
 
-    public function embedUrl(bool $autoplay = false, bool $mute = true): ?string
+    public function tiktokId(): ?string
+    {
+        if ($this->platform() !== 'tiktok') {
+            return null;
+        }
+
+        $url = (string) $this->video_url;
+
+        if (preg_match('/\/video\/(\d+)/', $url, $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('/tiktok\.com\/embed\/v2\/(\d+)/', $url, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    public function instagramCode(): ?string
+    {
+        if ($this->platform() !== 'instagram') {
+            return null;
+        }
+
+        $url = (string) $this->video_url;
+
+        if (preg_match('/instagram\.com\/(?:reel|p|tv)\/([A-Za-z0-9_-]+)/', $url, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    public function embedUrl(bool $autoplay = false, bool $mute = true, bool $shortsUi = false): ?string
+    {
+        return match ($this->platform()) {
+            'youtube' => $this->youtubeEmbedUrl($autoplay, $mute, $shortsUi),
+            'tiktok' => $this->tiktokEmbedUrl(),
+            'instagram' => $this->instagramEmbedUrl(),
+            default => null,
+        };
+    }
+
+    public function thumbnailUrl(): ?string
+    {
+        if ($this->cover_image) {
+            return asset('storage/'.$this->cover_image);
+        }
+
+        $id = $this->youtubeId();
+
+        return $id ? 'https://i.ytimg.com/vi/'.$id.'/hqdefault.jpg' : null;
+    }
+
+    public function platformLabel(): string
+    {
+        return match ($this->platform()) {
+            'youtube' => 'YouTube',
+            'tiktok' => 'TikTok',
+            'instagram' => 'Instagram',
+            default => 'Video',
+        };
+    }
+
+    protected function youtubeEmbedUrl(bool $autoplay, bool $mute, bool $shortsUi = false): ?string
     {
         $id = $this->youtubeId();
 
@@ -81,8 +195,16 @@ class Video extends Model
             'rel' => 0,
             'modestbranding' => 1,
             'playsinline' => 1,
-            'controls' => 1,
+            'controls' => $shortsUi ? 0 : 1,
         ];
+
+        if ($shortsUi) {
+            $params['fs'] = 0;
+            $params['iv_load_policy'] = 3;
+            $params['disablekb'] = 1;
+            $params['loop'] = 1;
+            $params['playlist'] = $id;
+        }
 
         if ($autoplay) {
             $params['autoplay'] = 1;
@@ -95,14 +217,24 @@ class Video extends Model
         return 'https://www.youtube.com/embed/'.$id.'?'.http_build_query($params);
     }
 
-    public function thumbnailUrl(): ?string
+    protected function tiktokEmbedUrl(): ?string
     {
-        if ($this->cover_image) {
-            return asset('storage/'.$this->cover_image);
+        $id = $this->tiktokId();
+
+        return $id ? 'https://www.tiktok.com/embed/v2/'.$id : null;
+    }
+
+    protected function instagramEmbedUrl(): ?string
+    {
+        $code = $this->instagramCode();
+
+        if (! $code) {
+            return null;
         }
 
-        $id = $this->youtubeId();
+        $url = strtolower((string) $this->video_url);
+        $kind = str_contains($url, '/reel/') ? 'reel' : (str_contains($url, '/tv/') ? 'tv' : 'p');
 
-        return $id ? 'https://i.ytimg.com/vi/'.$id.'/hqdefault.jpg' : null;
+        return "https://www.instagram.com/{$kind}/{$code}/embed";
     }
 }

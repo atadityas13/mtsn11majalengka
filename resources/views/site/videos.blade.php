@@ -54,22 +54,27 @@
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         @forelse ($videos as $video)
             <article class="overflow-hidden rounded-2xl border border-kemenag/10 bg-white shadow-sm">
-                <div class="aspect-video overflow-hidden bg-kemenag-dark">
+                <div class="{{ in_array($video->platform(), ['tiktok', 'instagram'], true) ? 'aspect-[9/16] max-h-[28rem] mx-auto' : 'aspect-video' }} overflow-hidden bg-kemenag-dark">
                     @if ($embed = $video->embedUrl())
                         <iframe
                             src="{{ $embed }}"
                             title="{{ $video->title }}"
                             class="h-full w-full"
                             loading="lazy"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
                         ></iframe>
                     @elseif ($thumb = $video->thumbnailUrl())
                         <img src="{{ $thumb }}" alt="{{ $video->title }}" class="h-full w-full object-cover">
+                    @else
+                        <div class="flex h-full items-center justify-center px-4 text-center text-sm text-white/70">
+                            URL belum bisa di-embed. Pastikan link lengkap {{ $video->platformLabel() }}.
+                        </div>
                     @endif
                 </div>
                 <div class="p-4">
-                    <h3 class="font-display text-lg font-extrabold text-kemenag-deep">{{ $video->title }}</h3>
+                    <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-kemenag/70">{{ $video->platformLabel() }}</p>
+                    <h3 class="mt-1 font-display text-lg font-extrabold text-kemenag-deep">{{ $video->title }}</h3>
                     @if ($video->description)
                         <p class="mt-2 line-clamp-2 text-sm text-muted">{{ $video->description }}</p>
                     @endif

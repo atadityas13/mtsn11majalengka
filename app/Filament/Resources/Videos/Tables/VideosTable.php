@@ -30,6 +30,10 @@ class VideosTable
                     ->label('Jenis')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => $state === 'short' ? 'Short' : 'Video'),
+                TextColumn::make('video_url')
+                    ->label('Sumber')
+                    ->formatStateUsing(fn ($state, $record): string => $record->platformLabel())
+                    ->toggleable(),
                 TextColumn::make('published_at')
                     ->label('Tayang')
                     ->dateTime('d M Y')

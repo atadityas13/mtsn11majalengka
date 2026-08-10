@@ -14,7 +14,7 @@
         }
     </style>
 </head>
-<body class="bg-black text-white antialiased">
+<body class="short-page bg-black text-white antialiased">
     <header class="short-topbar">
         <a href="{{ route('home') }}" class="short-topbar-btn" aria-label="Kembali">←</a>
         <div class="min-w-0 text-center">
@@ -27,18 +27,26 @@
     @if ($shorts->isEmpty())
         <div class="flex min-h-dvh flex-col items-center justify-center gap-4 px-6 text-center">
             <p class="font-display text-2xl font-extrabold">Belum ada short</p>
-            <p class="max-w-sm text-sm text-white/60">Tambahkan video berjenis Short dari panel admin (/admin → Video & Short).</p>
+            <p class="max-w-sm text-sm text-white/60">Tambahkan video berjenis Short dari panel admin (/admin → Video & Short). Sumber: YouTube Shorts, TikTok, atau Instagram Reels.</p>
             <a href="{{ route('home') }}" class="rounded-md bg-kemenag px-4 py-2 text-sm font-bold">Kembali ke beranda</a>
         </div>
     @else
         <div class="short-feed" data-short-feed>
             @foreach ($shorts as $index => $short)
-                <section class="short-slide" data-short-slide data-embed="{{ $short->embedUrl(autoplay: true, mute: true) }}">
+                <section
+                    class="short-slide"
+                    data-short-slide
+                    data-platform="{{ $short->platform() }}"
+                    data-embed="{{ $short->embedUrl(autoplay: true, mute: true, shortsUi: true) }}"
+                    data-embed-sound="{{ $short->embedUrl(autoplay: true, mute: false, shortsUi: true) }}"
+                >
                     <div class="short-media">
                         @if ($thumb = $short->thumbnailUrl())
                             <img src="{{ $thumb }}" alt="" class="short-poster" data-short-poster>
                         @else
-                            <div class="short-poster short-poster-fallback pattern-mesh"></div>
+                            <div class="short-poster short-poster-fallback pattern-mesh flex items-center justify-center text-sm font-bold text-white/70">
+                                {{ $short->platformLabel() }}
+                            </div>
                         @endif
                         <div class="short-player" data-short-player></div>
                         <button type="button" class="short-play" data-short-play aria-label="Putar">
@@ -46,9 +54,16 @@
                         </button>
                     </div>
 
+                    <div class="short-actions">
+                        <button type="button" class="short-action-btn is-muted" data-short-mute aria-label="Nyalakan suara">
+                            <span data-mute-icon>OFF</span>
+                            <small>Suara</small>
+                        </button>
+                    </div>
+
                     <div class="short-overlay">
                         <div class="short-meta">
-                            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-gold">{{ $site->school_name }}</p>
+                            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-gold">{{ $short->platformLabel() }} · {{ $site->school_name }}</p>
                             <h1 class="mt-1 font-display text-xl font-extrabold leading-snug">{{ $short->title }}</h1>
                             @if ($short->description)
                                 <p class="mt-2 line-clamp-3 text-sm text-white/75">{{ $short->description }}</p>

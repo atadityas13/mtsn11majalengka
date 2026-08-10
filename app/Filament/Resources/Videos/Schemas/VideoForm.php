@@ -37,19 +37,31 @@ class VideoForm
                         'video' => 'Video biasa (horizontal)',
                     ])
                     ->required()
-                    ->default('short'),
+                    ->default('short')
+                    ->helperText('TikTok & Instagram Reels biasanya pilih Short'),
                 TextInput::make('video_url')
-                    ->label('URL YouTube / Shorts')
+                    ->label('URL video')
                     ->required()
                     ->url()
-                    ->helperText('Contoh: https://youtube.com/shorts/xxxx atau https://youtu.be/xxxx')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (?string $state, callable $set, callable $get): void {
+                        if (blank($state)) {
+                            return;
+                        }
+
+                        $probe = new \App\Models\Video(['video_url' => $state]);
+                        if ($probe->suggestsShort() && $get('type') !== 'video') {
+                            $set('type', 'short');
+                        }
+                    })
+                    ->helperText('YouTube / Shorts, TikTok (bukan vm.tiktok.com), atau Instagram Reel/Post — tempel URL lengkap')
                     ->columnSpanFull(),
                 FileUpload::make('cover_image')
-                    ->label('Cover (opsional)')
+                    ->label('Cover')
                     ->image()
                     ->directory('videos')
                     ->disk('public')
-                    ->helperText('Jika kosong, pakai thumbnail YouTube')
+                    ->helperText('Wajib disarankan untuk TikTok/Instagram (thumbnail otomatis hanya untuk YouTube)')
                     ->columnSpanFull(),
                 Textarea::make('description')
                     ->label('Deskripsi')

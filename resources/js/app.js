@@ -141,6 +141,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const shortFeed = document.querySelector('[data-short-feed]');
     if (shortFeed) {
         const slides = [...shortFeed.querySelectorAll('[data-short-slide]')];
+        let soundOn = false;
+
+        const setMuteUi = (slide, muted) => {
+            const btn = slide.querySelector('[data-short-mute]');
+            const icon = slide.querySelector('[data-mute-icon]');
+            if (!btn || !icon) {
+                return;
+            }
+            btn.classList.toggle('is-muted', muted);
+            btn.setAttribute('aria-label', muted ? 'Nyalakan suara' : 'Matikan suara');
+            icon.textContent = muted ? 'OFF' : 'ON';
+        };
 
         const unload = (slide) => {
             const player = slide.querySelector('[data-short-player]');
@@ -151,18 +163,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             poster?.classList.remove('is-hidden');
             playBtn?.classList.remove('is-hidden');
-            slide.classList.remove('is-playing');
+            slide.classList.remove('is-playing', 'platform-youtube', 'platform-tiktok', 'platform-instagram');
+            setMuteUi(slide, true);
         };
 
-        const load = (slide) => {
-            const embed = slide.dataset.embed;
+        const load = (slide, { withSound = soundOn } = {}) => {
+            const embed = withSound
+                ? slide.dataset.embedSound || slide.dataset.embed
+                : slide.dataset.embed;
+            const platform = slide.dataset.platform || 'youtube';
             const player = slide.querySelector('[data-short-player]');
             const poster = slide.querySelector('[data-short-poster]');
             const playBtn = slide.querySelector('[data-short-play]');
-            if (!embed || !player || player.childElementCount) {
+            if (!embed || !player) {
                 return;
             }
 
+            player.innerHTML = '';
             const iframe = document.createElement('iframe');
             iframe.src = embed;
             iframe.title = 'Short video';
@@ -170,10 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
             iframe.allowFullscreen = true;
             iframe.setAttribute('playsinline', 'true');
+            iframe.setAttribute('scrolling', 'no');
+            iframe.className = `short-iframe is-${platform}`;
             player.appendChild(iframe);
             poster?.classList.add('is-hidden');
             playBtn?.classList.add('is-hidden');
             slide.classList.add('is-playing');
+            slide.classList.add(`platform-${platform}`);
+            setMuteUi(slide, !withSound);
         };
 
         const observer = new IntersectionObserver(
@@ -197,7 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         slides.forEach((slide) => {
             observer.observe(slide);
-            slide.querySelector('[data-short-play]')?.addEventListener('click', () => load(slide));
+            slide.querySelector('[data-short-play]')?.addEventListener('click', () => {
+                load(slide, { withSound: soundOn });
+            });
+            slide.querySelector('[data-short-mute]')?.addEventListener('click', (event) => {
+                event.stopPropagation();
+                soundOn = !soundOn;
+                load(slide, { withSound: soundOn });
+            });
         });
     }
 });
