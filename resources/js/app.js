@@ -613,4 +613,46 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    const setupLayananMarquee = () => {
+        const root = document.querySelector('[data-layanan-marquee]');
+        if (!root) {
+            return;
+        }
+
+        const viewport = root.querySelector('.layanan-apps-viewport');
+        const rail = root.querySelector('.layanan-apps-rail');
+        const group = root.querySelector('[data-layanan-group]');
+        if (!viewport || !rail || !group) {
+            return;
+        }
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const sync = () => {
+            root.querySelectorAll('[data-layanan-clone]').forEach((node) => node.remove());
+            root.classList.remove('is-marquee');
+
+            const needsMarquee = !reduceMotion && group.scrollWidth > viewport.clientWidth + 8;
+            if (!needsMarquee) {
+                return;
+            }
+
+            const copy = group.cloneNode(true);
+            copy.setAttribute('data-layanan-clone', 'true');
+            copy.setAttribute('aria-hidden', 'true');
+            copy.querySelectorAll('a').forEach((link) => {
+                link.setAttribute('tabindex', '-1');
+            });
+            rail.appendChild(copy);
+            root.classList.add('is-marquee');
+        };
+
+        sync();
+        window.addEventListener('resize', () => {
+            window.requestAnimationFrame(sync);
+        });
+    };
+
+    setupLayananMarquee();
 });

@@ -242,93 +242,57 @@
         box-shadow: 0 10px 22px rgb(0 0 0 / 0.22);
     }
 
-    .layanan-ticker {
-        display: flex;
-        align-items: stretch;
-        min-height: 4.25rem;
-        background: #fff;
-        border-top: 1px solid rgb(10 122 62 / 0.1);
-    }
-
-    .layanan-ticker-label {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 0.2rem;
-        flex-shrink: 0;
-        min-width: 7.5rem;
-        padding: 0.85rem 1rem;
-        background: #043f1f;
-        color: #fff;
-        box-shadow: 8px 0 18px rgb(4 63 31 / 0.18);
-    }
-
-    .layanan-ticker-label > span:first-child {
-        font-family: var(--font-display);
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        line-height: 1.25;
-    }
-
-    .layanan-ticker-all {
-        font-size: 0.68rem;
-        font-weight: 700;
-        color: #d4a017;
-        text-decoration: none;
-    }
-
-    .layanan-ticker-all:hover {
-        text-decoration: underline;
-    }
-
-    .layanan-ticker-track {
-        flex: 1;
+    .layanan-apps {
         overflow: hidden;
-        mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
     }
 
-    .layanan-ticker-rail {
+    .layanan-apps-viewport {
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .layanan-apps-rail {
         display: flex;
         width: max-content;
-        animation: layanan-marquee 32s linear infinite;
+        max-width: 100%;
+        margin-inline: auto;
     }
 
-    .layanan-ticker:hover .layanan-ticker-rail {
-        animation-play-state: paused;
-    }
-
-    .layanan-ticker-group {
+    .layanan-apps-group {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.25rem;
+        flex-wrap: nowrap;
     }
 
-    .layanan-ticker-item {
-        display: inline-flex;
+    .layanan-app {
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 0.7rem;
-        padding: 0.7rem 1.35rem;
-        border-right: 1px solid rgb(10 122 62 / 0.1);
-        white-space: nowrap;
+        gap: 0.55rem;
+        min-width: 6.5rem;
+        max-width: 8rem;
+        padding: 0.65rem 1rem 0.85rem;
         text-decoration: none;
-        transition: background-color 0.2s ease;
+        text-align: center;
+        transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
-    .layanan-ticker-item:hover {
-        background: rgb(232 245 238 / 0.9);
+    .layanan-app:hover {
+        transform: translateY(-3px);
+        opacity: 0.92;
     }
 
-    .layanan-ticker-logo {
+    .layanan-ticker-logo,
+    .layanan-app .layanan-ticker-logo {
         display: block;
-        width: 2.35rem;
-        height: 2.35rem;
+        width: 3.5rem;
+        height: 3.5rem;
         object-fit: contain;
-        border-radius: 0.65rem;
+        border-radius: 0.9rem;
         flex-shrink: 0;
-        background: #fff;
+        background: transparent;
     }
 
     .layanan-ticker-logo--mark {
@@ -338,34 +302,57 @@
         overflow: hidden;
         background: #0a7a3e;
         color: #fff;
+        border-radius: 0.9rem;
     }
 
     .layanan-ticker-initial {
         font-family: var(--font-display);
-        font-size: 1rem;
+        font-size: 1.25rem;
         font-weight: 800;
         line-height: 1;
     }
 
-    .layanan-ticker-name {
-        font-family: var(--font-display);
-        font-size: 0.92rem;
-        font-weight: 800;
-        color: #065c2e;
+    .layanan-app-name {
+        font-size: 0.84rem;
+        font-weight: 600;
+        line-height: 1.25;
+        color: #3f4d45;
+    }
+
+    /* Marquee hanya aktif jika konten overflow (diaktifkan via JS) */
+    .layanan-apps.is-marquee .layanan-apps-rail {
+        max-width: none;
+        margin-inline: 0;
+        animation: layanan-marquee 28s linear infinite;
+    }
+
+    .layanan-apps.is-marquee:hover .layanan-apps-rail {
+        animation-play-state: paused;
+    }
+
+    .layanan-apps.is-marquee .layanan-apps-group {
+        justify-content: flex-start;
+    }
+
+    .layanan-apps.is-marquee .layanan-apps-viewport {
+        mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
     }
 
     @media (min-width: 768px) {
-        .layanan-ticker-label {
-            min-width: 9.5rem;
-            padding: 0.95rem 1.25rem;
+        .layanan-app {
+            min-width: 7.5rem;
+            max-width: 9rem;
+            padding: 0.85rem 1.25rem 1rem;
         }
 
-        .layanan-ticker-label > span:first-child {
-            font-size: 0.78rem;
+        .layanan-ticker-logo,
+        .layanan-app .layanan-ticker-logo {
+            width: 4rem;
+            height: 4rem;
         }
 
-        .layanan-ticker-name {
-            font-size: 1rem;
+        .layanan-app-name {
+            font-size: 0.92rem;
         }
     }
 
@@ -1096,7 +1083,7 @@
     .ornament-arc,
     .section-label::before,
     .wa-float,
-    .layanan-ticker-rail {
+    .layanan-apps.is-marquee .layanan-apps-rail {
         animation: none !important;
     }
 

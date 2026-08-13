@@ -156,7 +156,7 @@
     @endif
 </section>
 
-{{-- Akses layanan: posisi sama seperti sebelumnya, tampilan ticker --}}
+{{-- Akses layanan: logo di atas + label di bawah (ala kemenag.go.id) --}}
 @if ($serviceLinks->isNotEmpty())
 <section class="bg-white py-12">
     <div class="site-container">
@@ -167,27 +167,19 @@
             </div>
             <a href="{{ route('layanan') }}" class="text-sm font-bold text-kemenag hover:underline">Semua layanan →</a>
         </div>
-        <div class="overflow-hidden rounded-2xl border border-kemenag/10 shadow-sm" aria-label="Daftar akses layanan">
-            <div class="layanan-ticker">
-                <div class="layanan-ticker-label">
-                    <span>Akses Layanan</span>
-                </div>
-                <div class="layanan-ticker-track">
-                    <div class="layanan-ticker-rail">
-                        @foreach ([1, 2] as $loopCopy)
-                            <div class="layanan-ticker-group" @if ($loopCopy === 2) aria-hidden="true" @endif>
-                                @foreach ($serviceLinks as $app)
-                                    <a
-                                        href="{{ $app->resolvedUrl() }}"
-                                        @if ($app->isExternal()) target="_blank" rel="noopener" @endif
-                                        class="layanan-ticker-item"
-                                        @if ($loopCopy === 2) tabindex="-1" @endif
-                                    >
-                                        <x-layanan-app-icon :logo="$app->logo" :label="$app->label" />
-                                        <span class="layanan-ticker-name">{{ $app->label }}</span>
-                                    </a>
-                                @endforeach
-                            </div>
+        <div class="layanan-apps" data-layanan-marquee aria-label="Daftar akses layanan">
+            <div class="layanan-apps-viewport">
+                <div class="layanan-apps-rail">
+                    <div class="layanan-apps-group" data-layanan-group>
+                        @foreach ($serviceLinks as $app)
+                            <a
+                                href="{{ $app->resolvedUrl() }}"
+                                @if ($app->isExternal()) target="_blank" rel="noopener" @endif
+                                class="layanan-app"
+                            >
+                                <x-layanan-app-icon :logo="$app->logo" :label="$app->label" />
+                                <span class="layanan-app-name">{{ $app->label }}</span>
+                            </a>
                         @endforeach
                     </div>
                 </div>
