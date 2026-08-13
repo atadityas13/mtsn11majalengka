@@ -7,7 +7,7 @@
 <div class="border-b border-kemenag/10 bg-kemenag-deep text-white">
     <div class="site-container py-12">
         <h1 class="font-display text-4xl font-extrabold md:text-5xl">Guru & Tendik</h1>
-        <p class="mt-3 text-white/75">Profil foto dapat diganti kapan saja dari panel admin.</p>
+        <p class="mt-3 text-white/75">Daftar tenaga pendidik dan kependidikan madrasah.</p>
     </div>
 </div>
 <section class="site-container py-12">
@@ -29,7 +29,7 @@
                 </div>
             </article>
         @empty
-            <p class="col-span-full rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada data guru/tendik. Tambahkan dari panel admin.</p>
+            <p class="col-span-full rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Data guru dan tendik belum tersedia.</p>
         @endforelse
     </div>
 </section>

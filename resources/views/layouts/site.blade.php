@@ -228,10 +228,6 @@
                         </a>
                     @endif
                 </div>
-                @if (! $site->facebook_url && ! $site->instagram_url && ! $site->youtube_url)
-                    <p class="mt-4 text-sm text-white/55">Tambahkan tautan media sosial di Pengaturan Situs.</p>
-                @endif
-            </div>
         </div>
         <div class="border-t border-white/10 py-4 text-center text-xs text-white/45">
             &copy; {{ date('Y') }} {{ $site->school_name }}. Seluruh hak dilindungi · Naungan Kementerian Agama RI.

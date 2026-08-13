@@ -68,7 +68,7 @@
                         <img src="{{ $thumb }}" alt="{{ $video->title }}" class="h-full w-full object-cover">
                     @else
                         <div class="flex h-full items-center justify-center px-4 text-center text-sm text-white/70">
-                            URL belum bisa di-embed. Pastikan link lengkap {{ $video->platformLabel() }}.
+                            Video tidak dapat ditampilkan saat ini.
                         </div>
                     @endif
                 </div>
@@ -81,7 +81,7 @@
                 </div>
             </article>
         @empty
-            <p class="col-span-full rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada video horizontal. Tambahkan dari panel admin (jenis: Video biasa).</p>
+            <p class="col-span-full rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada video yang dipublikasikan.</p>
         @endforelse
     </div>
 

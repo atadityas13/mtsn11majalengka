@@ -14,13 +14,13 @@
     <div class="site-container py-12">
         <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">Profil</p>
         <h1 class="mt-2 font-display text-4xl font-extrabold md:text-5xl">Struktur Organisasi</h1>
-        <p class="mt-3 max-w-2xl text-white/75">Susunan pejabat struktural madrasah. Foto dan nama dapat diperbarui dari panel admin.</p>
+        <p class="mt-3 max-w-2xl text-white/75">Susunan pejabat struktural madrasah.</p>
     </div>
 </div>
 
 <section class="site-container py-12 md:py-16">
     @if ($nodes->isEmpty())
-        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada data struktur. Tambahkan dari panel admin.</p>
+        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Data struktur organisasi belum tersedia.</p>
     @else
         {{-- Leadership spotlight --}}
         <div class="mb-12 grid gap-4 sm:grid-cols-2 sm:gap-6" x-reveal>

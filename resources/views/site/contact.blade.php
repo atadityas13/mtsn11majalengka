@@ -27,7 +27,7 @@
                 <iframe src="{{ $settings->map_embed_url }}" class="h-full min-h-72 w-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             @else
                 <div class="flex h-full min-h-72 items-center justify-center text-sm text-muted">
-                    Tambahkan URL embed peta di Pengaturan Situs.
+                    Peta lokasi belum tersedia.
                 </div>
             @endif
         </div>
@@ -35,7 +35,7 @@
 
     <div class="rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm md:p-8">
         <h2 class="font-display text-2xl font-extrabold text-kemenag-deep">Kirim pesan</h2>
-        <p class="mt-2 text-sm text-muted">Pesan masuk ke kotak admin di panel Filament.</p>
+        <p class="mt-2 text-sm text-muted">Sampaikan pertanyaan atau saran Anda. Kami akan merespons secepatnya.</p>
 
         @if (session('success'))
             <div class="mt-4 rounded-md border border-kemenag/20 bg-kemenag-soft px-4 py-3 text-sm font-semibold text-kemenag-deep">

@@ -26,7 +26,7 @@
             <a href="{{ route('downloads.file', $item) }}" class="btn-primary shrink-0">Unduh</a>
         </article>
     @empty
-        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada berkas unduhan. Unggah dari panel admin.</p>
+        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">Belum ada berkas unduhan yang tersedia.</p>
     @endforelse
     <div>{{ $downloads->links() }}</div>
 </section>

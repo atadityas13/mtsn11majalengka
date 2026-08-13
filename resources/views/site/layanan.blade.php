@@ -28,7 +28,7 @@
         </a>
     @empty
         <p class="col-span-full rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">
-            Belum ada layanan. Tambahkan dari panel admin (menu <strong>Akses Layanan</strong>).
+            Belum ada layanan yang tersedia saat ini.
         </p>
     @endforelse
 </section>

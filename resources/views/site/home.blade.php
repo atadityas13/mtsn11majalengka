@@ -152,7 +152,7 @@
             </div>
         </div>
     @else
-        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted" x-reveal>Belum ada berita. Tambahkan dari panel admin.</p>
+        <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted" x-reveal>Belum ada berita yang dipublikasikan.</p>
     @endif
 </section>
 
@@ -331,7 +331,7 @@
     <div class="mb-8" x-reveal>
         <p class="section-label">Profil</p>
         <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">Video Profil Madrasah</h2>
-        <p class="mt-2 max-w-2xl text-sm text-muted">Video dapat diganti kapan saja dari panel admin (Pengaturan Situs).</p>
+        <p class="mt-2 max-w-2xl text-sm text-muted">Kenali lebih dekat kegiatan dan suasana pembelajaran di madrasah kami.</p>
     </div>
     <div class="overflow-hidden rounded-2xl border border-kemenag/10 bg-kemenag-dark shadow-lg" x-reveal="reveal-scale">
         <div class="aspect-video">
@@ -435,7 +435,7 @@
                         {{ $site->accreditation_label ?: 'Akreditasi' }}
                         {{ $site->accreditation_value ?: 'A' }}
                     </p>
-                    <p class="mt-2 text-sm text-muted">Unggah gambar surat akreditasi dari panel admin (Pengaturan Situs).</p>
+                    <p class="mt-2 text-sm text-muted">Dokumen akreditasi sedang disiapkan.</p>
                 </div>
             @endif
         </div>

@@ -27,7 +27,7 @@
     @if ($shorts->isEmpty())
         <div class="flex min-h-dvh flex-col items-center justify-center gap-4 px-6 text-center">
             <p class="font-display text-2xl font-extrabold">Belum ada short</p>
-            <p class="max-w-sm text-sm text-white/60">Tambahkan video berjenis Short dari panel admin (/admin → Video & Short). Sumber: YouTube Shorts, TikTok, atau Instagram Reels.</p>
+            <p class="max-w-sm text-sm text-white/60">Konten short belum tersedia. Silakan cek kembali nanti.</p>
             <a href="{{ route('home') }}" class="rounded-md bg-kemenag px-4 py-2 text-sm font-bold">Kembali ke beranda</a>
         </div>
     @else
