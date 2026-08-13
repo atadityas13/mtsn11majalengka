@@ -11,8 +11,8 @@
             <img
                 src="{{ asset('storage/'.$site->hero_image) }}"
                 alt=""
-                class="hero-kenburns h-full w-full object-cover"
-                style="object-position: {{ $site->heroImageFocus() }}; transform-origin: {{ $site->heroImageFocus() }};"
+                class="hero-kenburns h-full w-full"
+                style="--hero-focus: {{ $site->heroImageFocus() }}; object-position: var(--hero-focus); transform-origin: var(--hero-focus);"
                 fetchpriority="high"
             >
         @else
@@ -20,8 +20,8 @@
         @endif
     </div>
 
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-kemenag-dark/78 via-kemenag-deep/35 to-transparent"></div>
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-kemenag-dark/65 via-transparent to-black/15"></div>
+    <div class="pointer-events-none absolute inset-0 hero-veil-side bg-gradient-to-r from-kemenag-dark/78 via-kemenag-deep/35 to-transparent"></div>
+    <div class="pointer-events-none absolute inset-0 hero-veil-bottom bg-gradient-to-t from-kemenag-dark/65 via-transparent to-black/15"></div>
     <div class="pointer-events-none absolute -left-16 top-1/4 h-72 w-72 rounded-full bg-gold/15 blur-3xl"></div>
 
     <div class="site-container relative flex min-h-[clamp(22rem,52vh,34rem)] flex-col justify-center py-14 md:py-16">
