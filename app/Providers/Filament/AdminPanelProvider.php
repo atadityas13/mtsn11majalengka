@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(\App\Filament\Pages\Auth\Login::class)
             ->brandName('Si COMA')
             ->brandLogo(function (): ?string {
                 $logo = SiteSetting::current()->logo;
@@ -91,15 +91,6 @@ class AdminPanelProvider extends PanelProvider
                             }
                         }
                     </script>
-                    HTML
-            )
-            ->renderHook(
-                PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
-                fn (): string => <<<'HTML'
-                    <div class="mb-6 text-center">
-                        <p class="text-sm font-semibold tracking-wide text-gray-500 dark:text-gray-400">Site Content Management</p>
-                        <p class="mt-1 text-base font-bold text-gray-950 dark:text-white">MTsN 11 Majalengka</p>
-                    </div>
                     HTML
             );
     }

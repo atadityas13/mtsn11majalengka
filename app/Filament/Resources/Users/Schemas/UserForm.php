@@ -22,6 +22,13 @@ class UserForm
                             ->label('Nama')
                             ->required()
                             ->maxLength(255),
+                        TextInput::make('username')
+                            ->label('Username')
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->rule('regex:/^[a-zA-Z0-9._-]+$/')
+                            ->helperText('Dipakai untuk masuk ke Si COMA. Huruf, angka, titik, dash, underscore.')
+                            ->maxLength(50),
                         TextInput::make('email')
                             ->label('Email')
                             ->email()
