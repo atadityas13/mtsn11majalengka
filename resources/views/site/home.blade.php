@@ -3,32 +3,37 @@
 @section('title', $site->school_name.' — '.$site->tagline)
 
 @section('content')
-{{-- Hero: motion halus + cahaya lembut --}}
+{{-- Hero: ken burns kuat + parallax scroll + cahaya --}}
 <section class="hero-stage relative overflow-hidden text-white">
-    <div class="absolute inset-0 pattern-mesh opacity-25"></div>
-    @if ($site->hero_image)
-        <img
-            src="{{ asset('storage/'.$site->hero_image) }}"
-            alt=""
-            class="hero-kenburns absolute inset-0 h-full w-full object-cover opacity-70"
-        >
-    @endif
-    {{-- Cahaya: kiri untuk teks, bawah untuk kedalaman, kanan lebih terbuka ke foto --}}
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-kemenag-dark/75 via-kemenag-deep/40 to-transparent"></div>
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-kemenag-dark/55 via-transparent to-kemenag-dark/20"></div>
-    <div class="pointer-events-none absolute -left-20 top-1/3 h-64 w-64 rounded-full bg-gold/10 blur-3xl"></div>
+    <div class="hero-media" data-hero-parallax>
+        <div class="absolute inset-0 pattern-mesh opacity-20"></div>
+        @if ($site->hero_image)
+            <img
+                src="{{ asset('storage/'.$site->hero_image) }}"
+                alt=""
+                class="hero-kenburns h-full w-full object-cover"
+                fetchpriority="high"
+            >
+        @else
+            <div class="h-full w-full bg-[linear-gradient(135deg,#0a7a3e,#043f1f)]"></div>
+        @endif
+    </div>
 
-    <div class="site-container relative py-12 md:py-14 lg:py-16">
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-kemenag-dark/78 via-kemenag-deep/35 to-transparent"></div>
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-kemenag-dark/65 via-transparent to-black/15"></div>
+    <div class="pointer-events-none absolute -left-16 top-1/4 h-72 w-72 rounded-full bg-gold/15 blur-3xl"></div>
+
+    <div class="site-container relative flex min-h-[clamp(22rem,52vh,34rem)] flex-col justify-center py-14 md:py-16">
         <p class="animate-rise section-label !text-gold">
             <span class="text-gold">Portal Resmi Madrasah</span>
         </p>
-        <h1 class="animate-rise-delay mt-3 max-w-4xl font-display text-4xl font-extrabold leading-[1.05] text-balance md:text-5xl lg:text-[3.25rem]">
+        <h1 class="animate-rise-delay mt-3 max-w-4xl font-display text-4xl font-extrabold leading-[1.05] text-balance md:text-5xl lg:text-[3.35rem]">
             {{ $site->hero_title ?: $site->school_name }}
         </h1>
-        <p class="animate-rise-delay-2 mt-3 max-w-2xl text-sm leading-relaxed text-white/90 md:text-base">
+        <p class="animate-rise-delay-2 mt-4 max-w-2xl text-sm leading-relaxed text-white/92 md:text-base">
             {{ $site->hero_subtitle ?: $site->tagline }}
         </p>
-        <div class="animate-rise-delay-3 mt-7 flex flex-wrap gap-3">
+        <div class="animate-rise-delay-3 mt-8 flex flex-wrap gap-3">
             @if ($site->hero_cta_url)
                 <a href="{{ $site->hero_cta_url }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-md bg-gold px-5 py-2.5 text-sm font-extrabold text-kemenag-dark transition hover:-translate-y-0.5 hover:brightness-110 hover:shadow-lg">
                     {{ $site->hero_cta_label ?: 'Info PPDB' }}
@@ -37,11 +42,15 @@
             <a href="{{ route('posts.index') }}" class="btn-ghost">Berita Terbaru</a>
         </div>
     </div>
+
+    <div class="hero-scroll-hint" aria-hidden="true">
+        <span></span>
+    </div>
 </section>
 
 {{-- Statistik singkat --}}
 <section class="border-b border-kemenag/10 bg-white">
-    <div class="site-container grid grid-cols-2 gap-4 py-8 md:grid-cols-4 md:gap-6" x-reveal>
+    <div class="site-container stagger grid grid-cols-2 gap-4 py-8 md:grid-cols-4 md:gap-6" x-reveal>
         @foreach ([
             ['Siswa', $site->students_count, 'Peserta didik aktif'],
             ['Guru', $site->teachers_count, 'Tenaga pendidik'],
@@ -49,8 +58,10 @@
             ['Berdiri', $site->founded_year, 'Tahun berdiri'],
         ] as [$label, $value, $hint])
             @if ($value)
-                <div class="rounded-2xl border border-kemenag/10 bg-surface px-4 py-5 text-center">
-                    <p class="font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">{{ $value }}</p>
+                <div class="reveal rounded-2xl border border-kemenag/10 bg-surface px-4 py-5 text-center">
+                    <p class="font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl" @if ($label !== 'Berdiri') data-count-up="{{ (int) $value }}" @endif>
+                        {{ $label === 'Berdiri' ? $value : '0' }}
+                    </p>
                     <p class="mt-1 text-sm font-bold text-kemenag">{{ $label }}</p>
                     <p class="mt-1 text-xs text-muted">{{ $hint }}</p>
                 </div>

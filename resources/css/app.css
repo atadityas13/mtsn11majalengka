@@ -104,10 +104,10 @@
 
     .reveal {
         opacity: 0;
-        transform: translateY(28px);
+        transform: translateY(40px);
         transition:
-            opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
         will-change: opacity, transform;
     }
 
@@ -118,10 +118,10 @@
 
     .reveal-left {
         opacity: 0;
-        transform: translateX(-28px);
+        transform: translateX(-40px);
         transition:
-            opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .reveal-left.is-visible {
@@ -131,15 +131,56 @@
 
     .reveal-scale {
         opacity: 0;
-        transform: scale(0.96);
+        transform: scale(0.92);
         transition:
-            opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .reveal-scale.is-visible {
         opacity: 1;
         transform: scale(1);
+    }
+
+    .hero-media {
+        position: absolute;
+        inset: -12% -6% -18%;
+        overflow: hidden;
+        will-change: transform;
+    }
+
+    .hero-kenburns {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform-origin: 60% 40%;
+        animation: kenburns 11s ease-in-out infinite alternate;
+        will-change: transform;
+    }
+
+    .hero-scroll-hint {
+        position: absolute;
+        left: 50%;
+        bottom: 1rem;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        width: 1.75rem;
+        height: 2.5rem;
+        transform: translateX(-50%);
+        border: 1.5px solid rgb(255 255 255 / 0.45);
+        border-radius: 9999px;
+        opacity: 0.85;
+    }
+
+    .hero-scroll-hint span {
+        display: block;
+        width: 0.28rem;
+        height: 0.28rem;
+        border-radius: 9999px;
+        background: rgb(255 255 255 / 0.9);
+        animation: scroll-hint 1.6s ease-in-out infinite;
     }
 
     .stagger > .reveal:nth-child(1) { transition-delay: 0.05s; }
@@ -803,12 +844,6 @@
         animation: float-soft 7.5s ease-in-out 0.8s infinite;
     }
 
-    .hero-kenburns {
-        transform-origin: center center;
-        animation: kenburns 22s ease-in-out infinite alternate;
-        will-change: transform;
-    }
-
     .delay-1 { transition-delay: 0.08s !important; }
     .delay-2 { transition-delay: 0.16s !important; }
     .delay-3 { transition-delay: 0.24s !important; }
@@ -828,10 +863,25 @@
 
 @keyframes kenburns {
     from {
-        transform: scale(1.05) translate(0, 0);
+        transform: scale(1) translate3d(0, 0, 0);
     }
     to {
-        transform: scale(1.14) translate(-1.5%, -1%);
+        transform: scale(1.28) translate3d(-4%, -3%, 0);
+    }
+}
+
+@keyframes scroll-hint {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    70% {
+        transform: translateY(10px);
+        opacity: 0.15;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 
@@ -888,6 +938,7 @@
     .animate-float,
     .animate-float-delay,
     .hero-kenburns,
+    .hero-scroll-hint span,
     .pattern-mesh,
     .ornament-arc,
     .section-label::before,
@@ -895,8 +946,13 @@
         animation: none !important;
     }
 
-    .hero-kenburns {
+    .hero-kenburns,
+    .hero-media {
         transform: none !important;
+    }
+
+    .hero-scroll-hint {
+        display: none;
     }
 
     .reveal,

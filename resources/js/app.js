@@ -42,6 +42,69 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('scroll', onScroll, { passive: true });
     }
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const heroStage = document.querySelector('.hero-stage');
+    const heroMedia = document.querySelector('[data-hero-parallax]');
+    if (heroStage && heroMedia && !reduceMotion) {
+        let ticking = false;
+        const updateParallax = () => {
+            const max = heroStage.offsetHeight;
+            const y = Math.min(window.scrollY, max);
+            heroMedia.style.transform = `translate3d(0, ${y * 0.32}px, 0)`;
+            ticking = false;
+        };
+        window.addEventListener(
+            'scroll',
+            () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            },
+            { passive: true }
+        );
+        updateParallax();
+    }
+
+    document.querySelectorAll('[data-count-up]').forEach((el) => {
+        const target = Number(el.dataset.countUp || 0);
+        if (!Number.isFinite(target) || target <= 0) {
+            return;
+        }
+
+        const run = () => {
+            if (reduceMotion) {
+                el.textContent = String(target);
+                return;
+            }
+            const duration = 1100;
+            const start = performance.now();
+            const tick = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = String(Math.round(target * eased));
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                }
+            };
+            requestAnimationFrame(tick);
+        };
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        run();
+                        observer.unobserve(el);
+                    }
+                });
+            },
+            { threshold: 0.45 }
+        );
+        observer.observe(el);
+    });
+
     document.querySelectorAll('[data-news-slider]').forEach((root) => {
         const slides = [...root.querySelectorAll('[data-slide]')];
         const dots = [...root.querySelectorAll('[data-slider-dot]')];
