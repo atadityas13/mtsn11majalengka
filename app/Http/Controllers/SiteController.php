@@ -84,6 +84,11 @@ class SiteController extends Controller
                 ->latest('published_at')
                 ->take(5)
                 ->get(),
+            'bannerPosts' => Post::published()
+                ->with('category')
+                ->latest('published_at')
+                ->take(5)
+                ->get(),
             'popularPosts' => Post::published()
                 ->with('category')
                 ->where('id', '!=', $post->id)

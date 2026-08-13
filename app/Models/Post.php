@@ -18,6 +18,8 @@ class Post extends Model
         'body',
         'cover_image',
         'author_name',
+        'editor_name',
+        'tags',
         'published_at',
         'is_published',
         'views_count',
@@ -65,5 +67,21 @@ class Post extends Model
         $words = str_word_count($text);
 
         return max(1, (int) ceil($words / 200));
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function tagList(): array
+    {
+        if (blank($this->tags)) {
+            return $this->category?->name ? [$this->category->name] : [];
+        }
+
+        return collect(explode(',', (string) $this->tags))
+            ->map(fn (string $tag) => trim($tag))
+            ->filter()
+            ->values()
+            ->all();
     }
 }

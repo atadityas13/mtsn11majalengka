@@ -14,57 +14,142 @@
     $fbShare = 'https://www.facebook.com/sharer/sharer.php?u='.rawurlencode($shareUrl);
     $xShare = 'https://twitter.com/intent/tweet?url='.rawurlencode($shareUrl).'&text='.rawurlencode($shareTitle);
     $mailShare = 'mailto:?subject='.rawurlencode($shareTitle).'&body='.rawurlencode($shareTitle."\n\n".$shareUrl);
+    $postTags = $post->tagList();
 @endphp
 
 @section('content')
 <article class="print-article">
-    <div class="border-b border-kemenag/10 bg-gradient-to-br from-kemenag-deep to-kemenag-dark text-white">
-        <div class="site-container py-10 md:py-12">
-            <nav class="no-print flex flex-wrap items-center gap-2 text-xs font-semibold text-white/70" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}" class="hover:text-gold">Beranda</a>
-                <span aria-hidden="true">/</span>
-                <a href="{{ route('posts.index') }}" class="hover:text-gold">Berita</a>
-                <span aria-hidden="true">/</span>
-                <span class="line-clamp-1 text-white/90">{{ $post->title }}</span>
-            </nav>
-            @if ($post->category)
-                <span class="mt-5 inline-flex rounded-md bg-gold/20 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
-            @endif
-            <h1 class="mt-4 max-w-4xl font-display text-3xl font-extrabold leading-tight text-balance md:text-5xl">{{ $post->title }}</h1>
-            <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/75">
-                <span>{{ optional($post->published_at)->translatedFormat('d F Y') }}</span>
-                @if ($post->author_name)
-                    <span>· {{ $post->author_name }}</span>
-                @endif
-                <span>· {{ $post->readingMinutes() }} menit baca</span>
-                <span>· {{ number_format($post->views_count) }} dilihat</span>
+    {{-- Banner slideshow berita terbaru --}}
+    @if ($bannerPosts->isNotEmpty())
+    <section class="no-print news-banner" data-news-slider data-interval="5000" aria-label="Berita terbaru">
+        <div class="relative overflow-hidden bg-kemenag-dark">
+            <div class="relative aspect-[21/9] min-h-[16rem] md:min-h-[22rem]">
+                @foreach ($bannerPosts as $index => $banner)
+                    <div
+                        class="news-slide absolute inset-0 transition-opacity duration-700 ease-out {{ $index === 0 ? 'is-active opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0' }}"
+                        data-slide="{{ $index }}"
+                    >
+                        <a href="{{ route('posts.show', $banner->slug) }}" class="group relative block h-full">
+                            @if ($banner->cover_image)
+                                <img
+                                    src="{{ asset('storage/'.$banner->cover_image) }}"
+                                    alt=""
+                                    class="h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-[1.03]"
+                                    @if ($index === 0) fetchpriority="high" @else loading="lazy" @endif
+                                >
+                            @else
+                                <div class="h-full w-full bg-[linear-gradient(135deg,#0a7a3e,#043f1f)]"></div>
+                            @endif
+                            <div class="absolute inset-0 bg-gradient-to-t from-kemenag-dark via-kemenag-dark/55 to-black/20"></div>
+                            <div class="absolute inset-x-0 bottom-0 p-6 md:p-10">
+                                <div class="site-container !px-0">
+                                    <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-gold">Berita Terbaru</p>
+                                    @if ($banner->category)
+                                        <span class="mt-3 inline-flex rounded bg-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">{{ $banner->category->name }}</span>
+                                    @endif
+                                    <h2 class="mt-3 max-w-4xl font-display text-2xl font-extrabold leading-tight text-white md:text-4xl">{{ $banner->title }}</h2>
+                                    @if ($banner->excerpt)
+                                        <p class="mt-3 max-w-3xl line-clamp-2 text-sm leading-relaxed text-white/85 md:text-base">{{ $banner->excerpt }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
             </div>
-        </div>
-    </div>
 
-    <div class="site-container grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10 lg:py-12">
-        <div class="min-w-0">
-            <div class="no-print article-share mb-6" data-share-bar>
-                <p class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-muted">Bagikan</p>
-                <div class="flex flex-wrap gap-2">
-                    <a href="{{ $waShare }}" target="_blank" rel="noopener" class="share-btn share-btn--wa" aria-label="Bagikan ke WhatsApp">WhatsApp</a>
-                    <a href="{{ $fbShare }}" target="_blank" rel="noopener" class="share-btn share-btn--fb" aria-label="Bagikan ke Facebook">Facebook</a>
-                    <a href="{{ $xShare }}" target="_blank" rel="noopener" class="share-btn share-btn--x" aria-label="Bagikan ke X">X</a>
-                    <a href="{{ $mailShare }}" class="share-btn share-btn--mail" aria-label="Bagikan lewat email">Email</a>
-                    <button type="button" class="share-btn share-btn--copy" data-copy-link data-url="{{ $shareUrl }}" aria-label="Salin tautan">Salin tautan</button>
-                    <button type="button" onclick="window.print()" class="share-btn share-btn--print">Cetak</button>
+            @if ($bannerPosts->count() > 1)
+                <div class="absolute bottom-4 right-4 z-10 flex items-center gap-2 md:bottom-6 md:right-8">
+                    <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" data-slider-prev aria-label="Sebelumnya">‹</button>
+                    <div class="flex gap-1.5 px-1" data-slider-dots>
+                        @foreach ($bannerPosts as $index => $banner)
+                            <button
+                                type="button"
+                                class="news-dot h-2 rounded-full transition-all {{ $index === 0 ? 'w-5 bg-gold' : 'w-2 bg-white/40' }}"
+                                data-slider-dot="{{ $index }}"
+                                aria-label="Slide {{ $index + 1 }}"
+                            ></button>
+                        @endforeach
+                    </div>
+                    <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" data-slider-next aria-label="Berikutnya">›</button>
                 </div>
+            @endif
+        </div>
+    </section>
+    @endif
+
+    <div class="site-container grid gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10 lg:py-10">
+        <div class="min-w-0">
+            <nav class="no-print flex flex-wrap items-center gap-2 text-xs font-semibold text-muted" aria-label="Breadcrumb">
+                <a href="{{ route('home') }}" class="hover:text-kemenag">Beranda</a>
+                <span aria-hidden="true">/</span>
+                <a href="{{ route('posts.index') }}" class="hover:text-kemenag">Berita</a>
+                <span aria-hidden="true">/</span>
+                <span class="line-clamp-1 text-ink/70">{{ $post->title }}</span>
+            </nav>
+
+            <h1 class="article-title mt-4">{{ $post->title }}</h1>
+
+            <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
+                <time datetime="{{ optional($post->published_at)->toDateString() }}">{{ optional($post->published_at)->translatedFormat('l, d F Y') }}</time>
+                <span aria-hidden="true">·</span>
+                <span>{{ $post->readingMinutes() }} menit baca</span>
+                <span aria-hidden="true">·</span>
+                <span>{{ number_format($post->views_count) }} dilihat</span>
             </div>
 
             @if ($post->cover_image)
-                <figure class="mb-8 overflow-hidden rounded-2xl border border-kemenag/10 bg-kemenag-soft shadow-md">
+                <figure class="mt-7 overflow-hidden rounded-xl border border-kemenag/10 bg-kemenag-soft">
                     <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="aspect-[16/9] w-full object-cover">
                 </figure>
             @endif
 
-            <div class="prose prose-lg max-w-none prose-headings:font-display prose-headings:text-kemenag-deep prose-a:text-kemenag prose-img:rounded-xl">
+            <div class="prose prose-lg mt-8 max-w-none prose-headings:font-display prose-headings:text-kemenag-deep prose-a:text-kemenag prose-img:rounded-xl">
                 {!! $post->body !!}
             </div>
+
+            {{-- Tags, kontributor, redaktur di bawah berita --}}
+            <footer class="article-meta-footer mt-10 border-t border-kemenag/10 pt-6">
+                @if (count($postTags))
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-[0.14em] text-muted">Tags</span>
+                        @foreach ($postTags as $tag)
+                            <span class="article-tag">{{ $tag }}</span>
+                        @endforeach
+                    </div>
+                @endif
+
+                <div class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+                    @if ($post->author_name)
+                        <p><span class="font-bold text-kemenag-deep">Kontributor:</span> <span class="text-ink/85">{{ $post->author_name }}</span></p>
+                    @endif
+                    @if ($post->editor_name)
+                        <p><span class="font-bold text-kemenag-deep">Redaktur:</span> <span class="text-ink/85">{{ $post->editor_name }}</span></p>
+                    @endif
+                </div>
+
+                {{-- Share dengan ikon di bawah artikel --}}
+                <div class="no-print mt-7" data-share-bar>
+                    <p class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-muted">Bagikan</p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <a href="{{ $waShare }}" target="_blank" rel="noopener" class="share-icon-btn" aria-label="Bagikan ke WhatsApp" title="WhatsApp">
+                            <img src="{{ asset('images/social/whatsapp.png') }}" alt="" width="40" height="40">
+                        </a>
+                        <a href="{{ $fbShare }}" target="_blank" rel="noopener" class="share-icon-btn" aria-label="Bagikan ke Facebook" title="Facebook">
+                            <img src="{{ asset('images/social/facebook.png') }}" alt="" width="40" height="40">
+                        </a>
+                        <a href="{{ $xShare }}" target="_blank" rel="noopener" class="share-icon-btn" aria-label="Bagikan ke X" title="X">
+                            <img src="{{ asset('images/social/x.png') }}" alt="" width="40" height="40">
+                        </a>
+                        <a href="{{ $mailShare }}" class="share-icon-btn" aria-label="Bagikan lewat email" title="Email">
+                            <img src="{{ asset('images/social/email.png') }}" alt="" width="40" height="40">
+                        </a>
+                        <button type="button" class="share-icon-btn" data-copy-link data-url="{{ $shareUrl }}" aria-label="Salin tautan" title="Salin tautan">
+                            <img src="{{ asset('images/social/link.png') }}" alt="" width="40" height="40">
+                        </button>
+                    </div>
+                </div>
+            </footer>
 
             <section class="no-print mt-12 border-t border-kemenag/10 pt-10" id="komentar">
                 <div class="flex items-end justify-between gap-3">

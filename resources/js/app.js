@@ -45,15 +45,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-copy-link]').forEach((button) => {
         button.addEventListener('click', async () => {
             const url = button.getAttribute('data-url') || window.location.href;
+            const hasIcon = Boolean(button.querySelector('img'));
             const label = button.textContent;
 
             try {
                 await navigator.clipboard.writeText(url);
                 button.classList.add('is-copied');
-                button.textContent = 'Tersalin';
+                if (!hasIcon) {
+                    button.textContent = 'Tersalin';
+                } else {
+                    button.setAttribute('title', 'Tersalin');
+                    button.setAttribute('aria-label', 'Tautan tersalin');
+                }
                 window.setTimeout(() => {
                     button.classList.remove('is-copied');
-                    button.textContent = label;
+                    if (!hasIcon) {
+                        button.textContent = label;
+                    } else {
+                        button.setAttribute('title', 'Salin tautan');
+                        button.setAttribute('aria-label', 'Salin tautan');
+                    }
                 }, 1800);
             } catch (error) {
                 window.prompt('Salin tautan ini:', url);

@@ -342,39 +342,64 @@
         object-fit: cover;
     }
 
-    .share-btn {
+    .article-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.75rem, 3.2vw, 2.65rem);
+        font-weight: 800;
+        line-height: 1.18;
+        letter-spacing: -0.02em;
+        color: #0f1f16;
+        max-width: 42rem;
+    }
+
+    .article-tag {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 0.35rem;
+        border: 1px solid rgb(10 122 62 / 0.18);
+        background: #e8f5ee;
+        padding: 0.2rem 0.55rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #065c2e;
+        text-decoration: none;
+    }
+
+    .share-icon-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 2.25rem;
-        padding: 0.4rem 0.85rem;
-        border-radius: 999px;
-        border: 1px solid rgb(10 122 62 / 0.15);
-        background: #fff;
-        color: #24362c;
-        font-size: 0.78rem;
-        font-weight: 700;
-        text-decoration: none;
-        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        width: 2.75rem;
+        height: 2.75rem;
+        padding: 0;
+        border: 0;
+        border-radius: 0.65rem;
+        background: transparent;
         cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
     }
 
-    .share-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgb(4 63 31 / 0.1);
+    .share-icon-btn img {
+        width: 2.5rem;
+        height: 2.5rem;
+        object-fit: contain;
+        display: block;
     }
 
-    .share-btn--wa { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
-    .share-btn--fb { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
-    .share-btn--x { background: #f8fafc; color: #0f172a; border-color: #e2e8f0; }
-    .share-btn--mail { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
-    .share-btn--copy,
-    .share-btn--print { background: #f4f7f5; color: #065c2e; }
+    .share-icon-btn:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.05);
+    }
 
-    .share-btn.is-copied {
-        background: #0a7a3e;
-        color: #fff;
-        border-color: #0a7a3e;
+    .share-icon-btn.is-copied {
+        outline: 2px solid #0a7a3e;
+        outline-offset: 2px;
+        border-radius: 0.75rem;
+    }
+
+    .news-banner .news-slide.is-active {
+        pointer-events: auto;
     }
 
     .comment-card {

@@ -65,8 +65,16 @@ class PostForm
                             ->imageEditor()
                             ->columnSpanFull(),
                         TextInput::make('author_name')
-                            ->label('Penulis')
+                            ->label('Kontributor')
                             ->maxLength(255),
+                        TextInput::make('editor_name')
+                            ->label('Redaktur')
+                            ->maxLength(255),
+                        TextInput::make('tags')
+                            ->label('Tags')
+                            ->helperText('Pisahkan dengan koma, contoh: Upacara, Nasionalisme, Kegiatan')
+                            ->maxLength(255)
+                            ->columnSpanFull(),
                         DateTimePicker::make('published_at')
                             ->label('Tanggal terbit')
                             ->native(false),
