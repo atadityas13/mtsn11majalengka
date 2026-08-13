@@ -46,12 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const heroStage = document.querySelector('.hero-stage');
     const heroMedia = document.querySelector('[data-hero-parallax]');
-    const canParallax =
-        heroStage &&
-        heroMedia &&
-        !reduceMotion &&
-        window.matchMedia('(min-width: 768px)').matches;
-    if (canParallax) {
+    if (heroStage && heroMedia && !reduceMotion) {
         let ticking = false;
         const updateParallax = () => {
             const max = heroStage.offsetHeight;
