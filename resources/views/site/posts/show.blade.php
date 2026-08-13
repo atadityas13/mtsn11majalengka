@@ -23,25 +23,25 @@
     @if ($bannerPosts->isNotEmpty())
     <section class="no-print news-banner" data-news-slider data-interval="5000" aria-label="Berita terbaru">
         <div class="relative overflow-hidden bg-kemenag-dark">
-            <div class="relative aspect-[21/9] min-h-[16rem] md:min-h-[22rem]">
+            <div class="relative min-h-[clamp(22rem,52vh,34rem)]">
                 @foreach ($bannerPosts as $index => $banner)
                     <div
                         class="news-slide absolute inset-0 transition-opacity duration-700 ease-out {{ $index === 0 ? 'is-active opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0' }}"
                         data-slide="{{ $index }}"
                     >
-                        <a href="{{ route('posts.show', $banner->slug) }}" class="group relative block h-full">
+                        <a href="{{ route('posts.show', $banner->slug) }}" class="group relative flex h-full min-h-[clamp(22rem,52vh,34rem)] flex-col justify-end">
                             @if ($banner->cover_image)
                                 <img
                                     src="{{ asset('storage/'.$banner->cover_image) }}"
                                     alt=""
-                                    class="h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-[1.03]"
+                                    class="absolute inset-0 h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-[1.03]"
                                     @if ($index === 0) fetchpriority="high" @else loading="lazy" @endif
                                 >
                             @else
-                                <div class="h-full w-full bg-[linear-gradient(135deg,#0a7a3e,#043f1f)]"></div>
+                                <div class="absolute inset-0 bg-[linear-gradient(135deg,#0a7a3e,#043f1f)]"></div>
                             @endif
                             <div class="absolute inset-0 bg-gradient-to-t from-kemenag-dark via-kemenag-dark/55 to-black/20"></div>
-                            <div class="absolute inset-x-0 bottom-0 p-6 md:p-10">
+                            <div class="relative z-[1] px-6 py-10 md:px-10 md:py-14">
                                 <div class="site-container !px-0">
                                     <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-gold">Berita Terbaru</p>
                                     @if ($banner->category)
