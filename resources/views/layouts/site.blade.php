@@ -41,20 +41,6 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col" x-data="{ open: false, searchOpen: false }">
-    {{-- Top utility bar ala portal Kemenag --}}
-    <div class="no-print bg-kemenag-dark text-[11px] text-white/85">
-        <div class="site-container flex flex-wrap items-center justify-between gap-2 py-2">
-            <p class="font-semibold tracking-wide">Naungan Kementerian Agama Republik Indonesia</p>
-            <div class="flex flex-wrap items-center gap-4 font-medium">
-                @if ($site->npsn)<span>NPSN {{ $site->npsn }}</span>@endif
-                @if ($site->accreditation_value)
-                    <span class="rounded bg-gold/20 px-2 py-0.5 text-gold">{{ $site->accreditation_label ?: 'Akreditasi' }} {{ $site->accreditation_value }}</span>
-                @endif
-                @if ($site->phone)<span class="hidden sm:inline">{{ $site->phone }}</span>@endif
-            </div>
-        </div>
-    </div>
-
     {{-- Main header: baris 1 identitas, baris 2 menu (supaya nama & nav muat) --}}
     <header class="site-header no-print sticky top-0 z-50 border-b border-kemenag/10 bg-white/95 backdrop-blur-md" data-site-header>
         <div class="site-container flex items-center justify-between gap-3 py-3">
