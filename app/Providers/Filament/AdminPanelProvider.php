@@ -11,7 +11,6 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Icons\Heroicon;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -54,13 +53,13 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::hex('#0a7a3e'),
             ])
             ->navigationGroups([
-                NavigationGroup::make('Konten')->icon(Heroicon::OutlinedNewspaper)->collapsible(),
-                NavigationGroup::make('Media')->icon(Heroicon::OutlinedPhoto)->collapsible(),
-                NavigationGroup::make('Profil')->icon(Heroicon::OutlinedBuildingLibrary)->collapsible(),
-                NavigationGroup::make('Interaksi')->icon(Heroicon::OutlinedInbox)->collapsible(),
-                NavigationGroup::make('Navigasi & Layanan')->icon(Heroicon::OutlinedBars3)->collapsible(),
-                NavigationGroup::make('Dokumen')->icon(Heroicon::OutlinedArrowDownTray)->collapsible(),
-                NavigationGroup::make('Sistem')->icon(Heroicon::OutlinedCog6Tooth)->collapsible(),
+                NavigationGroup::make('Konten')->collapsible(),
+                NavigationGroup::make('Media')->collapsible(),
+                NavigationGroup::make('Profil')->collapsible(),
+                NavigationGroup::make('Interaksi')->collapsible(),
+                NavigationGroup::make('Navigasi & Layanan')->collapsible(),
+                NavigationGroup::make('Dokumen')->collapsible(),
+                NavigationGroup::make('Sistem')->collapsible(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
