@@ -66,10 +66,12 @@ class PostForm
                             ->columnSpanFull(),
                         TextInput::make('author_name')
                             ->label('Kontributor')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->default(fn (): ?string => auth()->user()?->name),
                         TextInput::make('editor_name')
                             ->label('Redaktur')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->default(fn (): ?string => auth()->user()?->name),
                         TextInput::make('tags')
                             ->label('Tags')
                             ->helperText('Pisahkan dengan koma, contoh: Upacara, Nasionalisme, Kegiatan')

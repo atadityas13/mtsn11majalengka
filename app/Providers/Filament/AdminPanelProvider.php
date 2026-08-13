@@ -2,21 +2,23 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\SiteSetting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 use Filament\View\PanelsRenderHook;
-use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -28,19 +30,41 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('MTsN 11 CMS')
+            ->brandName('Si COMA')
+            ->brandLogo(function (): ?string {
+                $logo = SiteSetting::current()->logo;
+
+                if (blank($logo)) {
+                    return null;
+                }
+
+                return Storage::disk('public')->url($logo);
+            })
+            ->brandLogoHeight('2.25rem')
+            ->favicon(function (): ?string {
+                $favicon = SiteSetting::current()->favicon;
+
+                if (blank($favicon)) {
+                    return null;
+                }
+
+                return Storage::disk('public')->url($favicon);
+            })
             ->colors([
                 'primary' => Color::hex('#0a7a3e'),
             ])
+            ->navigationGroups([
+                NavigationGroup::make('Konten')->icon(Heroicon::OutlinedNewspaper)->collapsible(),
+                NavigationGroup::make('Media')->icon(Heroicon::OutlinedPhoto)->collapsible(),
+                NavigationGroup::make('Profil')->icon(Heroicon::OutlinedBuildingLibrary)->collapsible(),
+                NavigationGroup::make('Interaksi')->icon(Heroicon::OutlinedInbox)->collapsible(),
+                NavigationGroup::make('Navigasi & Layanan')->icon(Heroicon::OutlinedBars3)->collapsible(),
+                NavigationGroup::make('Dokumen')->icon(Heroicon::OutlinedArrowDownTray)->collapsible(),
+                NavigationGroup::make('Sistem')->icon(Heroicon::OutlinedCog6Tooth)->collapsible(),
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                Dashboard::class,
-            ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                AccountWidget::class,
-            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -68,6 +92,15 @@ class AdminPanelProvider extends PanelProvider
                             }
                         }
                     </script>
+                    HTML
+            )
+            ->renderHook(
+                PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+                fn (): string => <<<'HTML'
+                    <div class="mb-6 text-center">
+                        <p class="text-sm font-semibold tracking-wide text-gray-500 dark:text-gray-400">Site Content Management</p>
+                        <p class="mt-1 text-base font-bold text-gray-950 dark:text-white">MTsN 11 Majalengka</p>
+                    </div>
                     HTML
             );
     }

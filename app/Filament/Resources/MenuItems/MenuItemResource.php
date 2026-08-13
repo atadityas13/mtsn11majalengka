@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MenuItems;
 
+use App\Filament\Concerns\RequiresSuperAdmin;
 use App\Filament\Resources\MenuItems\Pages\CreateMenuItem;
 use App\Filament\Resources\MenuItems\Pages\EditMenuItem;
 use App\Filament\Resources\MenuItems\Pages\ListMenuItems;
@@ -13,9 +14,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class MenuItemResource extends Resource
 {
+    use RequiresSuperAdmin;
+
     protected static ?string $model = MenuItem::class;
 
     protected static ?string $navigationLabel = 'Menu';
@@ -24,7 +28,9 @@ class MenuItemResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Menu';
 
-    protected static ?int $navigationSort = 7;
+    protected static string|UnitEnum|null $navigationGroup = 'Navigasi & Layanan';
+
+    protected static ?int $navigationSort = 1;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3;
 

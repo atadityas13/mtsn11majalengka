@@ -13,6 +13,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class CommentResource extends Resource
 {
@@ -24,7 +25,9 @@ class CommentResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Komentar';
 
-    protected static ?int $navigationSort = 4;
+    protected static string|UnitEnum|null $navigationGroup = 'Konten';
+
+    protected static ?int $navigationSort = 2;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 

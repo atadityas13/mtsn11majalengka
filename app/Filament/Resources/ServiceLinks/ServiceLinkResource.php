@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ServiceLinks;
 
+use App\Filament\Concerns\RequiresSuperAdmin;
 use App\Filament\Resources\ServiceLinks\Pages\CreateServiceLink;
 use App\Filament\Resources\ServiceLinks\Pages\EditServiceLink;
 use App\Filament\Resources\ServiceLinks\Pages\ListServiceLinks;
@@ -13,9 +14,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ServiceLinkResource extends Resource
 {
+    use RequiresSuperAdmin;
+
     protected static ?string $model = ServiceLink::class;
 
     protected static ?string $navigationLabel = 'Akses Layanan';
@@ -24,7 +28,9 @@ class ServiceLinkResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Akses Layanan';
 
-    protected static ?int $navigationSort = 8;
+    protected static string|UnitEnum|null $navigationGroup = 'Navigasi & Layanan';
+
+    protected static ?int $navigationSort = 2;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 

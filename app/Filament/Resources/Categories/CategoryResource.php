@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class CategoryResource extends Resource
 {
@@ -24,7 +25,9 @@ class CategoryResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Kategori';
 
-    protected static ?int $navigationSort = 8;
+    protected static string|UnitEnum|null $navigationGroup = 'Konten';
+
+    protected static ?int $navigationSort = 3;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 

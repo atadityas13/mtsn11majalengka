@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
@@ -20,19 +21,33 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        if (! $this->is_active) {
+            return false;
+        }
+
+        return $this->role instanceof UserRole;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === UserRole::SuperAdmin;
+    }
+
+    public function isRedaktur(): bool
+    {
+        return $this->role === UserRole::Redaktur;
     }
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'role' => UserRole::class,
         ];
     }
 }

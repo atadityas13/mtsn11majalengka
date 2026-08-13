@@ -3,7 +3,9 @@
 namespace App\Filament\Pages;
 
 use App\Models\SiteSetting;
+use App\Models\User;
 use BackedEnum;
+use Illuminate\Support\Facades\Auth;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -17,6 +19,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 
 /**
  * @property-read Schema $form
@@ -29,9 +32,18 @@ class ManageSiteSettings extends Page
 
     protected static ?string $title = 'Pengaturan Situs & Tampilan';
 
+    protected static string|UnitEnum|null $navigationGroup = 'Sistem';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
     protected static ?int $navigationSort = 1;
+
+    public static function canAccess(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User && $user->isSuperAdmin();
+    }
 
     /**
      * @var array<string, mixed>|null

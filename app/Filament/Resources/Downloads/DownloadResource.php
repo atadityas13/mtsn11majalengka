@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Downloads;
 
+use App\Filament\Concerns\RequiresSuperAdmin;
 use App\Filament\Resources\Downloads\Pages\CreateDownload;
 use App\Filament\Resources\Downloads\Pages\EditDownload;
 use App\Filament\Resources\Downloads\Pages\ListDownloads;
@@ -13,9 +14,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class DownloadResource extends Resource
 {
+    use RequiresSuperAdmin;
+
     protected static ?string $model = Download::class;
 
     protected static ?string $navigationLabel = 'Unduhan';
@@ -24,7 +28,9 @@ class DownloadResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Unduhan';
 
-    protected static ?int $navigationSort = 10;
+    protected static string|UnitEnum|null $navigationGroup = 'Dokumen';
+
+    protected static ?int $navigationSort = 1;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowDownTray;
 

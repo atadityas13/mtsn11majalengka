@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrganizationNodes;
 
+use App\Filament\Concerns\RequiresSuperAdmin;
 use App\Filament\Resources\OrganizationNodes\Pages\CreateOrganizationNode;
 use App\Filament\Resources\OrganizationNodes\Pages\EditOrganizationNode;
 use App\Filament\Resources\OrganizationNodes\Pages\ListOrganizationNodes;
@@ -13,9 +14,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class OrganizationNodeResource extends Resource
 {
+    use RequiresSuperAdmin;
+
     protected static ?string $model = OrganizationNode::class;
 
     protected static ?string $navigationLabel = 'Struktur Organisasi';
@@ -26,7 +30,9 @@ class OrganizationNodeResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static ?int $navigationSort = 12;
+    protected static string|UnitEnum|null $navigationGroup = 'Profil';
+
+    protected static ?int $navigationSort = 3;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleGroup;
 

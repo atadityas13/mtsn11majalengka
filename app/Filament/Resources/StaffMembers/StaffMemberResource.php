@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StaffMembers;
 
+use App\Filament\Concerns\RequiresSuperAdmin;
 use App\Filament\Resources\StaffMembers\Pages\CreateStaffMember;
 use App\Filament\Resources\StaffMembers\Pages\EditStaffMember;
 use App\Filament\Resources\StaffMembers\Pages\ListStaffMembers;
@@ -13,9 +14,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class StaffMemberResource extends Resource
 {
+    use RequiresSuperAdmin;
+
     protected static ?string $model = StaffMember::class;
 
     protected static ?string $navigationLabel = 'Guru & Tendik';
@@ -24,7 +28,9 @@ class StaffMemberResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Guru & Tendik';
 
-    protected static ?int $navigationSort = 11;
+    protected static string|UnitEnum|null $navigationGroup = 'Profil';
+
+    protected static ?int $navigationSort = 2;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 

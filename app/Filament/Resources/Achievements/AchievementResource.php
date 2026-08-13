@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class AchievementResource extends Resource
 {
@@ -24,7 +25,9 @@ class AchievementResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Prestasi';
 
-    protected static ?int $navigationSort = 9;
+    protected static string|UnitEnum|null $navigationGroup = 'Profil';
+
+    protected static ?int $navigationSort = 1;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
 

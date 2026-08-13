@@ -13,6 +13,7 @@ use App\Models\GalleryItem;
 use App\Models\OrganizationNode;
 use App\Models\Page;
 use App\Models\Post;
+use App\Models\PostViewDaily;
 use App\Models\SiteSetting;
 use App\Models\StaffMember;
 use App\Models\Video;
@@ -67,6 +68,7 @@ class SiteController extends Controller
     {
         $post = Post::published()->with('category')->where('slug', $slug)->firstOrFail();
         $post->increment('views_count');
+        PostViewDaily::recordView();
         $post->refresh();
 
         return view('site.posts.show', [
