@@ -167,20 +167,24 @@
             </div>
             <a href="{{ route('layanan') }}" class="text-sm font-bold text-kemenag hover:underline">Semua layanan →</a>
         </div>
-        <div class="layanan-apps" data-layanan-marquee aria-label="Daftar akses layanan">
-            <div class="layanan-apps-viewport">
-                <div class="layanan-apps-rail">
-                    <div class="layanan-apps-group" data-layanan-group>
-                        @foreach ($serviceLinks as $app)
-                            <a
-                                href="{{ $app->resolvedUrl() }}"
-                                @if ($app->isExternal()) target="_blank" rel="noopener" @endif
-                                class="layanan-app"
-                            >
-                                <x-layanan-app-icon :logo="$app->logo" :label="$app->label" />
-                                <span class="layanan-app-name">{{ $app->label }}</span>
-                            </a>
-                        @endforeach
+        <div class="layanan-apps is-marquee" data-layanan-marquee aria-label="Daftar akses layanan">
+            <div class="layanan-apps-shell">
+                <div class="layanan-apps-viewport">
+                    <div class="layanan-apps-rail">
+                        <div class="layanan-apps-group" data-layanan-group>
+                            @foreach ($serviceLinks as $app)
+                                <a
+                                    href="{{ $app->resolvedUrl() }}"
+                                    @if ($app->isExternal()) target="_blank" rel="noopener" @endif
+                                    class="layanan-app"
+                                >
+                                    <span class="layanan-app-icon-wrap">
+                                        <x-layanan-app-icon :logo="$app->logo" :label="$app->label" />
+                                    </span>
+                                    <span class="layanan-app-name">{{ $app->label }}</span>
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>

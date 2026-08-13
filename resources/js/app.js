@@ -628,23 +628,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const sourceHtml = group.innerHTML;
+
+        const makeGroup = (attrs = {}) => {
+            const node = document.createElement('div');
+            node.className = 'layanan-apps-group';
+            node.innerHTML = sourceHtml;
+            Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+            if (attrs['aria-hidden'] === 'true') {
+                node.querySelectorAll('a').forEach((link) => link.setAttribute('tabindex', '-1'));
+            }
+            return node;
+        };
 
         const sync = () => {
-            root.querySelectorAll('[data-layanan-clone]').forEach((node) => node.remove());
+            rail.innerHTML = '';
             root.classList.remove('is-marquee');
 
-            const needsMarquee = !reduceMotion && group.scrollWidth > viewport.clientWidth + 8;
-            if (!needsMarquee) {
+            if (reduceMotion) {
+                rail.appendChild(makeGroup({ 'data-layanan-group': 'true' }));
                 return;
             }
 
-            const copy = group.cloneNode(true);
-            copy.setAttribute('data-layanan-clone', 'true');
-            copy.setAttribute('aria-hidden', 'true');
-            copy.querySelectorAll('a').forEach((link) => {
-                link.setAttribute('tabindex', '-1');
-            });
-            rail.appendChild(copy);
+            // Satu set diisi sampai setidaknya selebar viewport (supaya tetap running meski item sedikit)
+            const set = document.createElement('div');
+            set.className = 'layanan-apps-set';
+            set.setAttribute('data-layanan-set', 'true');
+            set.style.display = 'flex';
+            set.style.flexWrap = 'nowrap';
+            set.style.alignItems = 'center';
+
+            set.appendChild(makeGroup({ 'data-layanan-group': 'true' }));
+            rail.appendChild(set);
+
+            let guard = 0;
+            while (set.scrollWidth < viewport.clientWidth && guard < 12) {
+                set.appendChild(
+                    makeGroup({
+                        'data-layanan-pad': 'true',
+                        'aria-hidden': 'true',
+                    })
+                );
+                guard += 1;
+            }
+
+            // Duplikat set untuk loop seamless (-50%)
+            const clone = set.cloneNode(true);
+            clone.setAttribute('data-layanan-clone', 'true');
+            clone.setAttribute('aria-hidden', 'true');
+            clone.querySelectorAll('a').forEach((link) => link.setAttribute('tabindex', '-1'));
+            rail.appendChild(clone);
+
             root.classList.add('is-marquee');
         };
 
