@@ -67,6 +67,13 @@ class ManageSiteSettings extends Page
                                     TextInput::make('accreditation_value')
                                         ->label('Nilai akreditasi')
                                         ->maxLength(50),
+                                    FileUpload::make('accreditation_image')
+                                        ->label('Gambar surat akreditasi')
+                                        ->image()
+                                        ->directory('settings')
+                                        ->disk('public')
+                                        ->helperText('Tampil di bagian bawah beranda')
+                                        ->columnSpanFull(),
                                     TextInput::make('founded_year')
                                         ->label('Tahun berdiri')
                                         ->numeric(),

@@ -3,58 +3,31 @@
 @section('title', $site->school_name.' — '.$site->tagline)
 
 @section('content')
-{{-- Hero institusional: brand first + grafis Kemenag-like --}}
+{{-- Hero: brand first, lebih pendek, BG lebih terlihat --}}
 <section class="relative overflow-hidden text-white">
-    <div class="absolute inset-0 pattern-mesh"></div>
-    <div class="absolute -right-24 -top-24 h-80 w-80 rounded-full ornament-arc opacity-40 animate-float"></div>
-    <div class="absolute -bottom-32 -left-16 h-96 w-96 rounded-full ornament-arc opacity-30 animate-float-delay"></div>
+    <div class="absolute inset-0 pattern-mesh opacity-40"></div>
     @if ($site->hero_image)
-        <img src="{{ asset('storage/'.$site->hero_image) }}" alt="" class="absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-luminosity">
+        <img src="{{ asset('storage/'.$site->hero_image) }}" alt="" class="absolute inset-0 h-full w-full object-cover opacity-55">
     @endif
-    <div class="absolute inset-0 bg-gradient-to-r from-kemenag-dark/95 via-kemenag-deep/80 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-kemenag-dark/70 via-kemenag-deep/45 to-kemenag-dark/35"></div>
 
-    <div class="site-container relative grid min-h-[78vh] items-center gap-10 py-16 md:grid-cols-[1.15fr_0.85fr] md:py-20">
-        <div>
-            <p class="animate-rise section-label !text-gold">
-                <span class="text-gold">Portal Resmi Madrasah</span>
-            </p>
-            <h1 class="animate-rise-delay mt-5 max-w-3xl font-display text-5xl font-extrabold leading-[1.02] text-balance md:text-6xl lg:text-7xl">
-                {{ $site->hero_title ?: $site->school_name }}
-            </h1>
-            <p class="animate-rise-delay-2 mt-5 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
-                {{ $site->hero_subtitle ?: $site->tagline }}
-            </p>
-            <div class="animate-rise-delay-2 mt-8 flex flex-wrap gap-3">
-                @if ($site->hero_cta_url)
-                    <a href="{{ $site->hero_cta_url }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-md bg-gold px-5 py-3 text-sm font-extrabold text-kemenag-dark transition hover:-translate-y-0.5 hover:brightness-110 hover:shadow-lg">
-                        {{ $site->hero_cta_label ?: 'Info PPDB' }}
-                    </a>
-                @endif
-                <a href="{{ route('posts.index') }}" class="btn-ghost">Berita Terbaru</a>
-            </div>
-        </div>
-
-        <div class="animate-rise-delay relative hidden md:block">
-            <div class="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-1 shadow-2xl backdrop-blur transition duration-500 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.35)]">
-                <div class="aspect-[4/5] overflow-hidden rounded-xl bg-kemenag-dark/40">
-                    @if ($site->hero_image)
-                        <img src="{{ asset('storage/'.$site->hero_image) }}" alt="{{ $site->school_name }}" class="h-full w-full object-cover transition duration-700 hover:scale-105">
-                    @else
-                        <div class="flex h-full flex-col justify-between bg-[linear-gradient(160deg,#0a7a3e,#043f1f)] p-8">
-                            <div class="h-24 w-24 rounded-full ornament-arc"></div>
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-[0.2em] text-gold">MTsN 11</p>
-                                <p class="mt-2 font-display text-3xl font-extrabold leading-tight">Majalengka</p>
-                                <p class="mt-3 text-sm text-white/70">Cingambul · Jawa Barat</p>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-            <div class="absolute -bottom-5 -left-5 animate-float rounded-xl bg-white px-4 py-3 text-kemenag-deep shadow-xl">
-                <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Status</p>
-                <p class="font-display text-2xl font-extrabold">Akreditasi {{ $site->accreditation_value ?: 'A' }}</p>
-            </div>
+    <div class="site-container relative py-10 md:py-12 lg:py-14">
+        <p class="animate-rise section-label !text-gold">
+            <span class="text-gold">Portal Resmi Madrasah</span>
+        </p>
+        <h1 class="animate-rise-delay mt-3 max-w-4xl font-display text-4xl font-extrabold leading-[1.05] text-balance md:text-5xl lg:text-[3.25rem]">
+            {{ $site->hero_title ?: $site->school_name }}
+        </h1>
+        <p class="animate-rise-delay-2 mt-3 max-w-2xl text-sm leading-relaxed text-white/85 md:text-base">
+            {{ $site->hero_subtitle ?: $site->tagline }}
+        </p>
+        <div class="animate-rise-delay-2 mt-6 flex flex-wrap gap-3">
+            @if ($site->hero_cta_url)
+                <a href="{{ $site->hero_cta_url }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-md bg-gold px-5 py-2.5 text-sm font-extrabold text-kemenag-dark transition hover:-translate-y-0.5 hover:brightness-110 hover:shadow-lg">
+                    {{ $site->hero_cta_label ?: 'Info PPDB' }}
+                </a>
+            @endif
+            <a href="{{ route('posts.index') }}" class="btn-ghost">Berita Terbaru</a>
         </div>
     </div>
 </section>
@@ -403,4 +376,42 @@
     </div>
 </section>
 @endif
+
+{{-- Akreditasi di bagian paling bawah konten beranda --}}
+<section class="border-t border-kemenag/10 bg-white py-12 md:py-14">
+    <div class="site-container" x-reveal>
+        <div class="mx-auto max-w-3xl text-center">
+            <p class="section-label !mx-auto">Status Madrasah</p>
+            <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">
+                {{ $site->accreditation_label ?: 'Akreditasi' }}
+                @if ($site->accreditation_value)
+                    {{ $site->accreditation_value }}
+                @endif
+            </h2>
+            @if ($site->npsn)
+                <p class="mt-2 text-sm text-muted">NPSN {{ $site->npsn }}</p>
+            @endif
+        </div>
+
+        <div class="mx-auto mt-8 max-w-3xl">
+            @if ($site->accreditation_image)
+                <figure class="overflow-hidden rounded-2xl border border-kemenag/10 bg-surface shadow-sm">
+                    <img
+                        src="{{ asset('storage/'.$site->accreditation_image) }}"
+                        alt="Surat {{ $site->accreditation_label ?: 'Akreditasi' }} {{ $site->school_name }}"
+                        class="h-auto w-full object-contain"
+                    >
+                </figure>
+            @else
+                <div class="rounded-2xl border border-dashed border-kemenag/25 bg-surface px-6 py-12 text-center">
+                    <p class="font-display text-xl font-extrabold text-kemenag-deep">
+                        {{ $site->accreditation_label ?: 'Akreditasi' }}
+                        {{ $site->accreditation_value ?: 'A' }}
+                    </p>
+                    <p class="mt-2 text-sm text-muted">Unggah gambar surat akreditasi dari panel admin (Pengaturan Situs).</p>
+                </div>
+            @endif
+        </div>
+    </div>
+</section>
 @endsection

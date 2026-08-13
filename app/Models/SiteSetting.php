@@ -25,6 +25,7 @@ class SiteSetting extends Model
         'headmaster_quote',
         'accreditation_label',
         'accreditation_value',
+        'accreditation_image',
         'npsn',
         'students_count',
         'teachers_count',
