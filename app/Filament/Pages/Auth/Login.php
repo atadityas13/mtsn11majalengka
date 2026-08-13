@@ -54,14 +54,30 @@ class Login extends BaseLogin
         return false;
     }
 
+    public function mount(): void
+    {
+        parent::mount();
+
+        $this->form->fill([
+            'username' => '',
+            'password' => '',
+            'remember' => false,
+        ]);
+    }
+
     protected function getEmailFormComponent(): Component
     {
         return TextInput::make('username')
             ->label('Username')
-            ->placeholder('admin')
+            ->placeholder('Masukkan username')
             ->required()
             ->autocomplete('username')
-            ->autofocus();
+            ->autofocus()
+            ->extraInputAttributes([
+                'autocapitalize' => 'none',
+                'autocorrect' => 'off',
+                'spellcheck' => 'false',
+            ]);
     }
 
     protected function getPasswordFormComponent(): Component
