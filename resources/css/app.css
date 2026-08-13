@@ -160,57 +160,6 @@
         will-change: transform;
     }
 
-    /* Mobile: gambar full-width tanpa crop & tanpa letterbox hijau */
-    @media (max-width: 767.98px) {
-        .hero-stage {
-            display: grid;
-            background: #0a3d24;
-        }
-
-        .hero-media {
-            grid-area: 1 / 1;
-            position: relative;
-            inset: auto;
-            width: 100%;
-            height: auto;
-            overflow: hidden;
-            background: transparent;
-        }
-
-        .hero-kenburns {
-            width: 100%;
-            height: auto;
-            object-fit: unset;
-            object-position: center center;
-            transform-origin: center center;
-        }
-
-        .hero-stage > .hero-veil-side,
-        .hero-stage > .hero-veil-bottom,
-        .hero-stage > .site-container,
-        .hero-stage > .hero-scroll-hint,
-        .hero-stage > .pointer-events-none {
-            grid-area: 1 / 1;
-        }
-
-        .hero-stage > .site-container {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            min-height: 0;
-            width: 100%;
-            align-self: stretch;
-            justify-content: flex-end;
-            padding-top: 4.5rem;
-            padding-bottom: 3.25rem;
-        }
-
-        .hero-stage > .hero-veil-side,
-        .hero-stage > .hero-veil-bottom {
-            z-index: 0;
-        }
-    }
-
     .hero-scroll-hint {
         position: absolute;
         left: 50%;

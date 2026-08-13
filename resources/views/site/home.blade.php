@@ -11,7 +11,7 @@
             <img
                 src="{{ asset('storage/'.$site->hero_image) }}"
                 alt=""
-                class="hero-kenburns w-full"
+                class="hero-kenburns h-full w-full"
                 style="--hero-focus: {{ $site->heroImageFocus() }}; object-position: var(--hero-focus); transform-origin: var(--hero-focus);"
                 fetchpriority="high"
             >
