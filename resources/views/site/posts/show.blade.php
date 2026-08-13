@@ -13,7 +13,7 @@
     $waShare = 'https://wa.me/?text='.rawurlencode($shareTitle.' '.$shareUrl);
     $fbShare = 'https://www.facebook.com/sharer/sharer.php?u='.rawurlencode($shareUrl);
     $xShare = 'https://twitter.com/intent/tweet?url='.rawurlencode($shareUrl).'&text='.rawurlencode($shareTitle);
-    $mailShare = 'mailto:?subject='.rawurlencode($shareTitle).'&body='.rawurlencode($shareTitle."\n\n".$shareUrl);
+    $tgShare = 'https://t.me/share/url?url='.rawurlencode($shareUrl).'&text='.rawurlencode($shareTitle);
     $postTags = $post->tagList();
 @endphp
 
@@ -128,24 +128,27 @@
                     @endif
                 </div>
 
-                {{-- Share dengan ikon di bawah artikel --}}
+                {{-- Share: ikon brand seperti situs berita --}}
                 <div class="no-print mt-7" data-share-bar>
-                    <p class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-muted">Bagikan</p>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <a href="{{ $waShare }}" target="_blank" rel="noopener" class="share-icon-btn" aria-label="Bagikan ke WhatsApp" title="WhatsApp">
-                            <img src="{{ asset('images/social/whatsapp.png') }}" alt="" width="40" height="40">
+                    <p class="mb-3 text-sm font-bold text-ink">Bagikan Artikel</p>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <a href="{{ $fbShare }}" target="_blank" rel="noopener" class="share-icon-btn share-icon-btn--fb" aria-label="Bagikan ke Facebook" title="Facebook">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14.5 8.5V6.9c0-.7.5-1.4 1.5-1.4h1.5V3h-2.1C12.7 3 11 4.7 11 7.1v1.4H9v2.9h2V21h3.5v-9.6h2.3l.7-2.9h-3Z"/></svg>
                         </a>
-                        <a href="{{ $fbShare }}" target="_blank" rel="noopener" class="share-icon-btn" aria-label="Bagikan ke Facebook" title="Facebook">
-                            <img src="{{ asset('images/social/facebook.png') }}" alt="" width="40" height="40">
+                        <a href="{{ $xShare }}" target="_blank" rel="noopener" class="share-icon-btn share-icon-btn--x" aria-label="Bagikan ke X" title="X">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.7 3H20l-6.2 7.1L21 21h-5.9l-4.6-6-5.3 6H3.2l6.6-7.6L3 3h6l4.2 5.5L17.7 3Zm-1 16.4h1.6L7.4 4.5H5.7l11 14.9Z"/></svg>
                         </a>
-                        <a href="{{ $xShare }}" target="_blank" rel="noopener" class="share-icon-btn" aria-label="Bagikan ke X" title="X">
-                            <img src="{{ asset('images/social/x.png') }}" alt="" width="40" height="40">
+                        <a href="{{ $waShare }}" target="_blank" rel="noopener" class="share-icon-btn share-icon-btn--wa" aria-label="Bagikan ke WhatsApp" title="WhatsApp">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.04 2C6.58 2 2.15 6.4 2.15 11.82c0 1.96.52 3.87 1.5 5.55L2 22l4.8-1.56a10 10 0 0 0 5.24 1.43h.01c5.46 0 9.89-4.4 9.89-9.82C21.94 6.4 17.5 2 12.04 2Zm5.77 13.9c-.24.67-1.4 1.24-1.94 1.32-.5.07-1.13.1-1.82-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.45.27-.29.59-.36.79-.36h.57c.18 0 .42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.32.02.51-.1.2-.14.32-.28.49-.14.17-.3.38-.42.51-.14.14-.29.29-.12.57.16.28.73 1.2 1.56 1.94 1.07.96 1.97 1.26 2.25 1.4.28.14.44.12.61-.07.16-.19.7-.81.89-1.09.19-.28.37-.23.63-.14.26.1 1.64.77 1.92.91.28.14.47.21.54.32.07.12.07.67-.17 1.34Z"/></svg>
                         </a>
-                        <a href="{{ $mailShare }}" class="share-icon-btn" aria-label="Bagikan lewat email" title="Email">
-                            <img src="{{ asset('images/social/email.png') }}" alt="" width="40" height="40">
+                        <a href="{{ $tgShare }}" target="_blank" rel="noopener" class="share-icon-btn share-icon-btn--tg" aria-label="Bagikan ke Telegram" title="Telegram">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.5 3.3 2.9 10.4c-1.3.5-1.3 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.7.4 1 .9 1 .6 0 .8-.2 1.1-.5l2.7-2.6 5.6 4.1c1 .6 1.8.3 2.1-1l3.7-17.4c.4-1.5-.5-2.2-1.9-1.6ZM8.7 13.6l9.9-6.2c.5-.3.9-.1.5.2l-8 7.2-.3 3.3-1.9-4.5-.2-.2Z"/></svg>
                         </a>
-                        <button type="button" class="share-icon-btn" data-copy-link data-url="{{ $shareUrl }}" aria-label="Salin tautan" title="Salin tautan">
-                            <img src="{{ asset('images/social/link.png') }}" alt="" width="40" height="40">
+                        <button type="button" class="share-icon-btn share-icon-btn--copy" data-copy-link data-url="{{ $shareUrl }}" aria-label="Salin tautan" title="Salin tautan">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h11v14Z"/></svg>
+                        </button>
+                        <button type="button" class="share-icon-btn share-icon-btn--print" onclick="window.print()" aria-label="Cetak artikel" title="Cetak">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3Zm-3 11H8v-5h8v5Zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1Zm-1-9H6v4h12V3Z"/></svg>
                         </button>
                     </div>
                 </div>

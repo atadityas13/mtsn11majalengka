@@ -369,33 +369,46 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 2.75rem;
-        height: 2.75rem;
-        padding: 0;
-        border: 0;
-        border-radius: 0.65rem;
-        background: transparent;
-        cursor: pointer;
-        text-decoration: none;
-        transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
-    }
-
-    .share-icon-btn img {
         width: 2.5rem;
         height: 2.5rem;
-        object-fit: contain;
+        padding: 0;
+        border: 0;
+        border-radius: 0.55rem;
+        cursor: pointer;
+        text-decoration: none;
+        color: #fff;
+        transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+    }
+
+    .share-icon-btn svg {
+        width: 1.15rem;
+        height: 1.15rem;
         display: block;
     }
 
     .share-icon-btn:hover {
         transform: translateY(-2px);
-        filter: brightness(1.05);
+        filter: brightness(1.06);
+        box-shadow: 0 6px 14px rgb(15 23 42 / 0.14);
+    }
+
+    .share-icon-btn--fb { background: #1877f2; }
+    .share-icon-btn--x { background: #111111; }
+    .share-icon-btn--wa { background: #25d366; }
+    .share-icon-btn--tg { background: #2aabee; }
+    .share-icon-btn--copy {
+        background: #f1f3f5;
+        color: #4b5563;
+    }
+    .share-icon-btn--print {
+        background: #fde8e8;
+        color: #e11d48;
     }
 
     .share-icon-btn.is-copied {
         outline: 2px solid #0a7a3e;
         outline-offset: 2px;
-        border-radius: 0.75rem;
     }
 
     .news-banner .news-slide.is-active {

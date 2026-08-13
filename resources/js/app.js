@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-copy-link]').forEach((button) => {
         button.addEventListener('click', async () => {
             const url = button.getAttribute('data-url') || window.location.href;
-            const hasIcon = Boolean(button.querySelector('img'));
+            const hasIcon = Boolean(button.querySelector('img, svg'));
             const label = button.textContent;
 
             try {
