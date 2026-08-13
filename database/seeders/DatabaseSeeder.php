@@ -10,6 +10,7 @@ use App\Models\MenuItem;
 use App\Models\OrganizationNode;
 use App\Models\Page;
 use App\Models\Post;
+use App\Models\ServiceLink;
 use App\Models\SiteSetting;
 use App\Models\StaffMember;
 use App\Models\User;
@@ -68,6 +69,45 @@ class DatabaseSeeder extends Seeder
             MenuItem::query()->updateOrCreate(
                 ['label' => $menu['label'], 'location' => 'footer'],
                 [...$menu, 'location' => 'footer', 'is_visible' => true, 'open_in_new_tab' => false]
+            );
+        }
+
+        $settings = SiteSetting::current();
+        $serviceLinks = [
+            [
+                'label' => 'PPDB Online',
+                'url' => $settings->ppdb_url ?: 'https://ppdb.mtsn11majalengka.sch.id/',
+                'description' => 'Pendaftaran peserta didik baru',
+                'sort_order' => 1,
+                'open_in_new_tab' => true,
+            ],
+            [
+                'label' => 'Rapor Digital',
+                'url' => $settings->rdm_url ?: 'https://rdm.mtsn11majalengka.sch.id/',
+                'description' => 'Portal RDM madrasah',
+                'sort_order' => 2,
+                'open_in_new_tab' => true,
+            ],
+            [
+                'label' => 'Kemenag RI',
+                'url' => $settings->kemenag_url ?: 'https://kemenag.go.id/',
+                'description' => 'Portal Kementerian Agama',
+                'sort_order' => 3,
+                'open_in_new_tab' => true,
+            ],
+            [
+                'label' => 'Kontak',
+                'url' => '/kontak',
+                'description' => 'Alamat & saluran komunikasi',
+                'sort_order' => 4,
+                'open_in_new_tab' => false,
+            ],
+        ];
+
+        foreach ($serviceLinks as $link) {
+            ServiceLink::query()->updateOrCreate(
+                ['label' => $link['label']],
+                [...$link, 'is_visible' => true]
             );
         }
 

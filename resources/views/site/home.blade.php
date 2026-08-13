@@ -49,48 +49,6 @@
     </div>
 </section>
 
-{{-- Akses layanan: ticker ala kemenag.go.id --}}
-@php
-    $layananApps = collect([
-        ['label' => 'PPDB Online', 'url' => $site->ppdb_url, 'type' => 'ppdb', 'logo' => null, 'external' => true],
-        ['label' => 'Rapor Digital', 'url' => $site->rdm_url, 'type' => 'rdm', 'logo' => null, 'external' => true],
-        ['label' => 'Kemenag RI', 'url' => $site->kemenag_url, 'type' => 'kemenag', 'logo' => $site->kemenag_logo, 'external' => true],
-        ['label' => 'Kontak', 'url' => route('contact'), 'type' => 'contact', 'logo' => null, 'external' => false],
-        ['label' => 'Unduhan', 'url' => route('downloads.index'), 'type' => 'download', 'logo' => null, 'external' => false],
-        ['label' => 'Video & Short', 'url' => route('videos.index'), 'type' => 'video', 'logo' => null, 'external' => false],
-        ['label' => 'Guru & Tendik', 'url' => route('staff.index'), 'type' => 'staff', 'logo' => $site->logo, 'external' => false],
-    ])->filter(fn ($item) => filled($item['url']))->values();
-@endphp
-@if ($layananApps->isNotEmpty())
-<section class="layanan-ticker-section border-b border-kemenag/10 bg-white" aria-label="Akses Layanan">
-    <div class="layanan-ticker">
-        <div class="layanan-ticker-label">
-            <span>Akses Layanan</span>
-            <a href="{{ route('layanan') }}" class="layanan-ticker-all">Semua →</a>
-        </div>
-        <div class="layanan-ticker-track">
-            <div class="layanan-ticker-rail">
-                @foreach ([1, 2] as $loopCopy)
-                    <div class="layanan-ticker-group" @if ($loopCopy === 2) aria-hidden="true" @endif>
-                        @foreach ($layananApps as $app)
-                            <a
-                                href="{{ $app['url'] }}"
-                                @if ($app['external']) target="_blank" rel="noopener" @endif
-                                class="layanan-ticker-item"
-                                @if ($loopCopy === 2) tabindex="-1" @endif
-                            >
-                                <x-layanan-app-icon :type="$app['type']" :logo="$app['logo']" :label="$app['label']" />
-                                <span class="layanan-ticker-name">{{ $app['label'] }}</span>
-                            </a>
-                        @endforeach
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>
-@endif
-
 {{-- Statistik singkat --}}
 <section class="border-b border-kemenag/10 bg-white">
     <div class="site-container stagger grid grid-cols-2 gap-4 py-8 md:grid-cols-4 md:gap-6" x-reveal>
@@ -197,6 +155,47 @@
         <p class="rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted" x-reveal>Belum ada berita. Tambahkan dari panel admin.</p>
     @endif
 </section>
+
+{{-- Akses layanan: posisi sama seperti sebelumnya, tampilan ticker --}}
+@if ($serviceLinks->isNotEmpty())
+<section class="bg-white py-12">
+    <div class="site-container">
+        <div class="mb-8 flex items-end justify-between" x-reveal>
+            <div>
+                <p class="section-label">Layanan</p>
+                <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep">Akses Layanan</h2>
+            </div>
+            <a href="{{ route('layanan') }}" class="text-sm font-bold text-kemenag hover:underline">Semua layanan →</a>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-kemenag/10 shadow-sm" aria-label="Daftar akses layanan">
+            <div class="layanan-ticker">
+                <div class="layanan-ticker-label">
+                    <span>Akses Layanan</span>
+                </div>
+                <div class="layanan-ticker-track">
+                    <div class="layanan-ticker-rail">
+                        @foreach ([1, 2] as $loopCopy)
+                            <div class="layanan-ticker-group" @if ($loopCopy === 2) aria-hidden="true" @endif>
+                                @foreach ($serviceLinks as $app)
+                                    <a
+                                        href="{{ $app->resolvedUrl() }}"
+                                        @if ($app->isExternal()) target="_blank" rel="noopener" @endif
+                                        class="layanan-ticker-item"
+                                        @if ($loopCopy === 2) tabindex="-1" @endif
+                                    >
+                                        <x-layanan-app-icon :logo="$app->logo" :label="$app->label" />
+                                        <span class="layanan-ticker-name">{{ $app->label }}</span>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@endif
 
 {{-- Pengumuman + Agenda --}}
 <section class="site-container grid gap-6 py-14 md:grid-cols-2 md:py-16">

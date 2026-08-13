@@ -10,22 +10,26 @@
     </div>
 </div>
 <section class="site-container grid gap-4 py-12 sm:grid-cols-2 lg:grid-cols-3">
-    @foreach ([
-        ['PPDB Online', $settings->ppdb_url, 'Portal penerimaan peserta didik baru', true],
-        ['Rapor Digital Madrasah', $settings->rdm_url, 'Login rapor digital siswa', true],
-        ['Kementerian Agama', $settings->kemenag_url, 'Portal resmi Kemenag RI', true],
-        ['Unduhan Dokumen', route('downloads.index'), 'Berkas dan dokumen madrasah', false],
-        ['Guru & Tendik', route('staff.index'), 'Profil tenaga pendidik', false],
-        ['Struktur Organisasi', route('organization.index'), 'Bagan pejabat struktural madrasah', false],
-        ['Video & Short', route('videos.index'), 'Dokumentasi video dan short', false],
-        ['Prestasi', route('achievements.index'), 'Capaian siswa dan madrasah', false],
-    ] as [$label, $url, $desc, $external])
-        @if ($url)
-            <a href="{{ $url }}" @if($external) target="_blank" rel="noopener" @endif class="rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-kemenag/30 hover:shadow-md">
-                <h2 class="font-display text-2xl font-extrabold text-kemenag-deep">{{ $label }}</h2>
-                <p class="mt-2 text-sm text-muted">{{ $desc }}</p>
-            </a>
-        @endif
-    @endforeach
+    @forelse ($serviceLinks as $item)
+        <a
+            href="{{ $item->resolvedUrl() }}"
+            @if ($item->isExternal()) target="_blank" rel="noopener" @endif
+            class="group rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-kemenag/30 hover:shadow-md"
+        >
+            <div class="flex items-start gap-4">
+                <x-layanan-app-icon :logo="$item->logo" :label="$item->label" />
+                <div class="min-w-0">
+                    <h2 class="font-display text-2xl font-extrabold text-kemenag-deep group-hover:text-kemenag">{{ $item->label }}</h2>
+                    @if ($item->description)
+                        <p class="mt-2 text-sm text-muted">{{ $item->description }}</p>
+                    @endif
+                </div>
+            </div>
+        </a>
+    @empty
+        <p class="col-span-full rounded-2xl border border-dashed border-kemenag/20 bg-white p-8 text-muted">
+            Belum ada layanan. Tambahkan dari panel admin (menu <strong>Akses Layanan</strong>).
+        </p>
+    @endforelse
 </section>
 @endsection

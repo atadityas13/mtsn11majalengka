@@ -147,9 +147,7 @@ class SiteController extends Controller
 
     public function layanan(): View
     {
-        return view('site.layanan', [
-            'settings' => SiteSetting::current(),
-        ]);
+        return view('site.layanan');
     }
 
     public function downloads(): View
