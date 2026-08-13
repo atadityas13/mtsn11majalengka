@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\MenuItems\Schemas;
 
+use App\Models\MenuItem;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class MenuItemForm
@@ -19,7 +21,7 @@ class MenuItemForm
                     ->maxLength(255),
                 TextInput::make('url')
                     ->label('URL / path')
-                    ->helperText('Contoh: /berita atau https://ppdb.mtsn11majalengka.sch.id/')
+                    ->helperText('Contoh: /berita atau https://ppdb.mtsn11majalengka.sch.id/. Untuk menu induk saja boleh diisi #')
                     ->required()
                     ->maxLength(255),
                 Select::make('location')
@@ -29,12 +31,33 @@ class MenuItemForm
                         'footer' => 'Footer',
                     ])
                     ->default('header')
-                    ->required(),
+                    ->required()
+                    ->live(),
+                Select::make('parent_id')
+                    ->label('Menu induk')
+                    ->helperText('Pilih menu induk jika ini submenu. Kosongkan untuk menu utama.')
+                    ->options(function (Get $get, ?MenuItem $record): array {
+                        return MenuItem::query()
+                            ->where('location', $get('location') ?: 'header')
+                            ->whereNull('parent_id')
+                            ->when(
+                                $record,
+                                fn ($query) => $query->whereKeyNot($record->getKey())
+                            )
+                            ->orderBy('sort_order')
+                            ->orderBy('label')
+                            ->pluck('label', 'id')
+                            ->all();
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
                 TextInput::make('sort_order')
                     ->label('Urutan')
                     ->numeric()
                     ->default(0)
-                    ->required(),
+                    ->required()
+                    ->helperText('Urutan di antara menu setingkat (utama atau sesama submenu)'),
                 Toggle::make('open_in_new_tab')
                     ->label('Buka tab baru')
                     ->default(false),

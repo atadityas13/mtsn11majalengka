@@ -33,26 +33,44 @@ class DatabaseSeeder extends Seeder
         SiteSetting::current();
 
         $headerMenus = [
-            ['label' => 'Beranda', 'url' => '/', 'sort_order' => 1],
-            ['label' => 'Berita', 'url' => '/berita', 'sort_order' => 2],
-            ['label' => 'Pengumuman', 'url' => '/pengumuman', 'sort_order' => 3],
-            ['label' => 'Agenda', 'url' => '/agenda', 'sort_order' => 4],
-            ['label' => 'Prestasi', 'url' => '/prestasi', 'sort_order' => 5],
-            ['label' => 'Galeri', 'url' => '/galeri', 'sort_order' => 6],
-            ['label' => 'Short', 'url' => '/short', 'sort_order' => 7],
-            ['label' => 'Video', 'url' => '/video', 'sort_order' => 8],
-            ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 9],
-            ['label' => 'Struktur Organisasi', 'url' => '/struktur-organisasi', 'sort_order' => 10],
-            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 11],
-            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 12],
-            ['label' => 'Layanan', 'url' => '/layanan', 'sort_order' => 13],
-            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 14],
+            ['label' => 'Beranda', 'url' => '/', 'sort_order' => 1, 'parent' => null],
+            ['label' => 'Berita', 'url' => '/berita', 'sort_order' => 2, 'parent' => null],
+            ['label' => 'Pengumuman', 'url' => '/pengumuman', 'sort_order' => 3, 'parent' => null],
+            ['label' => 'Agenda', 'url' => '/agenda', 'sort_order' => 4, 'parent' => null],
+            ['label' => 'Prestasi', 'url' => '/prestasi', 'sort_order' => 5, 'parent' => null],
+            ['label' => 'Galeri', 'url' => '/galeri', 'sort_order' => 6, 'parent' => null],
+            ['label' => 'Short', 'url' => '/short', 'sort_order' => 7, 'parent' => null],
+            ['label' => 'Video', 'url' => '/video', 'sort_order' => 8, 'parent' => null],
+            ['label' => 'Profil', 'url' => '/halaman/profil', 'sort_order' => 9, 'parent' => null],
+            ['label' => 'Struktur Organisasi', 'url' => '/struktur-organisasi', 'sort_order' => 1, 'parent' => 'Profil'],
+            ['label' => 'Guru & Tendik', 'url' => '/tenaga-pendidik', 'sort_order' => 2, 'parent' => 'Profil'],
+            ['label' => 'Unduhan', 'url' => '/unduhan', 'sort_order' => 10, 'parent' => null],
+            ['label' => 'Layanan', 'url' => '/layanan', 'sort_order' => 11, 'parent' => null],
+            ['label' => 'Kontak', 'url' => '/kontak', 'sort_order' => 12, 'parent' => null],
         ];
 
         foreach ($headerMenus as $menu) {
+            $parentLabel = $menu['parent'] ?? null;
+            unset($menu['parent']);
+
+            $parentId = null;
+            if ($parentLabel) {
+                $parentId = MenuItem::query()
+                    ->where('location', 'header')
+                    ->where('label', $parentLabel)
+                    ->whereNull('parent_id')
+                    ->value('id');
+            }
+
             MenuItem::query()->updateOrCreate(
                 ['label' => $menu['label'], 'location' => 'header'],
-                [...$menu, 'location' => 'header', 'is_visible' => true, 'open_in_new_tab' => false]
+                [
+                    ...$menu,
+                    'location' => 'header',
+                    'parent_id' => $parentId,
+                    'is_visible' => true,
+                    'open_in_new_tab' => false,
+                ]
             );
         }
 

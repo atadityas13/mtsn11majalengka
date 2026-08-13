@@ -79,7 +79,31 @@
         <nav class="hidden border-t border-kemenag/10 bg-kemenag-soft/40 lg:block">
             <div class="site-container flex flex-wrap items-center gap-x-1 gap-y-1 py-2 text-[13px] font-semibold text-ink/80">
                 @forelse ($headerMenus as $item)
-                    <a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif class="rounded-md px-2.5 py-1.5 transition hover:bg-white hover:text-kemenag-deep">{{ $item->label }}</a>
+                    @if ($item->children->isNotEmpty())
+                        <div class="nav-item">
+                            <a
+                                href="{{ $item->resolvedUrl() }}"
+                                @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif
+                                class="nav-link inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 transition hover:bg-white hover:text-kemenag-deep"
+                                aria-haspopup="true"
+                            >
+                                <span>{{ $item->label }}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 opacity-70" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" clip-rule="evenodd"/></svg>
+                            </a>
+                            <div class="nav-dropdown" role="menu">
+                                @foreach ($item->children as $child)
+                                    <a
+                                        href="{{ $child->resolvedUrl() }}"
+                                        @if($child->open_in_new_tab) target="_blank" rel="noopener" @endif
+                                        class="nav-dropdown-link"
+                                        role="menuitem"
+                                    >{{ $child->label }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $item->resolvedUrl() }}" @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif class="rounded-md px-2.5 py-1.5 transition hover:bg-white hover:text-kemenag-deep">{{ $item->label }}</a>
+                    @endif
                 @empty
                     <a href="{{ route('home') }}" class="rounded-md px-2.5 py-1.5 hover:bg-white hover:text-kemenag-deep">Beranda</a>
                     <a href="{{ route('posts.index') }}" class="rounded-md px-2.5 py-1.5 hover:bg-white hover:text-kemenag-deep">Berita</a>
@@ -101,7 +125,39 @@
         <div x-cloak x-show="open" x-transition class="border-t border-kemenag/10 bg-white lg:hidden">
             <nav class="site-container flex flex-col gap-1 py-3 text-sm font-semibold">
                 @forelse ($headerMenus as $item)
-                    <a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif class="rounded-md px-3 py-3 hover:bg-kemenag-soft" @click="open = false">{{ $item->label }}</a>
+                    @if ($item->children->isNotEmpty())
+                        <div class="rounded-md" x-data="{ subOpen: false }">
+                            <div class="flex items-stretch">
+                                <a
+                                    href="{{ $item->resolvedUrl() }}"
+                                    @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif
+                                    class="flex-1 rounded-md px-3 py-3 hover:bg-kemenag-soft"
+                                    @click="open = false"
+                                >{{ $item->label }}</a>
+                                <button
+                                    type="button"
+                                    class="inline-flex w-12 items-center justify-center rounded-md text-kemenag-deep hover:bg-kemenag-soft"
+                                    @click="subOpen = !subOpen"
+                                    :aria-expanded="subOpen.toString()"
+                                    aria-label="Buka submenu {{ $item->label }}"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 transition" :class="subOpen ? 'rotate-180' : ''"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" clip-rule="evenodd"/></svg>
+                                </button>
+                            </div>
+                            <div x-cloak x-show="subOpen" x-transition class="ml-3 space-y-1 border-l border-kemenag/15 pb-2 pl-3">
+                                @foreach ($item->children as $child)
+                                    <a
+                                        href="{{ $child->resolvedUrl() }}"
+                                        @if($child->open_in_new_tab) target="_blank" rel="noopener" @endif
+                                        class="block rounded-md px-3 py-2.5 text-ink/80 hover:bg-kemenag-soft hover:text-kemenag-deep"
+                                        @click="open = false"
+                                    >{{ $child->label }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $item->resolvedUrl() }}" @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif class="rounded-md px-3 py-3 hover:bg-kemenag-soft" @click="open = false">{{ $item->label }}</a>
+                    @endif
                 @empty
                     <a href="{{ route('home') }}" class="rounded-md px-3 py-3 hover:bg-kemenag-soft" @click="open = false">Beranda</a>
                     <a href="{{ route('posts.index') }}" class="rounded-md px-3 py-3 hover:bg-kemenag-soft" @click="open = false">Berita</a>
@@ -141,7 +197,7 @@
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-gold">Navigasi</p>
                 <div class="mt-4 flex flex-col gap-2 text-sm text-white/80">
                     @forelse ($footerMenus as $item)
-                        <a href="{{ $item->url }}" class="hover:text-white">{{ $item->label }}</a>
+                        <a href="{{ $item->resolvedUrl() }}" @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif class="hover:text-white">{{ $item->label }}</a>
                     @empty
                         <a href="{{ route('posts.index') }}" class="hover:text-white">Berita</a>
                         <a href="{{ route('pages.show', 'profil') }}" class="hover:text-white">Profil</a>
