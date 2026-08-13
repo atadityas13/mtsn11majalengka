@@ -81,15 +81,15 @@
                 @forelse ($headerMenus as $item)
                     @if ($item->children->isNotEmpty())
                         <div class="nav-item">
-                            <a
-                                href="{{ $item->resolvedUrl() }}"
-                                @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif
+                            <button
+                                type="button"
                                 class="nav-link inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 transition hover:bg-white hover:text-kemenag-deep"
                                 aria-haspopup="true"
+                                aria-expanded="false"
                             >
                                 <span>{{ $item->label }}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 opacity-70" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" clip-rule="evenodd"/></svg>
-                            </a>
+                            </button>
                             <div class="nav-dropdown" role="menu">
                                 @foreach ($item->children as $child)
                                     <a
@@ -127,23 +127,15 @@
                 @forelse ($headerMenus as $item)
                     @if ($item->children->isNotEmpty())
                         <div class="rounded-md" x-data="{ subOpen: false }">
-                            <div class="flex items-stretch">
-                                <a
-                                    href="{{ $item->resolvedUrl() }}"
-                                    @if($item->open_in_new_tab) target="_blank" rel="noopener" @endif
-                                    class="flex-1 rounded-md px-3 py-3 hover:bg-kemenag-soft"
-                                    @click="open = false"
-                                >{{ $item->label }}</a>
-                                <button
-                                    type="button"
-                                    class="inline-flex w-12 items-center justify-center rounded-md text-kemenag-deep hover:bg-kemenag-soft"
-                                    @click="subOpen = !subOpen"
-                                    :aria-expanded="subOpen.toString()"
-                                    aria-label="Buka submenu {{ $item->label }}"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 transition" :class="subOpen ? 'rotate-180' : ''"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" clip-rule="evenodd"/></svg>
-                                </button>
-                            </div>
+                            <button
+                                type="button"
+                                class="flex w-full items-center justify-between rounded-md px-3 py-3 text-left hover:bg-kemenag-soft"
+                                @click="subOpen = !subOpen"
+                                :aria-expanded="subOpen.toString()"
+                            >
+                                <span>{{ $item->label }}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 transition" :class="subOpen ? 'rotate-180' : ''" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" clip-rule="evenodd"/></svg>
+                            </button>
                             <div x-cloak x-show="subOpen" x-transition class="ml-3 space-y-1 border-l border-kemenag/15 pb-2 pl-3">
                                 @foreach ($item->children as $child)
                                     <a

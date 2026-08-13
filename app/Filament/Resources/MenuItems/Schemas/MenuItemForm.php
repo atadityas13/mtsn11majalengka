@@ -21,7 +21,7 @@ class MenuItemForm
                     ->maxLength(255),
                 TextInput::make('url')
                     ->label('URL / path')
-                    ->helperText('Contoh: /berita atau https://ppdb.mtsn11majalengka.sch.id/. Untuk menu induk saja boleh diisi #')
+                    ->helperText('Untuk menu biasa: /berita. Untuk menu induk ber-submenu: URL diabaikan (hanya buka dropdown saat hover), boleh diisi #')
                     ->required()
                     ->maxLength(255),
                 Select::make('location')

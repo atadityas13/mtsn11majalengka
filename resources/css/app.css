@@ -220,6 +220,16 @@
         position: relative;
     }
 
+    .nav-item > .nav-link {
+        appearance: none;
+        background: transparent;
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+        font-weight: inherit;
+    }
+
     .nav-dropdown {
         position: absolute;
         top: calc(100% - 0.15rem);
