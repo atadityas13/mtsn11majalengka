@@ -791,12 +791,22 @@
         animation: rise 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
     }
 
+    .animate-rise-delay-3 {
+        animation: rise 1.25s cubic-bezier(0.22, 1, 0.36, 1) 0.34s both;
+    }
+
     .animate-float {
         animation: float-soft 6s ease-in-out infinite;
     }
 
     .animate-float-delay {
         animation: float-soft 7.5s ease-in-out 0.8s infinite;
+    }
+
+    .hero-kenburns {
+        transform-origin: center center;
+        animation: kenburns 22s ease-in-out infinite alternate;
+        will-change: transform;
     }
 
     .delay-1 { transition-delay: 0.08s !important; }
@@ -813,6 +823,15 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes kenburns {
+    from {
+        transform: scale(1.05) translate(0, 0);
+    }
+    to {
+        transform: scale(1.14) translate(-1.5%, -1%);
     }
 }
 
@@ -865,13 +884,19 @@
     .animate-rise,
     .animate-rise-delay,
     .animate-rise-delay-2,
+    .animate-rise-delay-3,
     .animate-float,
     .animate-float-delay,
+    .hero-kenburns,
     .pattern-mesh,
     .ornament-arc,
     .section-label::before,
     .wa-float {
         animation: none !important;
+    }
+
+    .hero-kenburns {
+        transform: none !important;
     }
 
     .reveal,

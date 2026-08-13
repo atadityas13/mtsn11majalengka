@@ -3,25 +3,32 @@
 @section('title', $site->school_name.' — '.$site->tagline)
 
 @section('content')
-{{-- Hero: brand first, lebih pendek, BG lebih terlihat --}}
-<section class="relative overflow-hidden text-white">
-    <div class="absolute inset-0 pattern-mesh opacity-40"></div>
+{{-- Hero: motion halus + cahaya lembut --}}
+<section class="hero-stage relative overflow-hidden text-white">
+    <div class="absolute inset-0 pattern-mesh opacity-25"></div>
     @if ($site->hero_image)
-        <img src="{{ asset('storage/'.$site->hero_image) }}" alt="" class="absolute inset-0 h-full w-full object-cover opacity-55">
+        <img
+            src="{{ asset('storage/'.$site->hero_image) }}"
+            alt=""
+            class="hero-kenburns absolute inset-0 h-full w-full object-cover opacity-70"
+        >
     @endif
-    <div class="absolute inset-0 bg-gradient-to-r from-kemenag-dark/70 via-kemenag-deep/45 to-kemenag-dark/35"></div>
+    {{-- Cahaya: kiri untuk teks, bawah untuk kedalaman, kanan lebih terbuka ke foto --}}
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-kemenag-dark/75 via-kemenag-deep/40 to-transparent"></div>
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-kemenag-dark/55 via-transparent to-kemenag-dark/20"></div>
+    <div class="pointer-events-none absolute -left-20 top-1/3 h-64 w-64 rounded-full bg-gold/10 blur-3xl"></div>
 
-    <div class="site-container relative py-10 md:py-12 lg:py-14">
+    <div class="site-container relative py-12 md:py-14 lg:py-16">
         <p class="animate-rise section-label !text-gold">
             <span class="text-gold">Portal Resmi Madrasah</span>
         </p>
         <h1 class="animate-rise-delay mt-3 max-w-4xl font-display text-4xl font-extrabold leading-[1.05] text-balance md:text-5xl lg:text-[3.25rem]">
             {{ $site->hero_title ?: $site->school_name }}
         </h1>
-        <p class="animate-rise-delay-2 mt-3 max-w-2xl text-sm leading-relaxed text-white/85 md:text-base">
+        <p class="animate-rise-delay-2 mt-3 max-w-2xl text-sm leading-relaxed text-white/90 md:text-base">
             {{ $site->hero_subtitle ?: $site->tagline }}
         </p>
-        <div class="animate-rise-delay-2 mt-6 flex flex-wrap gap-3">
+        <div class="animate-rise-delay-3 mt-7 flex flex-wrap gap-3">
             @if ($site->hero_cta_url)
                 <a href="{{ $site->hero_cta_url }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-md bg-gold px-5 py-2.5 text-sm font-extrabold text-kemenag-dark transition hover:-translate-y-0.5 hover:brightness-110 hover:shadow-lg">
                     {{ $site->hero_cta_label ?: 'Info PPDB' }}
