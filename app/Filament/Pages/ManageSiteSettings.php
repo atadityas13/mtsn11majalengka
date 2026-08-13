@@ -6,6 +6,7 @@ use App\Models\SiteSetting;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -124,6 +125,25 @@ class ManageSiteSettings extends Page
                                         ->image()
                                         ->directory('settings')
                                         ->disk('public')
+                                        ->helperText('Unggah foto landscape lebar. Atur fokus fokus di bawah jika objek penting tidak di tengah.')
+                                        ->columnSpanFull(),
+                                    Select::make('hero_image_position')
+                                        ->label('Fokus tampilan gambar hero')
+                                        ->options([
+                                            '50% 20%' => 'Atas (tengah)',
+                                            '50% 35%' => 'Agak atas',
+                                            '50% 50%' => 'Tengah',
+                                            '50% 65%' => 'Agak bawah',
+                                            '50% 80%' => 'Bawah (tengah)',
+                                            '20% 30%' => 'Kiri atas',
+                                            '20% 50%' => 'Kiri tengah',
+                                            '20% 70%' => 'Kiri bawah',
+                                            '80% 30%' => 'Kanan atas',
+                                            '80% 50%' => 'Kanan tengah',
+                                            '80% 70%' => 'Kanan bawah',
+                                        ])
+                                        ->default('50% 40%')
+                                        ->helperText('Menentukan bagian foto yang ditonjolkan saat dipotong otomatis.')
                                         ->columnSpanFull(),
                                     TextInput::make('hero_cta_label')
                                         ->label('Teks tombol CTA'),

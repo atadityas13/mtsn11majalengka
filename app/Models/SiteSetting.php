@@ -17,6 +17,7 @@ class SiteSetting extends Model
         'hero_title',
         'hero_subtitle',
         'hero_image',
+        'hero_image_position',
         'hero_cta_label',
         'hero_cta_url',
         'headmaster_name',
@@ -106,5 +107,15 @@ class SiteSetting extends Model
         }
 
         return $this->profile_video_url;
+    }
+
+    /**
+     * CSS object-position / transform-origin untuk fokus gambar hero.
+     */
+    public function heroImageFocus(): string
+    {
+        $position = trim((string) $this->hero_image_position);
+
+        return $position !== '' ? $position : '50% 40%';
     }
 }

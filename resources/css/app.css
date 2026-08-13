@@ -154,7 +154,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transform-origin: 60% 40%;
+        /* transform-origin di-set dari admin (inline style) */
         animation: kenburns 11s ease-in-out infinite alternate;
         will-change: transform;
     }
