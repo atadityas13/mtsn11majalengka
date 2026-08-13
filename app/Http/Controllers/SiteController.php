@@ -6,6 +6,7 @@ use App\Models\Achievement;
 use App\Models\Agenda;
 use App\Models\Announcement;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\ContactMessage;
 use App\Models\Download;
 use App\Models\GalleryItem;
@@ -65,6 +66,8 @@ class SiteController extends Controller
     public function post(string $slug): View
     {
         $post = Post::published()->with('category')->where('slug', $slug)->firstOrFail();
+        $post->increment('views_count');
+        $post->refresh();
 
         return view('site.posts.show', [
             'post' => $post,
@@ -75,7 +78,48 @@ class SiteController extends Controller
                 ->latest('published_at')
                 ->take(3)
                 ->get(),
+            'latestPosts' => Post::published()
+                ->with('category')
+                ->where('id', '!=', $post->id)
+                ->latest('published_at')
+                ->take(5)
+                ->get(),
+            'popularPosts' => Post::published()
+                ->with('category')
+                ->where('id', '!=', $post->id)
+                ->orderByDesc('views_count')
+                ->latest('published_at')
+                ->take(5)
+                ->get(),
+            'approvedComments' => $post->comments()
+                ->approved()
+                ->latest()
+                ->get(),
+            'recentComments' => Comment::query()
+                ->approved()
+                ->with('post')
+                ->latest()
+                ->take(5)
+                ->get(),
         ]);
+    }
+
+    public function storeComment(Request $request, string $slug): RedirectResponse
+    {
+        $post = Post::published()->where('slug', $slug)->firstOrFail();
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:120'],
+            'body' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $post->comments()->create([
+            ...$data,
+            'is_approved' => false,
+        ]);
+
+        return back()->with('comment_success', 'Komentar Anda telah dikirim dan menunggu tinjauan.');
     }
 
     public function announcements(): View

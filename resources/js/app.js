@@ -42,6 +42,25 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('scroll', onScroll, { passive: true });
     }
 
+    document.querySelectorAll('[data-copy-link]').forEach((button) => {
+        button.addEventListener('click', async () => {
+            const url = button.getAttribute('data-url') || window.location.href;
+            const label = button.textContent;
+
+            try {
+                await navigator.clipboard.writeText(url);
+                button.classList.add('is-copied');
+                button.textContent = 'Tersalin';
+                window.setTimeout(() => {
+                    button.classList.remove('is-copied');
+                    button.textContent = label;
+                }, 1800);
+            } catch (error) {
+                window.prompt('Salin tautan ini:', url);
+            }
+        });
+    });
+
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const heroStage = document.querySelector('.hero-stage');

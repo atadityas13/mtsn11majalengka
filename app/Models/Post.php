@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Post extends Model
@@ -19,6 +20,7 @@ class Post extends Model
         'author_name',
         'published_at',
         'is_published',
+        'views_count',
     ];
 
     protected function casts(): array
@@ -26,6 +28,7 @@ class Post extends Model
         return [
             'published_at' => 'datetime',
             'is_published' => 'boolean',
+            'views_count' => 'integer',
         ];
     }
 
@@ -43,11 +46,24 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query
             ->where('is_published', true)
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
+    }
+
+    public function readingMinutes(): int
+    {
+        $text = trim(strip_tags((string) $this->body));
+        $words = str_word_count($text);
+
+        return max(1, (int) ceil($words / 200));
     }
 }

@@ -280,6 +280,147 @@
         color: #065c2e;
     }
 
+    .article-sidebar {
+        align-self: start;
+    }
+
+    @media (min-width: 1024px) {
+        .article-sidebar {
+            position: sticky;
+            top: 6.5rem;
+        }
+    }
+
+    .sidebar-card {
+        border-radius: 1.15rem;
+        border: 1px solid rgb(10 122 62 / 0.1);
+        background: #fff;
+        padding: 1.15rem;
+        box-shadow: 0 12px 28px rgb(4 63 31 / 0.07);
+    }
+
+    .sidebar-card-title {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #065c2e;
+        padding-bottom: 0.65rem;
+        border-bottom: 2px solid rgb(212 160 23 / 0.45);
+    }
+
+    .sidebar-news-item {
+        display: grid;
+        grid-template-columns: 4.25rem minmax(0, 1fr);
+        gap: 0.75rem;
+        align-items: start;
+        text-decoration: none;
+        border-radius: 0.75rem;
+        padding: 0.35rem;
+        transition: background-color 0.15s ease;
+    }
+
+    .sidebar-news-item:hover {
+        background: rgb(232 245 238 / 0.8);
+    }
+
+    .sidebar-news-thumb {
+        width: 4.25rem;
+        height: 3.25rem;
+        overflow: hidden;
+        border-radius: 0.55rem;
+        background: #e8f5ee;
+        display: grid;
+        place-items: center;
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: #0a7a3e;
+    }
+
+    .sidebar-news-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .share-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.25rem;
+        padding: 0.4rem 0.85rem;
+        border-radius: 999px;
+        border: 1px solid rgb(10 122 62 / 0.15);
+        background: #fff;
+        color: #24362c;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        cursor: pointer;
+    }
+
+    .share-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgb(4 63 31 / 0.1);
+    }
+
+    .share-btn--wa { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .share-btn--fb { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .share-btn--x { background: #f8fafc; color: #0f172a; border-color: #e2e8f0; }
+    .share-btn--mail { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+    .share-btn--copy,
+    .share-btn--print { background: #f4f7f5; color: #065c2e; }
+
+    .share-btn.is-copied {
+        background: #0a7a3e;
+        color: #fff;
+        border-color: #0a7a3e;
+    }
+
+    .comment-card {
+        border-radius: 1rem;
+        border: 1px solid rgb(10 122 62 / 0.1);
+        background: #fff;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 6px 16px rgb(4 63 31 / 0.04);
+    }
+
+    .comment-avatar {
+        display: grid;
+        place-items: center;
+        width: 2.4rem;
+        height: 2.4rem;
+        border-radius: 999px;
+        background: linear-gradient(145deg, #0a7a3e, #043f1f);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 0.95rem;
+    }
+
+    .comment-form {
+        border-radius: 1.15rem;
+        border: 1px solid rgb(10 122 62 / 0.12);
+        background: linear-gradient(180deg, #fff, #f7faf8);
+        padding: 1.25rem;
+        box-shadow: 0 12px 28px rgb(4 63 31 / 0.06);
+    }
+
+    .field-input {
+        width: 100%;
+        border-radius: 0.55rem;
+        border: 1px solid rgb(10 122 62 / 0.2);
+        padding: 0.65rem 0.8rem;
+        font-size: 0.9rem;
+        outline: none;
+        background: #fff;
+    }
+
+    .field-input:focus {
+        border-color: #0a7a3e;
+        box-shadow: 0 0 0 3px rgb(10 122 62 / 0.15);
+    }
+
     .wa-float {
         @apply fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg;
         animation: float-soft 5s ease-in-out infinite;
