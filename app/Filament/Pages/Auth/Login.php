@@ -2,10 +2,12 @@
 
 namespace App\Filament\Pages\Auth;
 
+use App\Models\User;
 use Filament\Auth\Pages\Login as BaseLogin;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Schema;
 use SensitiveParameter;
 
 class Login extends BaseLogin
@@ -116,9 +118,33 @@ class Login extends BaseLogin
      */
     protected function getCredentialsFromFormData(#[SensitiveParameter] array $data): array
     {
+        $login = trim((string) ($data['username'] ?? ''));
+        $password = $data['password'];
+
+        // Kolom username sudah ada (migrasi sudah jalan).
+        if (Schema::hasColumn('users', 'username')) {
+            return [
+                'username' => $login,
+                'password' => $password,
+            ];
+        }
+
+        // Fallback jika hosting belum migrate: terima email penuh atau prefix sebelum @.
+        if (str_contains($login, '@')) {
+            return [
+                'email' => $login,
+                'password' => $password,
+            ];
+        }
+
+        $email = User::query()
+            ->where('email', $login)
+            ->orWhere('email', 'like', $login.'@%')
+            ->value('email');
+
         return [
-            'username' => $data['username'],
-            'password' => $data['password'],
+            'email' => $email ?: $login,
+            'password' => $password,
         ];
     }
 }

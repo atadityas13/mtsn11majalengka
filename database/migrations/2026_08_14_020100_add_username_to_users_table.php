@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
@@ -10,11 +10,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('username')->nullable()->unique()->after('name');
-        });
+        if (! Schema::hasColumn('users', 'username')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('username')->nullable()->unique()->after('name');
+            });
+        }
 
-        User::query()->orderBy('id')->each(function (User $user): void {
+        $users = DB::table('users')->orderBy('id')->get(['id', 'email', 'username']);
+
+        foreach ($users as $user) {
+            if (filled($user->username)) {
+                continue;
+            }
+
             $base = Str::of((string) $user->email)
                 ->before('@')
                 ->lower()
@@ -29,23 +37,27 @@ return new class extends Migration
             $suffix = 1;
 
             while (
-                User::query()
+                DB::table('users')
                     ->where('username', $username)
-                    ->whereKeyNot($user->id)
+                    ->where('id', '!=', $user->id)
                     ->exists()
             ) {
                 $username = $base.$suffix;
                 $suffix++;
             }
 
-            $user->forceFill(['username' => $username])->saveQuietly();
-        });
+            DB::table('users')->where('id', $user->id)->update([
+                'username' => $username,
+            ]);
+        }
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('username');
-        });
+        if (Schema::hasColumn('users', 'username')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('username');
+            });
+        }
     }
 };

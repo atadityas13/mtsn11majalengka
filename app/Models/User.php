@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 #[Fillable(['name', 'username', 'email', 'password', 'role', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
@@ -21,21 +23,46 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        if (! $this->is_active) {
-            return false;
+        // Belum migrate role/is_active: izinkan akses supaya login tidak 500.
+        if (! Schema::hasColumn($this->getTable(), 'role')) {
+            return true;
         }
 
-        return $this->role instanceof UserRole;
+        try {
+            if (Schema::hasColumn($this->getTable(), 'is_active') && ! $this->is_active) {
+                return false;
+            }
+
+            return $this->role instanceof UserRole;
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     public function isSuperAdmin(): bool
     {
-        return $this->role === UserRole::SuperAdmin;
+        if (! Schema::hasColumn($this->getTable(), 'role')) {
+            return true;
+        }
+
+        try {
+            return $this->role === UserRole::SuperAdmin;
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     public function isRedaktur(): bool
     {
-        return $this->role === UserRole::Redaktur;
+        if (! Schema::hasColumn($this->getTable(), 'role')) {
+            return false;
+        }
+
+        try {
+            return $this->role === UserRole::Redaktur;
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     /**
