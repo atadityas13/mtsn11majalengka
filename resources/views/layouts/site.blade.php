@@ -166,17 +166,17 @@
                 <div class="mt-4 flex flex-wrap gap-3">
                     @if ($site->facebook_url)
                         <a href="{{ $site->facebook_url }}" target="_blank" rel="noopener" class="social-follow-btn" aria-label="Facebook">
-                            <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5H17V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.5H8v3.1h2.8v8h2.7z"/></svg>
+                            <img src="{{ asset('images/social/facebook.png') }}" alt="Facebook" width="40" height="40" loading="lazy">
                         </a>
                     @endif
                     @if ($site->instagram_url)
                         <a href="{{ $site->instagram_url }}" target="_blank" rel="noopener" class="social-follow-btn" aria-label="Instagram">
-                            <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M12 7.2A4.8 4.8 0 1 0 12 16.8 4.8 4.8 0 0 0 12 7.2zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2zm6.1-8.2a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0zm3.1 1.1c-.1-1.9-.5-3.5-1.9-4.9S16.6 1.7 14.7 1.6C12.7 1.5 11.3 1.5 12 1.5s-.7 0-2.7.1C7.4 1.7 5.8 2.1 4.4 3.5S1.7 6.8 1.6 8.7C1.5 10.7 1.5 12.1 1.5 12s0 .7.1 2.7c.1 1.9.5 3.5 1.9 4.9s3 1.8 4.9 1.9c2 .1 3.4.1 4.1.1s.7 0 2.7-.1c1.9-.1 3.5-.5 4.9-1.9s1.8-3 1.9-4.9c.1-2 .1-3.4.1-4.1s0-.7-.1-2.7zm-2 10.3a5.3 5.3 0 0 1-3 3c-2 .5-6.7.5-8.8 0a5.3 5.3 0 0 1-3-3c-.5-2-.5-6.7 0-8.8a5.3 5.3 0 0 1 3-3c2-.5 6.7-.5 8.8 0a5.3 5.3 0 0 1 3 3c.5 2.1.5 6.8 0 8.8z"/></svg>
+                            <img src="{{ asset('images/social/instagram.png') }}" alt="Instagram" width="40" height="40" loading="lazy">
                         </a>
                     @endif
                     @if ($site->youtube_url)
                         <a href="{{ $site->youtube_url }}" target="_blank" rel="noopener" class="social-follow-btn" aria-label="YouTube">
-                            <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.5 31.5 0 0 0 24 12a31.5 31.5 0 0 0-.5-5.8zM9.8 15.5v-7l6.3 3.5-6.3 3.5z"/></svg>
+                            <img src="{{ asset('images/social/youtube.png') }}" alt="YouTube" width="40" height="40" loading="lazy">
                         </a>
                     @endif
                 </div>

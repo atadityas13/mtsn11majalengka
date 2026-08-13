@@ -227,11 +227,19 @@
     }
 
     .social-follow-btn {
-        @apply inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/15 bg-white/5 text-white transition;
+        @apply inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm transition;
+    }
+
+    .social-follow-btn img {
+        display: block;
+        width: 2.15rem;
+        height: 2.15rem;
+        object-fit: contain;
     }
 
     .social-follow-btn:hover {
-        @apply border-gold/50 bg-gold text-kemenag-dark;
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 10px 22px rgb(0 0 0 / 0.22);
     }
 
     .layanan-ticker {
