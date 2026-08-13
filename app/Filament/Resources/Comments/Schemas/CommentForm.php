@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Comments\Schemas;
 
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -22,10 +23,9 @@ class CommentForm
                     ->email()
                     ->disabled()
                     ->dehydrated(false),
-                TextInput::make('post.title')
+                Placeholder::make('post_title')
                     ->label('Berita')
-                    ->disabled()
-                    ->dehydrated(false)
+                    ->content(fn ($record) => $record?->post?->title ?: '—')
                     ->columnSpanFull(),
                 Textarea::make('body')
                     ->label('Komentar')
