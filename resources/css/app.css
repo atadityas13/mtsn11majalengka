@@ -508,7 +508,7 @@
 
     .related-news__featured {
         display: grid;
-        gap: 1rem;
+        gap: 1.25rem;
         padding: 0.85rem;
         border: 1px solid rgb(10 122 62 / 0.14);
         border-radius: 1rem;
@@ -520,6 +520,7 @@
     @media (min-width: 640px) {
         .related-news__featured {
             grid-template-columns: 14rem 1fr;
+            gap: 1.5rem;
             align-items: stretch;
         }
     }
@@ -559,7 +560,13 @@
         flex-direction: column;
         justify-content: center;
         gap: 0.35rem;
-        padding: 0.15rem 0.35rem 0.15rem 0;
+        padding: 0.25rem 0.5rem 0.25rem 0.15rem;
+    }
+
+    @media (min-width: 640px) {
+        .related-news__featured-body {
+            padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+        }
     }
 
     .related-news__featured-body h3 {
