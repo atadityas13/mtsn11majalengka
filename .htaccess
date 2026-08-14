@@ -1,0 +1,13 @@
+# Shared hosting: document root = root project (bukan public/).
+# Semua request diarahkan ke folder public/.
+# Blok PHP cPanel (BEGIN/END) boleh ditambah di bawah ini di server.
+
+DirectoryIndex public/index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Jangan loop jika sudah di /public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
