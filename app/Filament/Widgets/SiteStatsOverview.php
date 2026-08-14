@@ -24,13 +24,13 @@ class SiteStatsOverview extends StatsOverviewWidget
 
     protected ?string $heading = 'Statistik situs';
 
-    protected ?string $description = 'Ringkasan performa konten dan antrian yang perlu ditinjau';
+    protected ?string $description = 'Ringkasan performa konten dan aktivitas situs';
 
     protected function getStats(): array
     {
         $publishedPosts = Post::query()->published()->count();
         $totalViews = (int) Post::query()->sum('views_count');
-        $pendingComments = Comment::query()->where('is_approved', false)->count();
+        $visibleComments = Comment::query()->where('is_approved', true)->count();
         $unreadMessages = ContactMessage::query()->whereNull('read_at')->count();
         $upcomingAgendas = Agenda::query()
             ->published()
@@ -48,10 +48,10 @@ class SiteStatsOverview extends StatsOverviewWidget
                 ->description('Akumulasi views berita')
                 ->descriptionIcon(Heroicon::OutlinedEye)
                 ->color('primary'),
-            Stat::make('Komentar menunggu', number_format($pendingComments))
-                ->description('Perlu persetujuan redaktur')
+            Stat::make('Komentar tayang', number_format($visibleComments))
+                ->description('Ditampilkan di situs')
                 ->descriptionIcon(Heroicon::OutlinedChatBubbleLeftRight)
-                ->color($pendingComments > 0 ? 'warning' : 'gray')
+                ->color('success')
                 ->url(CommentResource::getUrl('index')),
             Stat::make('Pesan kontak baru', number_format($unreadMessages))
                 ->description('Belum dibaca')

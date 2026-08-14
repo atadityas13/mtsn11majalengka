@@ -7,6 +7,7 @@ use App\Filament\Resources\ContactMessages\ContactMessageResource;
 use App\Models\Comment;
 use App\Models\ContactMessage;
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -24,11 +25,10 @@ class ModerationQueueWidget extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Antrian moderasi')
-            ->description('Komentar menunggu persetujuan')
+            ->heading('Komentar terbaru')
+            ->description('Langsung tayang di situs — kelola atau hapus jika perlu')
             ->query(
                 Comment::query()
-                    ->where('is_approved', false)
                     ->with('post')
                     ->latest()
             )
@@ -43,22 +43,28 @@ class ModerationQueueWidget extends TableWidget
                     ->label('Berita')
                     ->limit(24)
                     ->placeholder('—'),
+                TextColumn::make('is_approved')
+                    ->label('Tampil')
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Ya' : 'Sembunyi')
+                    ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
                 TextColumn::make('created_at')
                     ->label('Masuk')
                     ->since(),
             ])
             ->recordActions([
-                Action::make('review')
-                    ->label('Tinjau')
+                Action::make('kelola')
+                    ->label('Kelola')
                     ->url(fn (Comment $record): string => CommentResource::getUrl('edit', ['record' => $record])),
+                DeleteAction::make()->label('Hapus'),
             ])
             ->paginated([5])
             ->defaultPaginationPageOption(5)
-            ->emptyStateHeading('Tidak ada antrian')
+            ->emptyStateHeading('Belum ada komentar')
             ->emptyStateDescription(
                 ContactMessage::query()->whereNull('read_at')->exists()
                     ? 'Ada pesan kontak belum dibaca. Buka menu Pesan Kontak.'
-                    : 'Semua komentar sudah ditinjau.'
+                    : 'Komentar pengunjung akan muncul di sini.'
             )
             ->headerActions([
                 Action::make('pesan')

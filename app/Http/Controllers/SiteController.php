@@ -123,10 +123,10 @@ class SiteController extends Controller
 
         $post->comments()->create([
             ...$data,
-            'is_approved' => false,
+            'is_approved' => true,
         ]);
 
-        return back()->with('comment_success', 'Komentar Anda telah dikirim dan menunggu tinjauan.');
+        return back()->with('comment_success', 'Komentar Anda telah dipublikasikan.');
     }
 
     public function announcements(): View

@@ -34,8 +34,8 @@ class CommentForm
                     ->dehydrated(false)
                     ->columnSpanFull(),
                 Toggle::make('is_approved')
-                    ->label('Disetujui / tampilkan di situs')
-                    ->helperText('Aktifkan agar komentar muncul di halaman berita'),
+                    ->label('Tampilkan di situs')
+                    ->helperText('Nonaktifkan untuk menyembunyikan komentar dari halaman berita tanpa menghapusnya'),
             ])
             ->columns(2);
     }

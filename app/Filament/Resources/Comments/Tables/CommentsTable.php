@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Comments\Tables;
 
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Notifications\Notification;
@@ -20,12 +21,12 @@ class CommentsTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 IconColumn::make('is_approved')
-                    ->label('Status')
+                    ->label('Tampil')
                     ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-clock')
+                    ->trueIcon('heroicon-o-eye')
+                    ->falseIcon('heroicon-o-eye-slash')
                     ->trueColor('success')
-                    ->falseColor('warning'),
+                    ->falseColor('gray'),
                 TextColumn::make('name')
                     ->label('Nama')
                     ->searchable()
@@ -49,25 +50,25 @@ class CommentsTable
             ])
             ->filters([
                 TernaryFilter::make('is_approved')
-                    ->label('Status')
-                    ->trueLabel('Disetujui')
-                    ->falseLabel('Menunggu')
+                    ->label('Status tampil')
+                    ->trueLabel('Ditampilkan')
+                    ->falseLabel('Disembunyikan')
                     ->placeholder('Semua'),
             ])
             ->recordActions([
-                Action::make('approve')
-                    ->label('Setujui')
-                    ->icon('heroicon-o-check')
+                Action::make('show')
+                    ->label('Tampilkan')
+                    ->icon('heroicon-o-eye')
                     ->color('success')
                     ->visible(fn ($record) => ! $record->is_approved)
                     ->action(function ($record): void {
                         $record->update(['is_approved' => true]);
                         Notification::make()
-                            ->title('Komentar disetujui')
+                            ->title('Komentar ditampilkan kembali')
                             ->success()
                             ->send();
                     }),
-                Action::make('unapprove')
+                Action::make('hide')
                     ->label('Sembunyikan')
                     ->icon('heroicon-o-eye-slash')
                     ->color('gray')
@@ -80,6 +81,7 @@ class CommentsTable
                             ->send();
                     }),
                 EditAction::make()->label('Detail'),
+                DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
