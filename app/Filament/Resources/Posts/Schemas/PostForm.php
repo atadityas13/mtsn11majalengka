@@ -55,6 +55,8 @@ class PostForm
                         Textarea::make('excerpt')
                             ->label('Cuplikan')
                             ->rows(3)
+                            ->maxLength(1000)
+                            ->helperText('Ringkasan singkat untuk daftar berita. Maksimal 1000 karakter.')
                             ->columnSpanFull(),
                         RichEditor::make('body')
                             ->label('Isi berita')
