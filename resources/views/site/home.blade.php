@@ -82,8 +82,8 @@
     </div>
 
     @if ($posts->isNotEmpty())
-        <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]" data-news-slider data-interval="4000">
-            <div class="relative overflow-hidden rounded-2xl bg-black/5 text-white shadow-lg">
+        <div class="grid items-start gap-6 lg:grid-cols-[1.4fr_1fr]" data-news-slider data-interval="4000">
+            <div class="relative h-fit overflow-hidden rounded-2xl text-white shadow-lg">
                 <div class="relative aspect-[16/10] md:aspect-[16/9]">
                     @foreach ($posts as $index => $post)
                         <div
@@ -97,7 +97,7 @@
                                     <div class="h-full w-full pattern-mesh"></div>
                                 @endif
                                 <div class="news-featured-veil pointer-events-none absolute inset-0" aria-hidden="true"></div>
-                                <div class="absolute inset-x-0 bottom-0 z-[1] px-5 pb-14 pt-6 md:px-7 md:pb-14 md:pt-8">
+                                <div class="absolute inset-x-0 bottom-0 z-[1] px-5 pb-14 pt-10 md:px-7 md:pb-14 md:pt-14">
                                     @if ($post->category)
                                         <span class="mb-2 inline-flex w-fit rounded bg-gold/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
                                     @endif
@@ -110,24 +110,24 @@
                             </a>
                         </div>
                     @endforeach
-                </div>
 
-                @if ($posts->count() > 1)
-                    <div class="absolute bottom-4 right-4 z-10 flex items-center gap-2">
-                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/25 text-white backdrop-blur-sm hover:bg-black/40" data-slider-prev aria-label="Sebelumnya">‹</button>
-                        <div class="flex gap-1.5 px-1" data-slider-dots>
-                            @foreach ($posts as $index => $post)
-                                <button
-                                    type="button"
-                                    class="news-dot h-2 rounded-full transition-all {{ $index === 0 ? 'w-5 bg-gold' : 'w-2 bg-white/50' }}"
-                                    data-slider-dot="{{ $index }}"
-                                    aria-label="Slide {{ $index + 1 }}"
-                                ></button>
-                            @endforeach
+                    @if ($posts->count() > 1)
+                        <div class="absolute bottom-4 right-4 z-10 flex items-center gap-2">
+                            <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/45" data-slider-prev aria-label="Sebelumnya">‹</button>
+                            <div class="flex gap-1.5 px-1" data-slider-dots>
+                                @foreach ($posts as $index => $post)
+                                    <button
+                                        type="button"
+                                        class="news-dot h-2 rounded-full transition-all {{ $index === 0 ? 'w-5 bg-gold' : 'w-2 bg-white/55' }}"
+                                        data-slider-dot="{{ $index }}"
+                                        aria-label="Slide {{ $index + 1 }}"
+                                    ></button>
+                                @endforeach
+                            </div>
+                            <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/45" data-slider-next aria-label="Berikutnya">›</button>
                         </div>
-                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/25 text-white backdrop-blur-sm hover:bg-black/40" data-slider-next aria-label="Berikutnya">›</button>
-                    </div>
-                @endif
+                    @endif
+                </div>
             </div>
 
             <div class="flex flex-col divide-y divide-kemenag/10 overflow-hidden rounded-2xl border border-kemenag/10 bg-white shadow-sm" x-reveal>
