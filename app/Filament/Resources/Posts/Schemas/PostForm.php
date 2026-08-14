@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
-use App\Filament\Forms\Components\RichEditor\Actions\SafeAttachFilesAction;
 use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -37,11 +36,7 @@ class PostForm
                             ->label('Kategori')
                             ->relationship('category', 'name')
                             ->searchable()
-                            ->preload()
-                            ->createOptionForm([
-                                TextInput::make('name')->required(),
-                                TextInput::make('slug'),
-                            ]),
+                            ->preload(),
                         TextInput::make('title')
                             ->label('Judul')
                             ->required()
@@ -70,25 +65,11 @@ class PostForm
                                 ['h2', 'h3', 'lead', 'paragraph'],
                                 ['alignStart', 'alignCenter', 'alignEnd'],
                                 ['blockquote', 'bulletList', 'orderedList', 'horizontalRule'],
-                                ['attachFiles'],
                                 ['undo', 'redo'],
                             ])
-                            ->fileAttachmentsDisk('public')
-                            ->fileAttachmentsDirectory('posts/body')
-                            ->fileAttachmentsVisibility('public')
-                            // Harus array (bukan null) — null membuat TypeError di Filament.
-                            ->fileAttachmentsAcceptedFileTypes([
-                                'image/jpeg',
-                                'image/png',
-                                'image/webp',
-                                'image/gif',
-                            ])
-                            ->fileAttachmentsMaxSize(5120)
-                            ->resizableImages()
-                            ->registerActions([
-                                SafeAttachFilesAction::make(),
-                            ])
-                            ->helperText('Gunakan Enter untuk paragraf baru. Sisipkan gambar JPG/PNG/WEBP/GIF lewat ikon lampiran. Blok “Baca juga” otomatis dari berita terbaru.'),
+                            // Lampiran gambar di editor dinonaktifkan sementara agar create berita stabil di hosting.
+                            ->fileAttachments(false)
+                            ->helperText('Gunakan Enter untuk paragraf baru. Gambar sampul diisi di kanan. Blok “Baca juga” otomatis dari berita terbaru.'),
                     ])
                     ->columns(2),
                 Section::make('Publikasi')
@@ -99,8 +80,7 @@ class PostForm
                             ->directory('posts')
                             ->visibility('public')
                             ->fetchFileInformation(false)
-                            ->maxSize(5120)
-                            // Jangan pakai ->image() / acceptedFileTypes(): memicu rule mimetypes.
+                            ->maxSize(3072)
                             ->rules([
                                 fn (): \Closure => function (string $attribute, mixed $value, \Closure $fail): void {
                                     foreach ((array) $value as $file) {
@@ -117,11 +97,9 @@ class PostForm
                                 },
                             ])
                             ->validationMessages([
-                                'mimetypes' => 'Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.',
-                                'mimes' => 'Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.',
-                                'max' => 'Ukuran gambar sampul maksimal 5 MB.',
+                                'max' => 'Ukuran gambar sampul maksimal 3 MB. Kompres dulu jika terlalu besar.',
                             ])
-                            ->helperText('Format: JPG, PNG, WEBP, atau GIF. Maksimal 5 MB.')
+                            ->helperText('Format: JPG, PNG, WEBP, atau GIF. Maksimal 3 MB (lebih aman di hosting).')
                             ->columnSpanFull(),
                         TextInput::make('author_name')
                             ->label('Kontributor')
@@ -133,12 +111,12 @@ class PostForm
                             ->default(fn (): ?string => auth()->user()?->name),
                         TextInput::make('tags')
                             ->label('Tags')
-                            ->helperText('Pisahkan dengan koma, contoh: Upacara, Nasionalisme, Kegiatan')
+                            ->helperText('Pisahkan dengan koma, contoh: Pramuka, Jambore Ranting, Prestasi')
                             ->maxLength(255)
                             ->columnSpanFull(),
                         DateTimePicker::make('published_at')
                             ->label('Tanggal terbit')
-                            ->native(false),
+                            ->native(true),
                         Toggle::make('is_published')
                             ->label('Tayangkan')
                             ->default(false),
