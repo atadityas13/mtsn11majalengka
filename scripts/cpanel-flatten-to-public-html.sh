@@ -94,11 +94,10 @@ HTA
 cp "$WEB/.htaccess" "$WEB/.htaccess.backup"
 cp "$APP/scripts/ensure-public-html-htaccess.sh" "$WEB/../mtsn11majalengka/scripts/" 2>/dev/null || true
 
-echo "==> Storage link (jika belum)"
-if [[ ! -e "$WEB/storage" ]]; then
-  ln -s "$APP/storage/app/public" "$WEB/storage" || true
-fi
-
+echo "==> Storage link (wajib agar gambar tampil)"
+rm -rf "$WEB/storage"
+ln -s "$APP/storage/app/public" "$WEB/storage"
+ls -la "$WEB/storage"
 echo
 echo "Selesai."
 echo "Cek: https://mtsn11majalengka.sch.id/"
