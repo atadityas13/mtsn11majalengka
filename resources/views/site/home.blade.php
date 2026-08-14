@@ -73,68 +73,66 @@
 
 {{-- Featured news: slideshow 5 + daftar 5 --}}
 <section class="site-container py-14 md:py-16">
-    <div class="mb-8 flex items-end justify-between gap-4" x-reveal>
-        <div>
-            <p class="section-label">Berita</p>
-            <h2 class="mt-2 font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">Berita Terbaru</h2>
+    <div class="mb-8" x-reveal>
+        <p class="section-label">Berita</p>
+        <div class="mt-2 flex items-center justify-between gap-4">
+            <h2 class="font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl">Berita Terbaru</h2>
+            <a href="{{ route('posts.index') }}" class="shrink-0 text-sm font-bold text-kemenag hover:underline">Lihat semua →</a>
         </div>
-        <a href="{{ route('posts.index') }}" class="text-sm font-bold text-kemenag hover:underline">Lihat semua →</a>
     </div>
 
     @if ($posts->isNotEmpty())
-        <div class="grid items-start gap-6 lg:grid-cols-[1.4fr_1fr]" data-news-slider data-interval="4000">
-            <div class="relative h-fit overflow-hidden rounded-2xl text-white shadow-lg">
-                <div class="relative aspect-[16/10] md:aspect-[16/9]">
-                    @foreach ($posts as $index => $post)
-                        <div
-                            class="news-slide absolute inset-0 transition-opacity duration-500 ease-out {{ $index === 0 ? 'is-active opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0' }}"
-                            data-slide="{{ $index }}"
-                        >
-                            <a href="{{ route('posts.show', $post->slug) }}" class="group relative block h-full overflow-hidden">
-                                @if ($post->cover_image)
-                                    <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
-                                @else
-                                    <div class="h-full w-full pattern-mesh"></div>
+        <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-stretch" data-news-slider data-interval="4000">
+            <div class="relative min-h-[22rem] overflow-hidden rounded-2xl text-white shadow-lg lg:min-h-0 lg:h-full">
+                @foreach ($posts as $index => $post)
+                    <div
+                        class="news-slide absolute inset-0 transition-opacity duration-500 ease-out {{ $index === 0 ? 'is-active opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0' }}"
+                        data-slide="{{ $index }}"
+                    >
+                        <a href="{{ route('posts.show', $post->slug) }}" class="group relative block h-full overflow-hidden">
+                            @if ($post->cover_image)
+                                <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
+                            @else
+                                <div class="h-full w-full pattern-mesh"></div>
+                            @endif
+                            <div class="news-featured-veil pointer-events-none absolute inset-0" aria-hidden="true"></div>
+                            <div class="absolute inset-x-0 bottom-0 z-[1] px-5 pb-14 pt-10 md:px-7 md:pb-14 md:pt-14">
+                                @if ($post->category)
+                                    <span class="mb-2 inline-flex w-fit rounded bg-gold/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
                                 @endif
-                                <div class="news-featured-veil pointer-events-none absolute inset-0" aria-hidden="true"></div>
-                                <div class="absolute inset-x-0 bottom-0 z-[1] px-5 pb-14 pt-10 md:px-7 md:pb-14 md:pt-14">
-                                    @if ($post->category)
-                                        <span class="mb-2 inline-flex w-fit rounded bg-gold/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
-                                    @endif
-                                    <p class="news-meta !text-gold">{{ optional($post->published_at)->translatedFormat('d F Y') }}</p>
-                                    <h3 class="mt-1.5 line-clamp-2 font-display text-xl font-extrabold leading-snug md:text-2xl">{{ $post->title }}</h3>
-                                    @if ($post->excerpt)
-                                        <p class="mt-2 line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/90">{{ $post->excerpt }}</p>
-                                    @endif
-                                </div>
-                            </a>
-                        </div>
-                    @endforeach
-
-                    @if ($posts->count() > 1)
-                        <div class="absolute bottom-4 right-4 z-10 flex items-center gap-2">
-                            <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/45" data-slider-prev aria-label="Sebelumnya">‹</button>
-                            <div class="flex gap-1.5 px-1" data-slider-dots>
-                                @foreach ($posts as $index => $post)
-                                    <button
-                                        type="button"
-                                        class="news-dot h-2 rounded-full transition-all {{ $index === 0 ? 'w-5 bg-gold' : 'w-2 bg-white/55' }}"
-                                        data-slider-dot="{{ $index }}"
-                                        aria-label="Slide {{ $index + 1 }}"
-                                    ></button>
-                                @endforeach
+                                <p class="news-meta !text-gold">{{ optional($post->published_at)->translatedFormat('d F Y') }}</p>
+                                <h3 class="mt-1.5 line-clamp-2 font-display text-xl font-extrabold leading-snug md:text-2xl">{{ $post->title }}</h3>
+                                @if ($post->excerpt)
+                                    <p class="mt-2 line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/90">{{ $post->excerpt }}</p>
+                                @endif
                             </div>
-                            <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/45" data-slider-next aria-label="Berikutnya">›</button>
+                        </a>
+                    </div>
+                @endforeach
+
+                @if ($posts->count() > 1)
+                    <div class="absolute bottom-4 right-4 z-10 flex items-center gap-2">
+                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/45" data-slider-prev aria-label="Sebelumnya">‹</button>
+                        <div class="flex gap-1.5 px-1" data-slider-dots>
+                            @foreach ($posts as $index => $post)
+                                <button
+                                    type="button"
+                                    class="news-dot h-2 rounded-full transition-all {{ $index === 0 ? 'w-5 bg-gold' : 'w-2 bg-white/55' }}"
+                                    data-slider-dot="{{ $index }}"
+                                    aria-label="Slide {{ $index + 1 }}"
+                                ></button>
+                            @endforeach
                         </div>
-                    @endif
-                </div>
+                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/45" data-slider-next aria-label="Berikutnya">›</button>
+                    </div>
+                @endif
             </div>
 
-            <div class="flex flex-col divide-y divide-kemenag/10 overflow-hidden rounded-2xl border border-kemenag/10 bg-white shadow-sm" x-reveal>
+            <div class="flex h-full flex-col divide-y divide-kemenag/10 overflow-hidden rounded-2xl border border-kemenag/10 bg-white shadow-sm" x-reveal>
                 @foreach ($posts as $index => $post)
                     <button
                         type="button"
-                        class="news-list-item group flex w-full gap-4 p-4 text-left transition hover:bg-kemenag-soft/60 {{ $index === 0 ? 'bg-kemenag-soft/80' : '' }}"
+                        class="news-list-item group flex w-full flex-1 gap-4 p-4 text-left transition hover:bg-kemenag-soft/60 {{ $index === 0 ? 'bg-kemenag-soft/80' : '' }}"
                         data-slider-item="{{ $index }}"
                     >
                         <div class="h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-kemenag-soft">
@@ -144,7 +142,7 @@
                                 <div class="flex h-full items-center justify-center bg-kemenag text-xs font-bold text-white">MTsN</div>
                             @endif
                         </div>
-                        <div class="min-w-0 flex-1">
+                        <div class="min-w-0 flex-1 self-center">
                             <p class="news-meta">{{ optional($post->published_at)->translatedFormat('d M Y') }}</p>
                             <h3 class="news-list-title mt-1 line-clamp-2 font-display text-lg font-bold leading-snug text-kemenag-deep group-hover:text-kemenag {{ $index === 0 ? 'text-kemenag' : '' }}">{{ $post->title }}</h3>
                             <a href="{{ route('posts.show', $post->slug) }}" class="mt-2 inline-block text-xs font-bold text-kemenag hover:underline" data-slider-link>Baca →</a>
