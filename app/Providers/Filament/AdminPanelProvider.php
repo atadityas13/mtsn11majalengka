@@ -11,6 +11,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -39,7 +40,7 @@ class AdminPanelProvider extends PanelProvider
 
                 return Storage::disk('public')->url($logo);
             })
-            ->brandLogoHeight('2.25rem')
+            ->brandLogoHeight('2rem')
             ->favicon(function (): ?string {
                 $favicon = SiteSetting::current()->favicon;
 
@@ -52,6 +53,8 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex('#0a7a3e'),
             ])
+            ->maxContentWidth(Width::Full)
+            ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([
                 NavigationGroup::make('Konten')->collapsible(),
                 NavigationGroup::make('Media')->collapsible(),
@@ -78,6 +81,10 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->renderHook(
+                PanelsRenderHook::STYLES_AFTER,
+                fn (): \Illuminate\Contracts\View\View => view('filament.hooks.admin-styles'),
+            )
             ->renderHook(
                 PanelsRenderHook::FOOTER,
                 fn (): \Illuminate\Contracts\View\View => view('partials.app-credit', [

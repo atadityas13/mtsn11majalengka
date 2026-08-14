@@ -14,8 +14,8 @@ class PopularPostsWidget extends TableWidget
     protected static ?int $sort = 4;
 
     protected int | string | array $columnSpan = [
-        'md' => 1,
-        'xl' => 1,
+        'default' => 'full',
+        'lg' => 1,
     ];
 
     public function table(Table $table): Table
@@ -32,15 +32,17 @@ class PopularPostsWidget extends TableWidget
             ->columns([
                 TextColumn::make('title')
                     ->label('Judul')
-                    ->limit(36)
-                    ->wrap(),
+                    ->wrap()
+                    ->limit(56),
                 TextColumn::make('views_count')
                     ->label('Dilihat')
                     ->numeric()
+                    ->alignEnd()
                     ->sortable(),
                 TextColumn::make('published_at')
                     ->label('Terbit')
-                    ->date('d M Y'),
+                    ->date('d M Y')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->recordActions([
                 Action::make('edit')

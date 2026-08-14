@@ -29,17 +29,20 @@ class RecentPostsWidget extends TableWidget
             ->columns([
                 TextColumn::make('title')
                     ->label('Judul')
-                    ->limit(48)
-                    ->wrap(),
+                    ->wrap()
+                    ->limit(72),
                 TextColumn::make('author_name')
                     ->label('Kontributor')
-                    ->placeholder('—'),
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('editor_name')
                     ->label('Redaktur')
-                    ->placeholder('—'),
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_published')
                     ->label('Tayang')
-                    ->boolean(),
+                    ->boolean()
+                    ->alignCenter(),
                 TextColumn::make('updated_at')
                     ->label('Diperbarui')
                     ->since(),

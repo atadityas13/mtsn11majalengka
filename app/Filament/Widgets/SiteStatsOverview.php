@@ -22,6 +22,8 @@ class SiteStatsOverview extends StatsOverviewWidget
 {
     protected static ?int $sort = 1;
 
+    protected int | string | array $columnSpan = 'full';
+
     protected ?string $heading = 'Statistik situs';
 
     protected ?string $description = 'Ringkasan performa konten dan aktivitas situs';

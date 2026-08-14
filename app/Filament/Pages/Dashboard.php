@@ -31,8 +31,8 @@ class Dashboard extends BaseDashboard
     public function getColumns(): int | array
     {
         return [
-            'md' => 2,
-            'xl' => 2,
+            'default' => 1,
+            'lg' => 2,
         ];
     }
 }

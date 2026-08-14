@@ -18,8 +18,8 @@ class ModerationQueueWidget extends TableWidget
     protected static ?int $sort = 3;
 
     protected int | string | array $columnSpan = [
-        'md' => 1,
-        'xl' => 1,
+        'default' => 'full',
+        'lg' => 1,
     ];
 
     public function table(Table $table): Table
@@ -35,14 +35,18 @@ class ModerationQueueWidget extends TableWidget
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama')
-                    ->limit(20),
+                    ->wrap()
+                    ->limit(28),
                 TextColumn::make('body')
                     ->label('Komentar')
-                    ->formatStateUsing(fn (string $state): string => Str::limit($state, 40)),
+                    ->wrap()
+                    ->formatStateUsing(fn (string $state): string => Str::limit($state, 64)),
                 TextColumn::make('post.title')
                     ->label('Berita')
-                    ->limit(24)
-                    ->placeholder('—'),
+                    ->wrap()
+                    ->limit(36)
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('is_approved')
                     ->label('Tampil')
                     ->badge()
@@ -50,7 +54,8 @@ class ModerationQueueWidget extends TableWidget
                     ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
                 TextColumn::make('created_at')
                     ->label('Masuk')
-                    ->since(),
+                    ->since()
+                    ->toggleable(),
             ])
             ->recordActions([
                 Action::make('kelola')

@@ -6,14 +6,14 @@
 @endphp
 
 @if ($variant === 'admin')
-    <div class="w-full border-t border-gray-200 bg-white px-4 py-4 text-center text-xs text-gray-500 dark:border-white/10 dark:bg-gray-950 dark:text-gray-400">
+    <div class="sicoma-admin-credit">
         <p>
             &copy; {{ date('Y') }} {{ $schoolName }} · Si COMA · Naungan
-            <a href="{{ $kemenagUrl }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 underline-offset-2 hover:underline dark:text-gray-200">Kementerian Agama RI</a>
+            <a href="{{ $kemenagUrl }}" target="_blank" rel="noopener noreferrer">Kementerian Agama RI</a>
         </p>
-        <p class="mt-1.5">
+        <p class="sicoma-admin-credit__dev">
             Developed by
-            <a href="{{ $ataUrl }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-700 underline-offset-2 hover:underline dark:text-gray-200">ATA DevLabs</a>
+            <a href="{{ $ataUrl }}" target="_blank" rel="noopener noreferrer">ATA DevLabs</a>
         </p>
     </div>
 @elseif ($variant === 'login')
