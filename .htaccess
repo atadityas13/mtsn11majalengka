@@ -1,22 +1,16 @@
-# Shared hosting: document root = root project.
-# Jangan rewrite "/" ke folder public/ (di LiteSpeed itu sering 403).
-# Blok PHP cPanel (BEGIN/END) boleh ditambah di bawah, di server saja.
-
 DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /
 
-    # Beranda harus ke index.php, bukan ke direktori public/
-    RewriteRule ^$ index.php [L]
+    RewriteRule ^index\.php$ - [L]
 
-    # File statis yang ada di public/ (css/js/gambar)
-    RewriteCond %{REQUEST_URI} !^/public/
-    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
-    RewriteRule ^(.*)$ public/$1 [L]
-
-    # Route aplikasi → front controller di root
+    # File/folder asli (css, gambar, dll.) dilayani apa adanya
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.php [L]
+    RewriteRule ^ /index.php [L]
 </IfModule>
+
+# Cadangan: jika rewrite tidak aktif, 404 ikut masuk Laravel
+ErrorDocument 404 /index.php
