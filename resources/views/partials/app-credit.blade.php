@@ -5,7 +5,18 @@
     $ataUrl = 'https://www.instagram.com/atadityas_13/';
 @endphp
 
-@if ($variant === 'login')
+@if ($variant === 'admin')
+    <div class="sicoma-admin-credit">
+        <p>
+            &copy; {{ date('Y') }} {{ $schoolName }}. Seluruh hak dilindungi · Naungan
+            <a href="{{ $kemenagUrl }}" target="_blank" rel="noopener noreferrer">Kementerian Agama RI</a>.
+        </p>
+        <p class="sicoma-admin-credit__dev">
+            Developed by
+            <a href="{{ $ataUrl }}" target="_blank" rel="noopener noreferrer">ATA DevLabs</a>
+        </p>
+    </div>
+@elseif ($variant === 'login')
     <p class="sicoma-login-foot">
         &copy; {{ date('Y') }} {{ $schoolName }}. Seluruh hak dilindungi · Naungan
         <a href="{{ $kemenagUrl }}" target="_blank" rel="noopener noreferrer">Kementerian Agama RI</a>
@@ -15,23 +26,14 @@
         </span>
     </p>
 @else
-    {{-- site + admin: teks & struktur sama seperti footer frontend --}}
-    <div @class([
-        'sicoma-site-credit',
-        'sicoma-site-credit--admin' => $variant === 'admin',
-        'border-t border-white/10 px-4 py-5 text-center text-xs text-white/45' => $variant !== 'admin',
-    ])>
+    <div class="border-t border-white/10 px-4 py-5 text-center text-xs text-white/45">
         <p>
             &copy; {{ date('Y') }} {{ $schoolName }}. Seluruh hak dilindungi · Naungan
-            <a href="{{ $kemenagUrl }}" target="_blank" rel="noopener noreferrer" @class([
-                'font-semibold text-white/75 underline-offset-2 hover:text-white hover:underline' => $variant !== 'admin',
-            ])>Kementerian Agama RI</a>.
+            <a href="{{ $kemenagUrl }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-white/75 underline-offset-2 hover:text-white hover:underline">Kementerian Agama RI</a>.
         </p>
-        <p @class(['mt-1.5', 'text-white/55' => $variant !== 'admin'])>
+        <p class="mt-1.5 text-white/55">
             Developed by
-            <a href="{{ $ataUrl }}" target="_blank" rel="noopener noreferrer" @class([
-                'font-semibold text-white/75 underline-offset-2 hover:text-white hover:underline' => $variant !== 'admin',
-            ])>ATA DevLabs</a>
+            <a href="{{ $ataUrl }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-white/75 underline-offset-2 hover:text-white hover:underline">ATA DevLabs</a>
         </p>
     </div>
 @endif

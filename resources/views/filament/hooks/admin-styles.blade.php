@@ -81,7 +81,7 @@
         object-fit: contain;
     }
 
-    /* Footer credit: same look & copy as public site footer strip */
+    /* Footer credit: light strip (match previous admin look) */
     .fi-footer {
         display: block;
         margin-top: 1.25rem;
@@ -95,41 +95,46 @@
         width: 100%;
     }
 
-    .sicoma-site-credit--admin {
+    .sicoma-admin-credit {
         margin: 0;
-        border-top: 1px solid rgb(255 255 255 / 0.1);
-        background: #043f1f;
-        padding: 1.25rem 1.25rem 1.4rem;
+        border-top: 1px solid rgb(226 232 240);
+        background: #fff;
+        padding: 1rem 1.25rem 1.35rem;
         text-align: center;
         font-size: 0.75rem;
         line-height: 1.5;
-        color: rgb(255 255 255 / 0.45);
+        color: rgb(100 116 139);
     }
 
-    .sicoma-site-credit--admin p {
-        margin: 0;
+    .dark .sicoma-admin-credit {
+        border-top-color: rgb(255 255 255 / 0.08);
+        background: rgb(3 7 18);
+        color: rgb(148 163 184);
     }
 
-    .sicoma-site-credit--admin p + p {
-        margin-top: 0.375rem;
-        color: rgb(255 255 255 / 0.55);
-    }
-
-    .sicoma-site-credit--admin a {
+    .sicoma-admin-credit a {
         font-weight: 600;
-        color: rgb(255 255 255 / 0.75);
+        color: rgb(51 65 85);
         text-decoration: none;
+    }
+
+    .sicoma-admin-credit a:hover {
+        color: #0a7a3e;
+        text-decoration: underline;
         text-underline-offset: 2px;
     }
 
-    .sicoma-site-credit--admin a:hover {
-        color: #ffffff;
-        text-decoration: underline;
+    .dark .sicoma-admin-credit a {
+        color: rgb(226 232 240);
+    }
+
+    .sicoma-admin-credit__dev {
+        margin-top: 0.35rem;
     }
 
     /* Hide accidental icons/buttons leaking into footer strip */
-    .fi-footer .sicoma-site-credit svg,
-    .fi-footer .sicoma-site-credit button,
+    .fi-footer .sicoma-admin-credit svg,
+    .fi-footer .sicoma-admin-credit button,
     .fi-footer > button,
     .fi-footer > .fi-icon-btn {
         display: none !important;
