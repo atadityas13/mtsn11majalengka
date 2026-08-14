@@ -79,6 +79,13 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->renderHook(
+                PanelsRenderHook::FOOTER,
+                fn (): \Illuminate\Contracts\View\View => view('partials.app-credit', [
+                    'variant' => 'admin',
+                    'schoolName' => SiteSetting::current()->school_name,
+                ]),
+            )
+            ->renderHook(
                 PanelsRenderHook::BODY_END,
                 fn (): string => <<<'HTML'
                     <script>

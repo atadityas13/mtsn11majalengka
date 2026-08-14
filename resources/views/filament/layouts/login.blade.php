@@ -181,6 +181,16 @@
                 color: rgba(255,255,255,.55);
             }
 
+            .sicoma-aside-foot a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            .sicoma-aside-foot a:hover {
+                color: rgba(255,255,255,.9);
+                text-decoration: underline;
+            }
+
             .sicoma-login-main {
                 display: flex;
                 align-items: center;
@@ -356,6 +366,28 @@
                 text-align: center;
                 font-size: 0.75rem;
                 color: #809289;
+                line-height: 1.55;
+            }
+
+            .sicoma-login-foot a {
+                color: #4f635b;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+            .sicoma-login-foot a:hover {
+                text-decoration: underline;
+            }
+
+            .sicoma-login-credit {
+                display: block;
+                margin-top: 0.35rem;
+                color: #6b7f76;
+            }
+
+            .sicoma-login-credit strong {
+                font-weight: 700;
+                color: #4f635b;
             }
         </style>
 
@@ -394,7 +426,9 @@
                     <p>Dashboard redaksi untuk mengelola berita, media, dan informasi madrasah.</p>
                 </div>
 
-                <div class="sicoma-aside-foot">Kementerian Agama RI</div>
+                <div class="sicoma-aside-foot">
+                    <a href="https://kemenag.go.id/" target="_blank" rel="noopener noreferrer">Kementerian Agama RI</a>
+                </div>
             </aside>
 
             <section class="sicoma-login-main">
@@ -427,7 +461,7 @@
                         </main>
                     </div>
 
-                    <p class="sicoma-login-foot">&copy; {{ date('Y') }} {{ $site->school_name }}</p>
+                    @include('partials.app-credit', ['variant' => 'login', 'schoolName' => $site->school_name])
                 </div>
             </section>
         </div>

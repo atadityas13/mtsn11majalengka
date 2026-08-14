@@ -228,10 +228,9 @@
                         </a>
                     @endif
                 </div>
+            </div>
         </div>
-        <div class="border-t border-white/10 py-4 text-center text-xs text-white/45">
-            &copy; {{ date('Y') }} {{ $site->school_name }}. Seluruh hak dilindungi · Naungan Kementerian Agama RI.
-        </div>
+        @include('partials.app-credit', ['variant' => 'site', 'schoolName' => $site->school_name])
     </footer>
 
     @if ($wa = $site->whatsappLink())
