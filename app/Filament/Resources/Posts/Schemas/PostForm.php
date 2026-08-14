@@ -66,18 +66,42 @@ class PostForm
                             ->fileAttachmentsDisk('public')
                             ->fileAttachmentsDirectory('posts/body')
                             ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsAcceptedFileTypes([
+                                'image/jpeg',
+                                'image/jpg',
+                                'image/pjpeg',
+                                'image/png',
+                                'image/x-png',
+                                'image/webp',
+                                'image/gif',
+                                'image/*',
+                                'application/octet-stream',
+                            ])
+                            ->fileAttachmentsMaxSize(5120)
                             ->resizableImages()
-                            ->helperText('Gunakan Enter untuk paragraf baru. Sisipkan gambar lewat ikon lampiran dan tautan lewat ikon link. Blok “Baca juga” otomatis dari berita terbaru.'),
+                            ->helperText('Gunakan Enter untuk paragraf baru. Sisipkan gambar (JPG/PNG/WEBP/GIF) lewat ikon lampiran dan tautan lewat ikon link. Blok “Baca juga” otomatis dari berita terbaru.'),
                     ])
                     ->columns(2),
                 Section::make('Publikasi')
                     ->schema([
                         FileUpload::make('cover_image')
                             ->label('Gambar sampul (bisa diganti nanti)')
-                            ->image()
-                            ->directory('posts')
                             ->disk('public')
+                            ->directory('posts')
+                            ->visibility('public')
                             ->imageEditor()
+                            ->maxSize(5120)
+                            ->rules([
+                                'nullable',
+                                'mimes:jpg,jpeg,png,webp,gif',
+                                'max:5120',
+                            ])
+                            ->validationMessages([
+                                'mimes' => 'Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.',
+                                'mimetypes' => 'Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.',
+                                'max' => 'Ukuran gambar sampul maksimal 5 MB.',
+                            ])
+                            ->helperText('Format: JPG, PNG, WEBP, atau GIF. Maksimal 5 MB.')
                             ->columnSpanFull(),
                         TextInput::make('author_name')
                             ->label('Kontributor')
