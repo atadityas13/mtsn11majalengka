@@ -21,7 +21,12 @@ fi
 
 if [[ ! -f "$OLD/public/index.php" ]]; then
   echo "Tidak menemukan $OLD/public/index.php"
-  echo "Script ini untuk kondisi: project Laravel utuh ada di dalam public_html."
+  echo "Script ini HANYA untuk migrasi sekali: project Laravel utuh masih di dalam public_html."
+  echo
+  if [[ -f "$APP/artisan" && -f "$WEB/index.php" && ! -f "$WEB/public/index.php" ]]; then
+    echo "Layout flatten sudah aktif. Setelah git pull, jalankan:"
+    echo "  bash $APP/scripts/cpanel-sync-public-html.sh"
+  fi
   exit 1
 fi
 
