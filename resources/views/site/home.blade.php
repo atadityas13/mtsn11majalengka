@@ -84,26 +84,30 @@
     @if ($posts->isNotEmpty())
         <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]" data-news-slider data-interval="4000">
             <div class="relative overflow-hidden rounded-2xl bg-kemenag-dark text-white shadow-lg">
-                <div class="relative aspect-[16/10] md:aspect-[16/9]">
+                <div class="relative min-h-[26rem] md:min-h-[30rem] lg:min-h-[32rem]">
                     @foreach ($posts as $index => $post)
                         <div
                             class="news-slide absolute inset-0 transition-opacity duration-500 ease-out {{ $index === 0 ? 'is-active opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0' }}"
                             data-slide="{{ $index }}"
                         >
-                            <a href="{{ route('posts.show', $post->slug) }}" class="group relative block h-full">
-                                @if ($post->cover_image)
-                                    <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-105">
-                                @else
-                                    <div class="h-full w-full pattern-mesh"></div>
-                                @endif
-                                <div class="absolute inset-0 bg-gradient-to-t from-kemenag-dark via-kemenag-dark/45 to-transparent"></div>
-                                <div class="absolute inset-x-0 bottom-0 p-6 md:p-8">
+                            <a href="{{ route('posts.show', $post->slug) }}" class="group flex h-full flex-col">
+                                <div class="relative min-h-0 flex-[1.2] overflow-hidden">
+                                    @if ($post->cover_image)
+                                        <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105">
+                                    @else
+                                        <div class="absolute inset-0 pattern-mesh"></div>
+                                    @endif
+                                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-kemenag-dark to-transparent"></div>
+                                </div>
+                                <div class="shrink-0 bg-kemenag-dark px-5 pb-14 pt-4 md:px-7 md:pt-5">
                                     @if ($post->category)
-                                        <span class="mb-2 inline-block rounded bg-gold/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
+                                        <span class="mb-2 inline-flex w-fit rounded bg-gold/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
                                     @endif
                                     <p class="news-meta !text-gold">{{ optional($post->published_at)->translatedFormat('d F Y') }}</p>
-                                    <h3 class="mt-2 font-display text-2xl font-extrabold leading-snug md:text-3xl">{{ $post->title }}</h3>
-                                    <p class="mt-3 line-clamp-2 max-w-2xl text-sm text-white/75">{{ $post->excerpt }}</p>
+                                    <h3 class="mt-1.5 line-clamp-3 font-display text-xl font-extrabold leading-snug md:text-2xl">{{ $post->title }}</h3>
+                                    @if ($post->excerpt)
+                                        <p class="mt-2 line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/75">{{ $post->excerpt }}</p>
+                                    @endif
                                 </div>
                             </a>
                         </div>
