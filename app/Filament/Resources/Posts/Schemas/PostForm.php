@@ -19,6 +19,14 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PostForm
 {
+    /**
+     * @return list<string>
+     */
+    public static function imageExtensions(): array
+    {
+        return ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    }
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
@@ -68,8 +76,13 @@ class PostForm
                             ->fileAttachmentsDisk('public')
                             ->fileAttachmentsDirectory('posts/body')
                             ->fileAttachmentsVisibility('public')
-                            // Hindari validasi mimetypes bawaan Filament (sering gagal di hosting).
-                            ->fileAttachmentsAcceptedFileTypes(fn (): ?array => null)
+                            // Harus array (bukan null) — null membuat TypeError di Filament.
+                            ->fileAttachmentsAcceptedFileTypes([
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                                'image/gif',
+                            ])
                             ->fileAttachmentsMaxSize(5120)
                             ->resizableImages()
                             ->registerActions([
@@ -87,7 +100,7 @@ class PostForm
                             ->visibility('public')
                             ->fetchFileInformation(false)
                             ->maxSize(5120)
-                            // Jangan pakai ->image() / acceptedFileTypes(): itu memicu rule mimetypes.
+                            // Jangan pakai ->image() / acceptedFileTypes(): memicu rule mimetypes.
                             ->rules([
                                 fn (): \Closure => function (string $attribute, mixed $value, \Closure $fail): void {
                                     foreach ((array) $value as $file) {
@@ -97,7 +110,7 @@ class PostForm
 
                                         $ext = strtolower((string) ($file->getClientOriginalExtension() ?: $file->guessExtension() ?: ''));
 
-                                        if (! in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true)) {
+                                        if (! in_array($ext, self::imageExtensions(), true)) {
                                             $fail('Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.');
                                         }
                                     }

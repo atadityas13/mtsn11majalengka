@@ -28,10 +28,12 @@ class SafeAttachFilesAction
                     ->label(filled($arguments['src'] ?? null)
                         ? __('filament-forms::components.rich_editor.actions.attach_files.modal.form.file.label.existing')
                         : __('filament-forms::components.rich_editor.actions.attach_files.modal.form.file.label.new'))
-                    ->maxSize($component->getFileAttachmentsMaxSize() ?? 5120)
+                    ->maxSize($component->getFileAttachmentsMaxSize() ?: 5120)
                     ->storeFiles(false)
+                    ->fetchFileInformation(false)
                     ->required(blank($arguments['src'] ?? null))
                     ->hiddenLabel(blank($arguments['src'] ?? null))
+                    // Sengaja TIDAK memakai acceptedFileTypes() agar tidak memicu rule mimetypes.
                     ->rules([
                         fn (): \Closure => function (string $attribute, mixed $value, \Closure $fail): void {
                             foreach ((array) $value as $file) {
