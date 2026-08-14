@@ -81,7 +81,7 @@
         object-fit: contain;
     }
 
-    /* Footer credit: clean, spaced, no stray chrome */
+    /* Footer credit: same look & copy as public site footer strip */
     .fi-footer {
         display: block;
         margin-top: 1.25rem;
@@ -95,46 +95,41 @@
         width: 100%;
     }
 
-    .sicoma-admin-credit {
+    .sicoma-site-credit--admin {
         margin: 0;
-        border-top: 1px solid rgb(226 232 240);
-        background: #fff;
-        padding: 1rem 1.25rem 1.35rem;
+        border-top: 1px solid rgb(255 255 255 / 0.1);
+        background: #043f1f;
+        padding: 1.25rem 1.25rem 1.4rem;
         text-align: center;
         font-size: 0.75rem;
         line-height: 1.5;
-        color: rgb(100 116 139);
+        color: rgb(255 255 255 / 0.45);
     }
 
-    .dark .sicoma-admin-credit {
-        border-top-color: rgb(255 255 255 / 0.08);
-        background: rgb(3 7 18);
-        color: rgb(148 163 184);
+    .sicoma-site-credit--admin p {
+        margin: 0;
     }
 
-    .sicoma-admin-credit a {
+    .sicoma-site-credit--admin p + p {
+        margin-top: 0.375rem;
+        color: rgb(255 255 255 / 0.55);
+    }
+
+    .sicoma-site-credit--admin a {
         font-weight: 600;
-        color: rgb(51 65 85);
+        color: rgb(255 255 255 / 0.75);
         text-decoration: none;
-    }
-
-    .sicoma-admin-credit a:hover {
-        color: #0a7a3e;
-        text-decoration: underline;
         text-underline-offset: 2px;
     }
 
-    .dark .sicoma-admin-credit a {
-        color: rgb(226 232 240);
-    }
-
-    .sicoma-admin-credit__dev {
-        margin-top: 0.35rem;
+    .sicoma-site-credit--admin a:hover {
+        color: #ffffff;
+        text-decoration: underline;
     }
 
     /* Hide accidental icons/buttons leaking into footer strip */
-    .fi-footer .sicoma-admin-credit svg,
-    .fi-footer .sicoma-admin-credit button,
+    .fi-footer .sicoma-site-credit svg,
+    .fi-footer .sicoma-site-credit button,
     .fi-footer > button,
     .fi-footer > .fi-icon-btn {
         display: none !important;
