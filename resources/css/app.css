@@ -761,11 +761,12 @@
     .news-featured-veil {
         background: linear-gradient(
             to top,
-            rgb(6 92 46 / 0.72) 0%,
-            rgb(10 122 62 / 0.45) 18%,
-            rgb(10 122 62 / 0.22) 38%,
-            rgb(10 122 62 / 0.08) 58%,
-            transparent 78%
+            rgb(4 63 31 / 0.88) 0%,
+            rgb(6 92 46 / 0.78) 22%,
+            rgb(10 122 62 / 0.58) 42%,
+            rgb(10 122 62 / 0.28) 58%,
+            rgb(10 122 62 / 0.1) 72%,
+            transparent 88%
         );
     }
 
