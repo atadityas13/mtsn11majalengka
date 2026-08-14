@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use App\Enums\UserRole;
+use App\Support\SafeTemporaryUpload;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -29,7 +30,9 @@ class UserForm
                             ->directory('avatars')
                             ->visibility('public')
                             ->fetchFileInformation(false)
-                            ->maxSize(2048)
+                            ->rules([
+                                SafeTemporaryUpload::rules(['jpg', 'jpeg', 'png', 'webp'], 2048, 'Foto profil'),
+                            ])
                             ->columnSpanFull(),
                         TextInput::make('name')
                             ->label('Nama')

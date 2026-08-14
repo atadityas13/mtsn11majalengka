@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Auth;
 
+use App\Support\SafeTemporaryUpload;
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
@@ -60,7 +61,9 @@ class EditProfile extends BaseEditProfile
             ->directory('avatars')
             ->visibility('public')
             ->fetchFileInformation(false)
-            ->maxSize(2048)
+            ->rules([
+                SafeTemporaryUpload::rules(['jpg', 'jpeg', 'png', 'webp'], 2048, 'Foto profil'),
+            ])
             ->helperText('JPG, PNG, atau WEBP. Maksimal 2 MB.');
     }
 

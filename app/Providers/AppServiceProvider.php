@@ -17,6 +17,12 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // File upload Livewire default hanya 5 menit — menulis berita biasanya lebih lama,
+        // sehingga livewire-tmp hilang dan create berita crash saat validasi ukuran.
+        config([
+            'livewire.temporary_file_upload.max_upload_time' => 180,
+        ]);
+
         View::composer(['layouts.site', 'site.*'], function ($view): void {
             $view->with('site', SiteSetting::current());
             $view->with(

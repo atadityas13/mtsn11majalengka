@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Posts\Schemas;
 
 use App\Models\User;
+use App\Support\SafeTemporaryUpload;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -14,7 +15,6 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PostForm
 {
@@ -80,26 +80,12 @@ class PostForm
                             ->directory('posts')
                             ->visibility('public')
                             ->fetchFileInformation(false)
-                            ->maxSize(3072)
+                            // Jangan pakai maxSize(): di hosting sering crash UnableToRetrieveMetadata
+                            // saat file livewire-tmp sudah kedaluwarsa / hilang.
                             ->rules([
-                                fn (): \Closure => function (string $attribute, mixed $value, \Closure $fail): void {
-                                    foreach ((array) $value as $file) {
-                                        if (! $file instanceof TemporaryUploadedFile) {
-                                            continue;
-                                        }
-
-                                        $ext = strtolower((string) ($file->getClientOriginalExtension() ?: $file->guessExtension() ?: ''));
-
-                                        if (! in_array($ext, self::imageExtensions(), true)) {
-                                            $fail('Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.');
-                                        }
-                                    }
-                                },
+                                SafeTemporaryUpload::rules(self::imageExtensions(), 3072, 'Gambar sampul'),
                             ])
-                            ->validationMessages([
-                                'max' => 'Ukuran gambar sampul maksimal 3 MB. Kompres dulu jika terlalu besar.',
-                            ])
-                            ->helperText('Format: JPG, PNG, WEBP, atau GIF. Maksimal 3 MB (lebih aman di hosting).')
+                            ->helperText('Format: JPG, PNG, WEBP, atau GIF. Maksimal 3 MB. Jika form lama terbuka, unggah ulang sampul sebelum simpan.')
                             ->columnSpanFull(),
                         TextInput::make('author_name')
                             ->label('Kontributor')
