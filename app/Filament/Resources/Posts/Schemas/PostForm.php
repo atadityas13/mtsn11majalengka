@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
+use App\Filament\Forms\Components\RichEditor\Actions\SafeAttachFilesAction;
 use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -14,6 +15,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PostForm
 {
@@ -66,20 +68,14 @@ class PostForm
                             ->fileAttachmentsDisk('public')
                             ->fileAttachmentsDirectory('posts/body')
                             ->fileAttachmentsVisibility('public')
-                            ->fileAttachmentsAcceptedFileTypes([
-                                'image/jpeg',
-                                'image/jpg',
-                                'image/pjpeg',
-                                'image/png',
-                                'image/x-png',
-                                'image/webp',
-                                'image/gif',
-                                'image/*',
-                                'application/octet-stream',
-                            ])
+                            // Hindari validasi mimetypes bawaan Filament (sering gagal di hosting).
+                            ->fileAttachmentsAcceptedFileTypes(fn (): ?array => null)
                             ->fileAttachmentsMaxSize(5120)
                             ->resizableImages()
-                            ->helperText('Gunakan Enter untuk paragraf baru. Sisipkan gambar (JPG/PNG/WEBP/GIF) lewat ikon lampiran dan tautan lewat ikon link. Blok “Baca juga” otomatis dari berita terbaru.'),
+                            ->registerActions([
+                                SafeAttachFilesAction::make(),
+                            ])
+                            ->helperText('Gunakan Enter untuk paragraf baru. Sisipkan gambar JPG/PNG/WEBP/GIF lewat ikon lampiran. Blok “Baca juga” otomatis dari berita terbaru.'),
                     ])
                     ->columns(2),
                 Section::make('Publikasi')
@@ -89,16 +85,27 @@ class PostForm
                             ->disk('public')
                             ->directory('posts')
                             ->visibility('public')
-                            ->imageEditor()
+                            ->fetchFileInformation(false)
                             ->maxSize(5120)
+                            // Jangan pakai ->image() / acceptedFileTypes(): itu memicu rule mimetypes.
                             ->rules([
-                                'nullable',
-                                'mimes:jpg,jpeg,png,webp,gif',
-                                'max:5120',
+                                fn (): \Closure => function (string $attribute, mixed $value, \Closure $fail): void {
+                                    foreach ((array) $value as $file) {
+                                        if (! $file instanceof TemporaryUploadedFile) {
+                                            continue;
+                                        }
+
+                                        $ext = strtolower((string) ($file->getClientOriginalExtension() ?: $file->guessExtension() ?: ''));
+
+                                        if (! in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true)) {
+                                            $fail('Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.');
+                                        }
+                                    }
+                                },
                             ])
                             ->validationMessages([
-                                'mimes' => 'Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.',
                                 'mimetypes' => 'Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.',
+                                'mimes' => 'Gambar sampul harus berformat JPG, PNG, WEBP, atau GIF.',
                                 'max' => 'Ukuran gambar sampul maksimal 5 MB.',
                             ])
                             ->helperText('Format: JPG, PNG, WEBP, atau GIF. Maksimal 5 MB.')
