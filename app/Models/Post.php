@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 
 class Post extends Model
 {
@@ -67,6 +68,117 @@ class Post extends Model
         $words = str_word_count($text);
 
         return max(1, (int) ceil($words / 200));
+    }
+
+    public function renderedBody(): string
+    {
+        $html = RichContentRenderer::make($this->body ?? '')
+            ->fileAttachmentsDisk('public')
+            ->fileAttachmentsVisibility('public')
+            ->toHtml();
+
+        // Konten lama tanpa tag HTML: jadikan paragraf.
+        if (! preg_match('/<(p|div|h[1-6]|ul|ol|blockquote|figure|img)\b/i', $html)) {
+            $html = collect(preg_split("/\n\s*\n/", trim(str_replace(["\r\n", "\r"], "\n", strip_tags($html)))))
+                ->map(fn (string $chunk) => trim($chunk))
+                ->filter()
+                ->map(fn (string $chunk) => '<p>'.e($chunk).'</p>')
+                ->implode('');
+        }
+
+        $latestOther = static::query()
+            ->published()
+            ->whereKeyNot($this->getKey())
+            ->latest('published_at')
+            ->first();
+
+        if ($latestOther) {
+            $html = $this->injectIntoArticleMiddle(
+                $html,
+                view('components.baca-juga', ['post' => $latestOther])->render()
+            );
+        }
+
+        return $html;
+    }
+
+    public function injectIntoArticleMiddle(string $html, string $insert): string
+    {
+        if ($html === '') {
+            return $insert;
+        }
+
+        if (! preg_match_all('/<\/p>/i', $html, $matches, PREG_OFFSET_CAPTURE)) {
+            return $html.$insert;
+        }
+
+        $paragraphCount = count($matches[0]);
+        $afterIndex = max(1, (int) floor($paragraphCount / 2)) - 1;
+        $offset = $matches[0][$afterIndex][1] + strlen($matches[0][$afterIndex][0]);
+
+        return substr($html, 0, $offset).$insert.substr($html, $offset);
+    }
+
+    public function bestRelatedPost(): ?self
+    {
+        $tags = collect($this->tagList())
+            ->map(fn (string $tag) => Str::lower($tag))
+            ->filter()
+            ->values();
+
+        $candidates = static::query()
+            ->published()
+            ->with('category')
+            ->whereKeyNot($this->getKey())
+            ->latest('published_at')
+            ->take(60)
+            ->get();
+
+        if ($candidates->isEmpty()) {
+            return null;
+        }
+
+        if ($tags->isEmpty()) {
+            $pool = $this->category_id
+                ? $candidates->where('category_id', $this->category_id)->values()
+                : $candidates;
+
+            if ($pool->isEmpty()) {
+                $pool = $candidates;
+            }
+
+            return $pool->random();
+        }
+
+        $scored = $candidates->map(function (self $post) use ($tags): array {
+            $postTags = collect($post->tagList())
+                ->map(fn (string $tag) => Str::lower($tag));
+
+            return [
+                'post' => $post,
+                'score' => $tags->intersect($postTags)->count(),
+            ];
+        });
+
+        $maxScore = (int) $scored->max('score');
+
+        if ($maxScore < 1) {
+            $pool = $this->category_id
+                ? $candidates->where('category_id', $this->category_id)->values()
+                : $candidates;
+
+            if ($pool->isEmpty()) {
+                $pool = $candidates;
+            }
+
+            return $pool->random();
+        }
+
+        return $scored
+            ->where('score', $maxScore)
+            ->pluck('post')
+            ->values()
+            ->random();
     }
 
     /**

@@ -73,13 +73,7 @@ class SiteController extends Controller
 
         return view('site.posts.show', [
             'post' => $post,
-            'related' => Post::published()
-                ->with('category')
-                ->where('id', '!=', $post->id)
-                ->when($post->category_id, fn ($q) => $q->where('category_id', $post->category_id))
-                ->latest('published_at')
-                ->take(3)
-                ->get(),
+            'related' => $post->bestRelatedPost(),
             'latestPosts' => Post::published()
                 ->with('category')
                 ->where('id', '!=', $post->id)

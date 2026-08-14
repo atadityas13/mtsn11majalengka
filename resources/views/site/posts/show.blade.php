@@ -104,8 +104,8 @@
                 </figure>
             @endif
 
-            <div class="prose prose-lg mt-8 max-w-none prose-headings:font-display prose-headings:text-kemenag-deep prose-a:text-kemenag prose-img:rounded-xl">
-                {!! $post->body !!}
+            <div class="article-content mt-8">
+                {!! $post->renderedBody() !!}
             </div>
 
             {{-- Tags, kontributor, redaktur di bawah berita --}}
@@ -153,6 +153,32 @@
                     </div>
                 </div>
             </footer>
+
+            @if ($related)
+                <section class="no-print related-news mt-12" aria-labelledby="related-news-heading">
+                    <p class="section-label">Rekomendasi</p>
+                    <h2 id="related-news-heading" class="mt-2 font-display text-2xl font-extrabold text-kemenag-deep">Berita terkait</h2>
+                    <a href="{{ route('posts.show', $related->slug) }}" class="related-news__featured group mt-6">
+                        <div class="related-news__featured-thumb">
+                            @if ($related->cover_image)
+                                <img src="{{ asset('storage/'.$related->cover_image) }}" alt="" loading="lazy">
+                            @else
+                                <span>MTsN 11</span>
+                            @endif
+                        </div>
+                        <div class="related-news__featured-body">
+                            @if ($related->category)
+                                <p class="related-news__cat">{{ $related->category->name }}</p>
+                            @endif
+                            <h3>{{ $related->title }}</h3>
+                            @if ($related->excerpt)
+                                <p class="related-news__excerpt">{{ \Illuminate\Support\Str::limit($related->excerpt, 140) }}</p>
+                            @endif
+                            <p class="related-news__meta">{{ optional($related->published_at)->translatedFormat('d M Y') }} · {{ number_format($related->views_count) }} dilihat</p>
+                        </div>
+                    </a>
+                </section>
+            @endif
 
             <section class="no-print mt-12 border-t border-kemenag/10 pt-10" id="komentar">
                 <div class="flex items-end justify-between gap-3">
@@ -279,30 +305,4 @@
         </aside>
     </div>
 </article>
-
-@if ($related->isNotEmpty())
-<section class="no-print border-t border-kemenag/10 bg-white">
-    <div class="site-container py-12">
-        <p class="section-label">Lanjutan</p>
-        <h2 class="mt-2 font-display text-2xl font-extrabold text-kemenag-deep">Berita terkait</h2>
-        <div class="mt-6 grid gap-4 md:grid-cols-3">
-            @foreach ($related as $item)
-                <a href="{{ route('posts.show', $item->slug) }}" class="group overflow-hidden rounded-2xl border border-kemenag/10 bg-surface shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                    <div class="aspect-[16/10] overflow-hidden bg-kemenag-soft">
-                        @if ($item->cover_image)
-                            <img src="{{ asset('storage/'.$item->cover_image) }}" alt="" class="img-zoom h-full w-full object-cover" loading="lazy">
-                        @else
-                            <div class="flex h-full items-center justify-center text-xs font-bold text-kemenag">MTsN 11</div>
-                        @endif
-                    </div>
-                    <div class="p-4">
-                        <p class="news-meta">{{ optional($item->published_at)->translatedFormat('d M Y') }}</p>
-                        <h3 class="mt-1 font-display text-lg font-bold leading-snug text-kemenag-deep group-hover:text-kemenag">{{ $item->title }}</h3>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
 @endsection

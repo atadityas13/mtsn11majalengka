@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
+use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -11,6 +12,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PostForm
@@ -52,7 +54,20 @@ class PostForm
                         RichEditor::make('body')
                             ->label('Isi berita')
                             ->required()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->toolbarButtons([
+                                ['bold', 'italic', 'underline', 'strike', 'link'],
+                                ['h2', 'h3', 'lead', 'paragraph'],
+                                ['alignStart', 'alignCenter', 'alignEnd'],
+                                ['blockquote', 'bulletList', 'orderedList', 'horizontalRule'],
+                                ['attachFiles'],
+                                ['undo', 'redo'],
+                            ])
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDirectory('posts/body')
+                            ->fileAttachmentsVisibility('public')
+                            ->resizableImages()
+                            ->helperText('Gunakan Enter untuk paragraf baru. Sisipkan gambar lewat ikon lampiran dan tautan lewat ikon link. Blok “Baca juga” otomatis dari berita terbaru.'),
                     ])
                     ->columns(2),
                 Section::make('Publikasi')
@@ -83,6 +98,22 @@ class PostForm
                         Toggle::make('is_published')
                             ->label('Tayangkan')
                             ->default(false),
+                        TextInput::make('views_count')
+                            ->label('Jumlah dilihat (awal)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->default(0)
+                            ->helperText('Hanya Super Admin. Nilai awal saat tayang; kunjungan berikutnya tetap menambah.')
+                            ->visible(function (): bool {
+                                $user = Auth::user();
+
+                                return $user instanceof User && $user->isSuperAdmin();
+                            })
+                            ->dehydrated(function (): bool {
+                                $user = Auth::user();
+
+                                return $user instanceof User && $user->isSuperAdmin();
+                            }),
                     ])
                     ->columns(2),
             ]);
