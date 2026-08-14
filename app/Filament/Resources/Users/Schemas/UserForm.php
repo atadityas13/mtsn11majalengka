@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use App\Enums\UserRole;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -18,6 +19,18 @@ class UserForm
             ->components([
                 Section::make('Akun admin')
                     ->schema([
+                        FileUpload::make('avatar')
+                            ->label('Foto profil')
+                            ->image()
+                            ->avatar()
+                            ->imageEditor()
+                            ->circleCropper()
+                            ->disk('public')
+                            ->directory('avatars')
+                            ->visibility('public')
+                            ->fetchFileInformation(false)
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
                         TextInput::make('name')
                             ->label('Nama')
                             ->required()
