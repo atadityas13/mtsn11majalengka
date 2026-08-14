@@ -1,13 +1,22 @@
-# Shared hosting: document root = root project (bukan public/).
-# Semua request diarahkan ke folder public/.
-# Blok PHP cPanel (BEGIN/END) boleh ditambah di bawah ini di server.
+# Shared hosting: document root = root project.
+# Jangan rewrite "/" ke folder public/ (di LiteSpeed itu sering 403).
+# Blok PHP cPanel (BEGIN/END) boleh ditambah di bawah, di server saja.
 
-DirectoryIndex public/index.php
+DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Jangan loop jika sudah di /public/
+    # Beranda harus ke index.php, bukan ke direktori public/
+    RewriteRule ^$ index.php [L]
+
+    # File statis yang ada di public/ (css/js/gambar)
     RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
     RewriteRule ^(.*)$ public/$1 [L]
+
+    # Route aplikasi → front controller di root
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
 </IfModule>
