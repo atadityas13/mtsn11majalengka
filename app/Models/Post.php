@@ -93,30 +93,11 @@ class Post extends Model
             ->first();
 
         if ($latestOther) {
-            $html = $this->injectIntoArticleMiddle(
-                $html,
-                view('components.baca-juga', ['post' => $latestOther])->render()
-            );
+            // Di akhir isi berita agar tidak memotong daftar/paragraf.
+            $html .= view('components.baca-juga', ['post' => $latestOther])->render();
         }
 
         return $html;
-    }
-
-    public function injectIntoArticleMiddle(string $html, string $insert): string
-    {
-        if ($html === '') {
-            return $insert;
-        }
-
-        if (! preg_match_all('/<\/p>/i', $html, $matches, PREG_OFFSET_CAPTURE)) {
-            return $html.$insert;
-        }
-
-        $paragraphCount = count($matches[0]);
-        $afterIndex = max(1, (int) floor($paragraphCount / 2)) - 1;
-        $offset = $matches[0][$afterIndex][1] + strlen($matches[0][$afterIndex][0]);
-
-        return substr($html, 0, $offset).$insert.substr($html, $offset);
     }
 
     public function bestRelatedPost(): ?self
