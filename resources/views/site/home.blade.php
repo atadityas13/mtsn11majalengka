@@ -83,28 +83,28 @@
 
     @if ($posts->isNotEmpty())
         <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]" data-news-slider data-interval="4000">
-            <div class="relative overflow-hidden rounded-2xl text-white shadow-lg news-featured-card">
+            <div class="relative overflow-hidden rounded-2xl bg-black/5 text-white shadow-lg">
                 <div class="relative aspect-[16/10] md:aspect-[16/9]">
                     @foreach ($posts as $index => $post)
                         <div
                             class="news-slide absolute inset-0 transition-opacity duration-500 ease-out {{ $index === 0 ? 'is-active opacity-100 z-[1]' : 'pointer-events-none opacity-0 z-0' }}"
                             data-slide="{{ $index }}"
                         >
-                            <a href="{{ route('posts.show', $post->slug) }}" class="group relative block h-full">
+                            <a href="{{ route('posts.show', $post->slug) }}" class="group relative block h-full overflow-hidden">
                                 @if ($post->cover_image)
                                     <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
                                 @else
                                     <div class="h-full w-full pattern-mesh"></div>
                                 @endif
                                 <div class="news-featured-veil pointer-events-none absolute inset-0" aria-hidden="true"></div>
-                                <div class="absolute inset-x-0 bottom-0 px-5 pb-14 pt-20 md:px-7 md:pb-14 md:pt-24">
+                                <div class="absolute inset-x-0 bottom-0 z-[1] px-5 pb-14 pt-6 md:px-7 md:pb-14 md:pt-8">
                                     @if ($post->category)
                                         <span class="mb-2 inline-flex w-fit rounded bg-gold/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold">{{ $post->category->name }}</span>
                                     @endif
                                     <p class="news-meta !text-gold">{{ optional($post->published_at)->translatedFormat('d F Y') }}</p>
-                                    <h3 class="mt-1.5 line-clamp-3 font-display text-xl font-extrabold leading-snug drop-shadow-sm md:text-2xl">{{ $post->title }}</h3>
+                                    <h3 class="mt-1.5 line-clamp-2 font-display text-xl font-extrabold leading-snug md:text-2xl">{{ $post->title }}</h3>
                                     @if ($post->excerpt)
-                                        <p class="mt-2 line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/85">{{ $post->excerpt }}</p>
+                                        <p class="mt-2 line-clamp-2 max-w-3xl text-sm leading-relaxed text-white/90">{{ $post->excerpt }}</p>
                                     @endif
                                 </div>
                             </a>
@@ -114,18 +114,18 @@
 
                 @if ($posts->count() > 1)
                     <div class="absolute bottom-4 right-4 z-10 flex items-center gap-2">
-                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" data-slider-prev aria-label="Sebelumnya">‹</button>
+                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/25 text-white backdrop-blur-sm hover:bg-black/40" data-slider-prev aria-label="Sebelumnya">‹</button>
                         <div class="flex gap-1.5 px-1" data-slider-dots>
                             @foreach ($posts as $index => $post)
                                 <button
                                     type="button"
-                                    class="news-dot h-2 rounded-full transition-all {{ $index === 0 ? 'w-5 bg-gold' : 'w-2 bg-white/40' }}"
+                                    class="news-dot h-2 rounded-full transition-all {{ $index === 0 ? 'w-5 bg-gold' : 'w-2 bg-white/50' }}"
                                     data-slider-dot="{{ $index }}"
                                     aria-label="Slide {{ $index + 1 }}"
                                 ></button>
                             @endforeach
                         </div>
-                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25" data-slider-next aria-label="Berikutnya">›</button>
+                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/25 text-white backdrop-blur-sm hover:bg-black/40" data-slider-next aria-label="Berikutnya">›</button>
                     </div>
                 @endif
             </div>

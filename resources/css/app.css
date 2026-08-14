@@ -757,19 +757,15 @@
         pointer-events: auto;
     }
 
-    /* Berita Terbaru: hijau lembut di bawah, memudar ke atas ke gambar */
-    .news-featured-card {
-        background: #0a7a3e;
-    }
-
+    /* Berita Terbaru: tanpa bilah solid — hijau lembut di bawah, pudar ke atas */
     .news-featured-veil {
         background: linear-gradient(
             to top,
-            rgb(6 92 46 / 0.78) 0%,
-            rgb(10 122 62 / 0.55) 28%,
-            rgb(10 122 62 / 0.22) 52%,
-            rgb(10 122 62 / 0.06) 72%,
-            transparent 100%
+            rgb(6 92 46 / 0.72) 0%,
+            rgb(10 122 62 / 0.45) 18%,
+            rgb(10 122 62 / 0.22) 38%,
+            rgb(10 122 62 / 0.08) 58%,
+            transparent 78%
         );
     }
 
