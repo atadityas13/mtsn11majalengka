@@ -118,17 +118,12 @@ class PostForm
                             ->label('Tanggal terbit')
                             ->native(true)
                             ->seconds(false)
-                            ->default(now())
-                            ->helperText('Waktu Indonesia Barat (WIB). Kosongkan tidak boleh jika ingin tayang — isi jam sekarang atau lebih awal.'),
+                            ->timezone('Asia/Jakarta')
+                            ->default(fn () => now('Asia/Jakarta'))
+                            ->helperText('Tanggal terbit ditentukan dari field ini (WIB), bukan dari tombol Tayangkan.'),
                         Toggle::make('is_published')
                             ->label('Tayangkan')
-                            ->default(false)
-                            ->live()
-                            ->afterStateUpdated(function (bool $state, callable $set, callable $get): void {
-                                if ($state && blank($get('published_at'))) {
-                                    $set('published_at', now());
-                                }
-                            }),
+                            ->default(false),
                         TextInput::make('views_count')
                             ->label('Jumlah dilihat (awal)')
                             ->numeric()
