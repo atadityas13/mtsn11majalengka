@@ -13,6 +13,6 @@
     @if ($page->hero_image)
         <img src="{{ asset('storage/'.$page->hero_image) }}" alt="{{ $page->title }}" class="mb-8 aspect-[16/9] w-full rounded-2xl object-cover shadow-md">
     @endif
-    <div class="prose prose-lg max-w-none prose-headings:font-display prose-headings:text-kemenag-deep">{!! $page->body !!}</div>
+    <div class="article-content mt-0 max-w-none">{!! $page->renderedBody() !!}</div>
 </div>
 @endsection
