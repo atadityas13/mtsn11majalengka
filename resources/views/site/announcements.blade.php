@@ -13,7 +13,7 @@
         <article class="rounded-2xl border border-kemenag/10 bg-white p-6 shadow-sm">
             <p class="news-meta">{{ optional($item->published_on)->translatedFormat('d F Y') }}</p>
             <h2 class="mt-2 font-display text-2xl font-extrabold text-kemenag-deep">{{ $item->title }}</h2>
-            <div class="prose mt-4 max-w-none">{!! $item->body !!}</div>
+            <div class="article-content mt-4 max-w-none">{!! $item->renderedBody() !!}</div>
         </article>
     @endforeach
     <div>{{ $announcements->links() }}</div>

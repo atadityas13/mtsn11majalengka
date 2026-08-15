@@ -21,7 +21,16 @@ class AnnouncementForm
                 RichEditor::make('body')
                     ->label('Isi pengumuman')
                     ->required()
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->toolbarButtons([
+                        ['bold', 'italic', 'underline', 'strike', 'link'],
+                        ['h2', 'h3', 'lead', 'paragraph'],
+                        ['alignStart', 'alignCenter', 'alignEnd'],
+                        ['blockquote', 'bulletList', 'orderedList', 'horizontalRule'],
+                        ['undo', 'redo'],
+                    ])
+                    ->fileAttachments(false)
+                    ->helperText('Format di sini akan tampil sama di halaman Pengumuman (paragraf, daftar, heading, dll).'),
                 DatePicker::make('published_on')
                     ->label('Tanggal')
                     ->native(false)

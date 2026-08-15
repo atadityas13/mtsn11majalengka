@@ -213,7 +213,7 @@
                         <span class="news-meta">{{ optional($item->published_on)->translatedFormat('d M Y') }}</span>
                     </div>
                     <h3 class="mt-2 font-display text-xl font-bold text-kemenag-deep">{{ $item->title }}</h3>
-                    <p class="mt-1 text-sm text-muted">{{ \Illuminate\Support\Str::limit(strip_tags($item->body), 120) }}</p>
+                    <p class="mt-1 text-sm text-muted">{{ \Illuminate\Support\Str::limit(strip_tags($item->renderedBody()), 120) }}</p>
                 </article>
             @empty
                 <p class="text-sm text-muted">Belum ada pengumuman.</p>
