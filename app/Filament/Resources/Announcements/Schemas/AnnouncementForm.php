@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Announcements\Schemas;
 
+use App\Filament\Forms\Components\RichEditor\Actions\SafeAttachFilesAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
@@ -27,10 +28,16 @@ class AnnouncementForm
                         ['h2', 'h3', 'lead', 'paragraph'],
                         ['alignStart', 'alignCenter', 'alignEnd'],
                         ['blockquote', 'bulletList', 'orderedList', 'horizontalRule'],
+                        ['attachFiles'],
                         ['undo', 'redo'],
                     ])
-                    ->fileAttachments(false)
-                    ->helperText('Format di sini akan tampil sama di halaman Pengumuman (paragraf, daftar, heading, dll).'),
+                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDirectory('announcements/body')
+                    ->fileAttachmentsVisibility('public')
+                    ->registerActions([
+                        SafeAttachFilesAction::make(),
+                    ])
+                    ->helperText('Sisipkan gambar lewat ikon klip. Format di sini tampil sama di halaman Pengumuman.'),
                 DatePicker::make('published_on')
                     ->label('Tanggal')
                     ->native(false)

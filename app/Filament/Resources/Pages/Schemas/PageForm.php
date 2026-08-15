@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Pages\Schemas;
 
+use App\Filament\Forms\Components\RichEditor\Actions\SafeAttachFilesAction;
+use App\Support\SafeTemporaryUpload;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
@@ -39,15 +41,25 @@ class PageForm
                         ['h2', 'h3', 'lead', 'paragraph'],
                         ['alignStart', 'alignCenter', 'alignEnd'],
                         ['blockquote', 'bulletList', 'orderedList', 'horizontalRule'],
+                        ['attachFiles'],
                         ['undo', 'redo'],
                     ])
-                    ->fileAttachments(false)
-                    ->helperText('Format di sini akan tampil sama di halaman publik (paragraf, daftar, heading, dll).'),
+                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDirectory('pages/body')
+                    ->fileAttachmentsVisibility('public')
+                    ->registerActions([
+                        SafeAttachFilesAction::make(),
+                    ])
+                    ->helperText('Sisipkan gambar lewat ikon klip (lampirkan file). Format tampil sama di frontend.'),
                 FileUpload::make('hero_image')
                     ->label('Gambar header')
                     ->image()
                     ->directory('pages')
                     ->disk('public')
+                    ->fetchFileInformation(false)
+                    ->rules([
+                        SafeTemporaryUpload::rules(['jpg', 'jpeg', 'png', 'webp', 'gif'], 3072, 'Gambar header'),
+                    ])
                     ->columnSpanFull(),
                 Toggle::make('is_published')
                     ->label('Tayangkan')

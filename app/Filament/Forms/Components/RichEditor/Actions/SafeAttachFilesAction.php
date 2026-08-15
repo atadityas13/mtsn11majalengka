@@ -2,6 +2,7 @@
 
 namespace App\Filament\Forms\Components\RichEditor\Actions;
 
+use App\Support\SafeTemporaryUpload;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -10,7 +11,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class SafeAttachFilesAction
 {
@@ -28,31 +28,13 @@ class SafeAttachFilesAction
                     ->label(filled($arguments['src'] ?? null)
                         ? __('filament-forms::components.rich_editor.actions.attach_files.modal.form.file.label.existing')
                         : __('filament-forms::components.rich_editor.actions.attach_files.modal.form.file.label.new'))
-                    ->maxSize($component->getFileAttachmentsMaxSize() ?: 5120)
                     ->storeFiles(false)
                     ->fetchFileInformation(false)
                     ->required(blank($arguments['src'] ?? null))
                     ->hiddenLabel(blank($arguments['src'] ?? null))
-                    // Sengaja TIDAK memakai acceptedFileTypes() agar tidak memicu rule mimetypes.
+                    // Jangan pakai acceptedFileTypes/maxSize (sering gagal di hosting).
                     ->rules([
-                        fn (): \Closure => function (string $attribute, mixed $value, \Closure $fail): void {
-                            foreach ((array) $value as $file) {
-                                if (! $file instanceof TemporaryUploadedFile) {
-                                    continue;
-                                }
-
-                                $ext = strtolower((string) ($file->getClientOriginalExtension() ?: $file->guessExtension() ?: ''));
-
-                                if (! in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true)) {
-                                    $fail('Gambar harus berformat JPG, PNG, WEBP, atau GIF.');
-                                }
-                            }
-                        },
-                    ])
-                    ->validationMessages([
-                        'mimetypes' => 'Gambar harus berformat JPG, PNG, WEBP, atau GIF.',
-                        'mimes' => 'Gambar harus berformat JPG, PNG, WEBP, atau GIF.',
-                        'max' => 'Ukuran gambar maksimal 5 MB.',
+                        SafeTemporaryUpload::rules(['jpg', 'jpeg', 'png', 'webp', 'gif'], 5120, 'Gambar'),
                     ]),
                 TextInput::make('alt')
                     ->label(filled($arguments['src'] ?? null)

@@ -43,6 +43,7 @@ class Page extends Model
     {
         $html = RichContentRenderer::make($this->body ?? '')
             ->fileAttachmentsDisk('public')
+            ->fileAttachmentsDirectory('pages/body')
             ->fileAttachmentsVisibility('public')
             ->toHtml();
 
