@@ -34,7 +34,14 @@ class AnnouncementForm
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('announcements/body')
                     ->fileAttachmentsVisibility('public')
-                    ->fileAttachmentsAcceptedFileTypes(null)
+                    ->fileAttachmentsAcceptedFileTypes([
+                        'image/png',
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/gif',
+                        'image/webp',
+                        'application/octet-stream',
+                    ])
                     ->saveUploadedFileAttachmentUsing(
                         fn (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string => $file->store('announcements/body', 'public')
                     )

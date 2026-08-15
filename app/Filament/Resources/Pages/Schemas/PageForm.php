@@ -47,7 +47,14 @@ class PageForm
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('pages/body')
                     ->fileAttachmentsVisibility('public')
-                    ->fileAttachmentsAcceptedFileTypes(null)
+                    ->fileAttachmentsAcceptedFileTypes([
+                        'image/png',
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/gif',
+                        'image/webp',
+                        'application/octet-stream',
+                    ])
                     ->saveUploadedFileAttachmentUsing(
                         fn (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string => $file->store('pages/body', 'public')
                     )
