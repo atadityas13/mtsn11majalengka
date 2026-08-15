@@ -34,7 +34,6 @@ class Announcement extends Model
     {
         $html = RichContentRenderer::make($this->body ?? '')
             ->fileAttachmentsDisk('public')
-            ->fileAttachmentsDirectory('announcements/body')
             ->fileAttachmentsVisibility('public')
             ->toHtml();
 

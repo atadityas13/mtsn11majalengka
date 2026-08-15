@@ -47,10 +47,14 @@ class PageForm
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('pages/body')
                     ->fileAttachmentsVisibility('public')
+                    ->fileAttachmentsAcceptedFileTypes(null)
+                    ->saveUploadedFileAttachmentUsing(
+                        fn (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string => $file->store('pages/body', 'public')
+                    )
                     ->registerActions([
                         SafeAttachFilesAction::make(),
                     ])
-                    ->helperText('Sisipkan gambar lewat ikon klip (lampirkan file). Format tampil sama di frontend.'),
+                    ->helperText('Sisipkan gambar lewat ikon klip. File tersimpan di storage/pages/body.'),
                 FileUpload::make('hero_image')
                     ->label('Gambar header')
                     ->image()

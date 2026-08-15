@@ -34,10 +34,14 @@ class AnnouncementForm
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('announcements/body')
                     ->fileAttachmentsVisibility('public')
+                    ->fileAttachmentsAcceptedFileTypes(null)
+                    ->saveUploadedFileAttachmentUsing(
+                        fn (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string => $file->store('announcements/body', 'public')
+                    )
                     ->registerActions([
                         SafeAttachFilesAction::make(),
                     ])
-                    ->helperText('Sisipkan gambar lewat ikon klip. Format di sini tampil sama di halaman Pengumuman.'),
+                    ->helperText('Sisipkan gambar lewat ikon klip. File tersimpan di storage/announcements/body.'),
                 DatePicker::make('published_on')
                     ->label('Tanggal')
                     ->native(false)
