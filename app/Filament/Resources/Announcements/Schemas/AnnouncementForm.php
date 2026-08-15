@@ -24,11 +24,10 @@ class AnnouncementForm
                     ->required()
                     ->columnSpanFull()
                     ->toolbarButtons([
-                        ['bold', 'italic', 'underline', 'strike', 'link'],
+                        ['bold', 'italic', 'underline', 'strike', 'link', 'attachFiles'],
                         ['h2', 'h3', 'lead', 'paragraph'],
                         ['alignStart', 'alignCenter', 'alignEnd'],
                         ['blockquote', 'bulletList', 'orderedList', 'horizontalRule'],
-                        ['attachFiles'],
                         ['undo', 'redo'],
                     ])
                     ->fileAttachmentsDisk('public')
@@ -48,7 +47,7 @@ class AnnouncementForm
                     ->registerActions([
                         SafeAttachFilesAction::make(),
                     ])
-                    ->helperText('Sisipkan gambar lewat ikon klip. File tersimpan di storage/announcements/body.'),
+                    ->helperText('Sisipkan gambar: drag ke editor, atau klik ikon jepit kertas (paperclip) di samping ikon tautan. File tersimpan di storage/announcements/body.'),
                 DatePicker::make('published_on')
                     ->label('Tanggal')
                     ->native(false)

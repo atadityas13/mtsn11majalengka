@@ -37,11 +37,10 @@ class PageForm
                     ->label('Isi halaman')
                     ->columnSpanFull()
                     ->toolbarButtons([
-                        ['bold', 'italic', 'underline', 'strike', 'link'],
+                        ['bold', 'italic', 'underline', 'strike', 'link', 'attachFiles'],
                         ['h2', 'h3', 'lead', 'paragraph'],
                         ['alignStart', 'alignCenter', 'alignEnd'],
                         ['blockquote', 'bulletList', 'orderedList', 'horizontalRule'],
-                        ['attachFiles'],
                         ['undo', 'redo'],
                     ])
                     ->fileAttachmentsDisk('public')
@@ -61,7 +60,7 @@ class PageForm
                     ->registerActions([
                         SafeAttachFilesAction::make(),
                     ])
-                    ->helperText('Sisipkan gambar lewat ikon klip. File tersimpan di storage/pages/body.'),
+                    ->helperText('Sisipkan gambar: drag ke editor, atau klik ikon jepit kertas (paperclip) di samping ikon tautan. File tersimpan di storage/pages/body.'),
                 FileUpload::make('hero_image')
                     ->label('Gambar header')
                     ->image()
