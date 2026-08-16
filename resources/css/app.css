@@ -824,6 +824,23 @@
         filter: brightness(1.05);
     }
 
+    .visitor-stats {
+        @apply max-w-xs rounded-md bg-[#e8e8e8] px-3 py-2.5 text-sm text-ink;
+        line-height: 1.55;
+    }
+
+    .visitor-stats p {
+        @apply m-0;
+    }
+
+    .visitor-stats span {
+        @apply font-bold;
+    }
+
+    .visitor-stats strong {
+        @apply font-normal;
+    }
+
     .social-follow-btn {
         @apply inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm transition;
     }

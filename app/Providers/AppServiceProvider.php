@@ -49,9 +49,14 @@ class AppServiceProvider extends ServiceProvider
             );
             $view->with('serviceLinks', ServiceLink::visible()->ordered()->get());
             try {
-                $view->with('siteVisitCount', SiteVisit::totalCount());
+                $view->with('siteVisitStats', SiteVisit::stats());
             } catch (\Throwable) {
-                $view->with('siteVisitCount', 0);
+                $view->with('siteVisitStats', [
+                    'today_visitors' => 0,
+                    'today_page_views' => 0,
+                    'total_visitors' => 0,
+                    'total_page_views' => 0,
+                ]);
             }
         });
     }

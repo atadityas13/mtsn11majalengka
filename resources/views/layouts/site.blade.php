@@ -184,9 +184,20 @@
                 <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-gold">
                     Portal Madrasah · Kemenag RI
                 </p>
-                <p class="mt-4 text-sm text-white/75">
-                    Pengunjung: <span class="font-bold text-white">{{ number_format($siteVisitCount ?? 0) }}</span>
-                </p>
+                @php
+                    $stats = $siteVisitStats ?? [
+                        'today_visitors' => 0,
+                        'today_page_views' => 0,
+                        'total_visitors' => 0,
+                        'total_page_views' => 0,
+                    ];
+                @endphp
+                <div class="visitor-stats mt-5" aria-label="Statistik pengunjung situs">
+                    <p><span>Pengunjung hari ini:</span> <strong>{{ number_format($stats['today_visitors']) }}</strong></p>
+                    <p><span>Tayangan hari ini:</span> <strong>{{ number_format($stats['today_page_views']) }}</strong></p>
+                    <p><span>Total pengunjung:</span> <strong>{{ number_format($stats['total_visitors']) }}</strong></p>
+                    <p><span>Total tayangan:</span> <strong>{{ number_format($stats['total_page_views']) }}</strong></p>
+                </div>
             </div>
             <div>
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-gold">Navigasi</p>
