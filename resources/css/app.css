@@ -826,7 +826,7 @@
 
     .site-mascot {
         @apply fixed bottom-5 right-5 z-[49] flex flex-col items-end gap-2;
-        width: 7.5rem;
+        width: 7.25rem;
     }
 
     .site-mascot--above-wa {
@@ -851,12 +851,11 @@
 
     .site-mascot-robot {
         position: relative;
-        width: 6.75rem;
-        height: 6.75rem;
+        width: 6.5rem;
+        height: 6.9rem;
         @apply cursor-pointer rounded-full border-0 bg-transparent p-0;
         transition: transform 0.25s ease;
-        filter: drop-shadow(0 12px 20px rgb(10 122 62 / 0.28));
-        animation: nelaska-float 4.2s ease-in-out infinite;
+        filter: drop-shadow(0 10px 18px rgb(10 122 62 / 0.26));
     }
 
     .site-mascot-robot:hover,
@@ -864,33 +863,103 @@
         transform: scale(1.06);
     }
 
-    .site-mascot.is-talking .site-mascot-robot {
-        animation: nelaska-float 4.2s ease-in-out infinite, nelaska-talk-bob 0.7s ease-in-out infinite;
+    .site-mascot-glow {
+        position: absolute;
+        inset: 18% 10% 8%;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgb(52 211 153 / 0.35) 0%, rgb(56 189 248 / 0.12) 48%, transparent 70%);
+        animation: nelaska-glow 2.8s ease-in-out infinite;
+        pointer-events: none;
     }
 
-    .site-mascot-img {
-        display: block;
+    .robot-root {
+        position: relative;
+        z-index: 1;
         width: 100%;
         height: 100%;
-        object-fit: contain;
-        pointer-events: none;
-        user-select: none;
-        transition: opacity 0.18s ease;
+        animation: robot-hover 4s ease-in-out infinite;
+        transform: scaleX(-1);
     }
 
-    @keyframes nelaska-float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+    .robot-eye {
+        animation: robot-blink 3.2s infinite;
     }
 
-    @keyframes nelaska-talk-bob {
-        0%, 100% { transform: translateY(-8px) rotate(-1deg); }
-        50% { transform: translateY(-12px) rotate(1.5deg); }
+    .robot-pupil {
+        animation: eye-search 5s ease-in-out infinite;
+    }
+
+    .robot-arm {
+        transform-origin: 20% 20%;
+    }
+
+    .site-mascot.is-talking .robot-arm {
+        animation: robot-wave 1.15s ease-in-out infinite;
+    }
+
+    .robot-mouth {
+        transform-origin: center;
+    }
+
+    .site-mascot.is-talking .robot-mouth {
+        animation: robot-talk 0.65s ease-in-out infinite;
+    }
+
+    .robot-pad,
+    .robot-antenna,
+    .robot-led {
+        animation: soft-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes nelaska-glow {
+        0%, 100% { opacity: 0.5; transform: scale(0.94); }
+        50% { opacity: 1; transform: scale(1.04); }
+    }
+
+    @keyframes soft-pulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+    }
+
+    @keyframes robot-hover {
+        0%, 100% { transform: scaleX(-1) translateY(0) rotate(-1deg); }
+        50% { transform: scaleX(-1) translateY(-11px) rotate(1deg); }
+    }
+
+    @keyframes robot-wave {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(-22deg) translateX(-2px); }
+    }
+
+    @keyframes robot-talk {
+        0%, 100% { transform: scaleX(1); opacity: 0.65; }
+        50% { transform: scaleX(2); opacity: 1; }
+    }
+
+    @keyframes robot-blink {
+        0%, 48%, 52%, 100% { opacity: 1; transform: scaleY(1); }
+        50% { opacity: 0.25; transform: scaleY(0.12); }
+    }
+
+    @keyframes eye-search {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(1.4px, -1px); }
+        50% { transform: translate(-1px, 1px); }
+        75% { transform: translate(1px, 0.4px); }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .site-mascot-robot,
-        .site-mascot.is-talking .site-mascot-robot {
+        .robot-root,
+        .robot-eye,
+        .robot-pupil,
+        .robot-arm,
+        .robot-mouth,
+        .robot-pad,
+        .robot-antenna,
+        .robot-led,
+        .site-mascot-glow,
+        .site-mascot.is-talking .robot-arm,
+        .site-mascot.is-talking .robot-mouth {
             animation: none !important;
         }
     }
@@ -901,8 +970,8 @@
         }
 
         .site-mascot-robot {
-            width: 5.5rem;
-            height: 5.5rem;
+            width: 5.4rem;
+            height: 5.7rem;
         }
 
         .site-mascot-bubble {

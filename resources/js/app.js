@@ -27,15 +27,8 @@ document.addEventListener('alpine:init', () => {
         cleanup(() => observer.disconnect());
     });
 
-    Alpine.data('siteMascot', (messages = [], frames = {}) => ({
+    Alpine.data('siteMascot', (messages = []) => ({
         messages: Array.isArray(messages) && messages.length ? messages : ['Halo!'],
-        frames: {
-            idle: frames.idle || '',
-            wave: frames.wave || frames.idle || '',
-            talk: frames.talk || frames.idle || '',
-            point: frames.point || frames.idle || '',
-        },
-        frameKey: 'idle',
         visible: true,
         talking: false,
         listening: false,
@@ -46,29 +39,9 @@ document.addEventListener('alpine:init', () => {
         sequenceTimer: null,
         hideTimer: null,
         idleTimer: null,
-        poseTimer: null,
-        poseIndex: 0,
         reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
 
-        get currentFrame() {
-            if (this.talking) {
-                return this.frames.talk || this.frames.idle;
-            }
-
-            return this.frames[this.frameKey] || this.frames.idle;
-        },
-
         init() {
-            // Preload frames supaya ganti pose tidak kedip.
-            Object.values(this.frames).forEach((src) => {
-                if (! src) {
-                    return;
-                }
-                const img = new Image();
-                img.src = src;
-            });
-
-            this.startPoseLoop();
             setTimeout(() => this.playSequence(), 900);
             this.idleTimer = setInterval(() => {
                 if (this.visible && ! this.busy && Math.random() > 0.55) {
@@ -82,24 +55,6 @@ document.addEventListener('alpine:init', () => {
             clearTimeout(this.sequenceTimer);
             clearTimeout(this.hideTimer);
             clearInterval(this.idleTimer);
-            clearInterval(this.poseTimer);
-        },
-
-        startPoseLoop() {
-            clearInterval(this.poseTimer);
-            if (this.reduceMotion) {
-                this.frameKey = 'idle';
-                return;
-            }
-
-            const cycle = ['idle', 'wave', 'idle', 'point', 'idle', 'wave'];
-            this.poseTimer = setInterval(() => {
-                if (! this.visible || this.talking || this.busy) {
-                    return;
-                }
-                this.poseIndex = (this.poseIndex + 1) % cycle.length;
-                this.frameKey = cycle[this.poseIndex];
-            }, 1600);
         },
 
         randomMessage() {
@@ -134,7 +89,6 @@ document.addEventListener('alpine:init', () => {
             this.busy = true;
             this.talking = true;
             this.listening = false;
-            this.frameKey = 'talk';
             this.typeWriter(text);
 
             const hold = Math.min(9000, 2200 + text.length * 45);
@@ -143,7 +97,6 @@ document.addEventListener('alpine:init', () => {
                 this.talking = false;
                 this.displayText = '';
                 this.busy = false;
-                this.frameKey = 'idle';
             }, hold);
         },
 
@@ -155,7 +108,6 @@ document.addEventListener('alpine:init', () => {
             this.busy = true;
             this.talking = true;
             this.listening = false;
-            this.frameKey = 'talk';
             this.messageIndex = 0;
             this.typeWriter(this.messages[0]);
 
@@ -172,7 +124,6 @@ document.addEventListener('alpine:init', () => {
                         this.talking = false;
                         this.displayText = '';
                         this.busy = false;
-                        this.frameKey = 'wave';
                     }, 2500);
                 }
             };
@@ -189,7 +140,6 @@ document.addEventListener('alpine:init', () => {
             }
 
             this.listening = true;
-            this.frameKey = 'wave';
             setTimeout(() => {
                 this.listening = false;
             }, 250);
@@ -209,7 +159,6 @@ document.addEventListener('alpine:init', () => {
 
             this.hideTimer = setTimeout(() => {
                 this.visible = true;
-                this.frameKey = 'wave';
                 setTimeout(() => this.speakOne(this.randomMessage()), 400);
             }, 18000);
         },
