@@ -12,6 +12,7 @@ use App\Models\Announcement;
 use App\Models\Comment;
 use App\Models\ContactMessage;
 use App\Models\Post;
+use App\Models\SiteVisit;
 use App\Models\User;
 use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\StatsOverviewWidget;
@@ -26,10 +27,21 @@ class SiteStatsOverview extends StatsOverviewWidget
 
     protected ?string $heading = 'Statistik situs';
 
-    protected ?string $description = 'Ringkasan performa konten dan aktivitas situs';
+    protected ?string $description = 'Ringkasan pengunjung, konten, dan aktivitas situs';
 
     protected function getStats(): array
     {
+        try {
+            $visits = SiteVisit::stats();
+        } catch (\Throwable) {
+            $visits = [
+                'today_visitors' => 0,
+                'today_page_views' => 0,
+                'total_visitors' => 0,
+                'total_page_views' => 0,
+            ];
+        }
+
         $publishedPosts = Post::query()->published()->count();
         $totalViews = (int) Post::query()->sum('views_count');
         $visibleComments = Comment::query()->where('is_approved', true)->count();
@@ -41,13 +53,29 @@ class SiteStatsOverview extends StatsOverviewWidget
         $activeAnnouncements = Announcement::query()->published()->count();
 
         $stats = [
+            Stat::make('Pengunjung hari ini', number_format($visits['today_visitors']))
+                ->description('Sesi unik hari ini')
+                ->descriptionIcon(Heroicon::OutlinedUserGroup)
+                ->color('success'),
+            Stat::make('Tayangan hari ini', number_format($visits['today_page_views']))
+                ->description('Halaman yang dibuka hari ini')
+                ->descriptionIcon(Heroicon::OutlinedCursorArrowRays)
+                ->color('primary'),
+            Stat::make('Total pengunjung', number_format($visits['total_visitors']))
+                ->description('Akumulasi sesi unik')
+                ->descriptionIcon(Heroicon::OutlinedUsers)
+                ->color('info'),
+            Stat::make('Total tayangan situs', number_format($visits['total_page_views']))
+                ->description('Akumulasi halaman dibuka')
+                ->descriptionIcon(Heroicon::OutlinedGlobeAlt)
+                ->color('primary'),
             Stat::make('Berita terbit', number_format($publishedPosts))
                 ->description('Artikel yang sedang tayang')
                 ->descriptionIcon(Heroicon::OutlinedNewspaper)
                 ->color('success')
                 ->url(PostResource::getUrl('index')),
-            Stat::make('Total tayangan', number_format($totalViews))
-                ->description('Akumulasi views berita')
+            Stat::make('Tayangan berita', number_format($totalViews))
+                ->description('Akumulasi views detail berita')
                 ->descriptionIcon(Heroicon::OutlinedEye)
                 ->color('primary'),
             Stat::make('Komentar tayang', number_format($visibleComments))
