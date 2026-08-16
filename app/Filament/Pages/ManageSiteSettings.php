@@ -230,7 +230,7 @@ class ManageSiteSettings extends Page
                                         ->label('Daftar ucapan robot')
                                         ->rows(5)
                                         ->maxLength(800)
-                                        ->helperText('Satu baris = satu ucapan. Robot hanya mengucapkan baris-baris ini (berurutan saat muncul, acak saat muncul lagi). Contoh:\nDirgahayu Republik Indonesia ke-81!\nSemangat Merdeka, keluarga besar MTsN 11 Majalengka.')
+                                        ->helperText('Satu baris = satu ucapan. Robot hanya mengucapkan daftar ini (berurutan saat muncul, acak saat muncul lagi).')
                                         ->columnSpanFull(),
                                     DatePicker::make('mascot_starts_on')
                                         ->label('Mulai tampil')
