@@ -27,10 +27,9 @@ document.addEventListener('alpine:init', () => {
         cleanup(() => observer.disconnect());
     });
 
-    Alpine.data('siteMascot', (messages = [], storageKey = 'site-mascot-dismissed') => ({
+    Alpine.data('siteMascot', (messages = []) => ({
         messages: Array.isArray(messages) && messages.length ? messages : ['Halo!'],
-        storageKey,
-        hidden: false,
+        visible: true,
         talking: false,
         listening: false,
         busy: false,
@@ -38,20 +37,14 @@ document.addEventListener('alpine:init', () => {
         messageIndex: 0,
         typingTimer: null,
         sequenceTimer: null,
+        hideTimer: null,
         idleTimer: null,
         reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
 
         init() {
-            try {
-                if (localStorage.getItem(this.storageKey) === '1') {
-                    this.hidden = true;
-                    return;
-                }
-            } catch (e) {}
-
             setTimeout(() => this.playSequence(), 900);
             this.idleTimer = setInterval(() => {
-                if (! this.hidden && ! this.busy && Math.random() > 0.55) {
+                if (this.visible && ! this.busy && Math.random() > 0.55) {
                     this.speakOne(this.randomMessage());
                 }
             }, 22000);
@@ -60,6 +53,7 @@ document.addEventListener('alpine:init', () => {
         destroy() {
             clearInterval(this.typingTimer);
             clearTimeout(this.sequenceTimer);
+            clearTimeout(this.hideTimer);
             clearInterval(this.idleTimer);
         },
 
@@ -88,7 +82,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         speakOne(text) {
-            if (this.busy || this.hidden) {
+            if (this.busy || ! this.visible) {
                 return;
             }
 
@@ -107,7 +101,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         playSequence() {
-            if (this.busy || this.hidden) {
+            if (this.busy || ! this.visible) {
                 return;
             }
 
@@ -141,34 +135,33 @@ document.addEventListener('alpine:init', () => {
         },
 
         onTap() {
-            if (this.hidden) {
+            if (! this.visible) {
                 return;
             }
 
             this.listening = true;
             setTimeout(() => {
                 this.listening = false;
-            }, 450);
+            }, 250);
 
-            if (this.busy) {
-                clearInterval(this.typingTimer);
-                clearTimeout(this.sequenceTimer);
-                this.busy = false;
-                this.talking = false;
-                this.displayText = '';
-            }
-
-            this.speakOne(this.randomMessage());
+            this.hideTemporarily();
         },
 
-        dismiss() {
-            this.hidden = true;
+        hideTemporarily() {
             clearInterval(this.typingTimer);
             clearTimeout(this.sequenceTimer);
-            clearInterval(this.idleTimer);
-            try {
-                localStorage.setItem(this.storageKey, '1');
-            } catch (e) {}
+            clearTimeout(this.hideTimer);
+
+            this.talking = false;
+            this.busy = false;
+            this.displayText = '';
+            this.visible = false;
+
+            // Muncul lagi setelah ~18 detik, lalu ucapkan satu baris acak.
+            this.hideTimer = setTimeout(() => {
+                this.visible = true;
+                setTimeout(() => this.speakOne(this.randomMessage()), 400);
+            }, 18000);
         },
     }));
 });

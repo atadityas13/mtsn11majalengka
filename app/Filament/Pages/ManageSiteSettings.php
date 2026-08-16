@@ -223,22 +223,14 @@ class ManageSiteSettings extends Page
                                 ->schema([
                                     Toggle::make('mascot_enabled')
                                         ->label('Tampilkan robot ucapan')
-                                        ->helperText('Robot mengambang di atas tombol WhatsApp.')
-                                        ->inline(false),
-                                    Select::make('mascot_theme')
-                                        ->label('Tema visual')
-                                        ->options([
-                                            'default' => 'Standar (hijau madrasah)',
-                                            'hut_ri' => 'HUT RI (merah-putih)',
-                                            'ramadan' => 'Ramadan (emas-hijau)',
-                                        ])
-                                        ->default('default')
-                                        ->required(),
+                                        ->helperText('Robot mengambang di atas tombol WhatsApp. Klik robot untuk menyembunyikan sementara; akan muncul lagi otomatis.')
+                                        ->inline(false)
+                                        ->columnSpanFull(),
                                     Textarea::make('mascot_message')
-                                        ->label('Teks ucapan')
-                                        ->rows(4)
-                                        ->maxLength(500)
-                                        ->helperText('Satu baris = satu ucapan. Robot akan membacanya berurutan (efek ketik), plus sapaan otomatis sesuai waktu & tema.')
+                                        ->label('Daftar ucapan robot')
+                                        ->rows(5)
+                                        ->maxLength(800)
+                                        ->helperText('Satu baris = satu ucapan. Robot hanya mengucapkan baris-baris ini (berurutan saat muncul, acak saat muncul lagi). Contoh:\nDirgahayu Republik Indonesia ke-81!\nSemangat Merdeka, keluarga besar MTsN 11 Majalengka.')
                                         ->columnSpanFull(),
                                     DatePicker::make('mascot_starts_on')
                                         ->label('Mulai tampil')
