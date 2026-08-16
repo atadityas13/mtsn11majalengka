@@ -824,6 +824,136 @@
         filter: brightness(1.05);
     }
 
+    .site-mascot {
+        @apply fixed bottom-5 right-5 z-[49] flex flex-col items-end gap-2;
+        width: 7.5rem;
+    }
+
+    .site-mascot--above-wa {
+        bottom: 5.75rem;
+    }
+
+    .site-mascot-bubble {
+        @apply relative max-w-[14rem] rounded-2xl border border-kemenag/15 bg-white px-3 py-2.5 pr-7 text-xs font-semibold leading-snug text-kemenag-deep shadow-lg;
+    }
+
+    .site-mascot-bubble::after {
+        content: '';
+        position: absolute;
+        right: 1.75rem;
+        bottom: -0.45rem;
+        border-left: 0.45rem solid transparent;
+        border-right: 0.45rem solid transparent;
+        border-top: 0.5rem solid #fff;
+        filter: drop-shadow(0 1px 0 rgb(10 122 62 / 0.12));
+    }
+
+    .site-mascot-dismiss {
+        @apply absolute right-1.5 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-base leading-none text-muted transition hover:bg-kemenag-soft hover:text-kemenag;
+    }
+
+    .site-mascot-robot {
+        width: 6.25rem;
+        height: 6.25rem;
+        pointer-events: none;
+    }
+
+    .robot-root-masterpiece {
+        width: 100%;
+        height: 100%;
+        animation: robot-hover 4s ease-in-out infinite;
+        transform: scaleX(-1);
+    }
+
+    .robot-eye {
+        animation: robot-blink 3s infinite;
+        transform-origin: center;
+    }
+
+    .robot-arm-active {
+        animation: robot-wave-natural 1.2s ease-in-out infinite;
+    }
+
+    .robot-hover-pod {
+        animation: energy-glow 2s ease-in-out infinite;
+    }
+
+    .robot-mouth-active {
+        animation: robot-talk-pulse 1s ease-in-out infinite;
+    }
+
+    .site-mascot--hut_ri .site-mascot-bubble {
+        border-color: rgb(220 38 38 / 0.25);
+        background: linear-gradient(180deg, #fff 0%, #fff 50%, #fee2e2 50%, #fee2e2 100%);
+    }
+
+    .site-mascot--hut_ri .robot-core {
+        fill: #dc2626;
+    }
+
+    .site-mascot--ramadan .site-mascot-bubble {
+        border-color: rgb(212 160 23 / 0.35);
+        background: linear-gradient(180deg, #fffbeb, #ecfdf5);
+    }
+
+    .site-mascot--ramadan .robot-core {
+        fill: #d4a017;
+    }
+
+    @keyframes robot-hover {
+        0%, 100% { transform: scaleX(-1) translateY(0) rotate(-1deg); }
+        50% { transform: scaleX(-1) translateY(-10px) rotate(1deg); }
+    }
+
+    @keyframes energy-glow {
+        0%, 100% { filter: drop-shadow(0 0 8px #6366f1); opacity: 0.85; }
+        50% { filter: drop-shadow(0 0 16px #38bdf8); opacity: 1; }
+    }
+
+    @keyframes robot-wave-natural {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(-22deg) translateX(-3px); }
+    }
+
+    @keyframes robot-talk-pulse {
+        0%, 100% { transform: scaleX(1); opacity: 0.6; }
+        50% { transform: scaleX(2); opacity: 1; }
+    }
+
+    @keyframes robot-blink {
+        0%, 48%, 52%, 100% { opacity: 1; transform: scaleY(1); }
+        50% { opacity: 0.3; transform: scaleY(0.1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .robot-root-masterpiece,
+        .robot-eye,
+        .robot-arm-active,
+        .robot-hover-pod,
+        .robot-mouth-active {
+            animation: none !important;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .site-mascot {
+            width: 5.75rem;
+        }
+
+        .site-mascot-robot {
+            width: 5rem;
+            height: 5rem;
+        }
+
+        .site-mascot-bubble {
+            @apply max-w-[11.5rem] text-[11px];
+        }
+
+        .site-mascot--above-wa {
+            bottom: 5.5rem;
+        }
+    }
+
     .visitor-stats {
         @apply mt-5 max-w-xs text-sm text-white/80;
         line-height: 1.7;

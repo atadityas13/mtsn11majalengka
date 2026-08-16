@@ -7,10 +7,12 @@ use App\Models\User;
 use BackedEnum;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\Action;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
@@ -215,6 +217,37 @@ class ManageSiteSettings extends Page
                                         ->maxLength(120)
                                         ->helperText('Dari dashboard userway.org. Widget aksesibilitas hanya tampil jika ID terisi.')
                                         ->columnSpanFull(),
+                                ])
+                                ->columns(2),
+                            Tab::make('Robot & Perayaan')
+                                ->schema([
+                                    Toggle::make('mascot_enabled')
+                                        ->label('Tampilkan robot ucapan')
+                                        ->helperText('Robot mengambang di atas tombol WhatsApp.')
+                                        ->inline(false),
+                                    Select::make('mascot_theme')
+                                        ->label('Tema visual')
+                                        ->options([
+                                            'default' => 'Standar (hijau madrasah)',
+                                            'hut_ri' => 'HUT RI (merah-putih)',
+                                            'ramadan' => 'Ramadan (emas-hijau)',
+                                        ])
+                                        ->default('default')
+                                        ->required(),
+                                    Textarea::make('mascot_message')
+                                        ->label('Teks ucapan')
+                                        ->rows(3)
+                                        ->maxLength(280)
+                                        ->helperText('Contoh: Dirgahayu Republik Indonesia ke-81!')
+                                        ->columnSpanFull(),
+                                    DatePicker::make('mascot_starts_on')
+                                        ->label('Mulai tampil')
+                                        ->native(false)
+                                        ->helperText('Kosongkan = langsung tampil saat diaktifkan'),
+                                    DatePicker::make('mascot_ends_on')
+                                        ->label('Selesai tampil')
+                                        ->native(false)
+                                        ->helperText('Kosongkan = tetap tampil sampai dimatikan'),
                                 ])
                                 ->columns(2),
                         ])

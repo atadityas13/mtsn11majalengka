@@ -46,7 +46,21 @@ class SiteSetting extends Model
         'profile_video_url',
         'footer_text',
         'userway_account_id',
+        'mascot_enabled',
+        'mascot_theme',
+        'mascot_message',
+        'mascot_starts_on',
+        'mascot_ends_on',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'mascot_enabled' => 'boolean',
+            'mascot_starts_on' => 'date',
+            'mascot_ends_on' => 'date',
+        ];
+    }
 
     public static function current(): self
     {
@@ -118,5 +132,24 @@ class SiteSetting extends Model
         $position = trim((string) $this->hero_image_position);
 
         return $position !== '' ? $position : '50% 40%';
+    }
+
+    public function mascotIsVisible(): bool
+    {
+        if (! $this->mascot_enabled || blank($this->mascot_message)) {
+            return false;
+        }
+
+        $today = now()->startOfDay();
+
+        if ($this->mascot_starts_on && $today->lt($this->mascot_starts_on->startOfDay())) {
+            return false;
+        }
+
+        if ($this->mascot_ends_on && $today->gt($this->mascot_ends_on->startOfDay())) {
+            return false;
+        }
+
+        return true;
     }
 }
