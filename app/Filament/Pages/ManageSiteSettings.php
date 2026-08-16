@@ -222,15 +222,15 @@ class ManageSiteSettings extends Page
                             Tab::make('Robot & Perayaan')
                                 ->schema([
                                     Toggle::make('mascot_enabled')
-                                        ->label('Tampilkan robot ucapan')
-                                        ->helperText('Robot mengambang di atas tombol WhatsApp. Klik robot untuk menyembunyikan sementara; akan muncul lagi otomatis.')
+                                        ->label('Tampilkan Nelaska')
+                                        ->helperText('Robot Nelaska mengambang di atas tombol WhatsApp. Klik untuk menyembunyikan sementara; akan muncul lagi otomatis.')
                                         ->inline(false)
                                         ->columnSpanFull(),
                                     Textarea::make('mascot_message')
-                                        ->label('Daftar ucapan robot')
+                                        ->label('Daftar ucapan tambahan')
                                         ->rows(5)
                                         ->maxLength(800)
-                                        ->helperText('Satu baris = satu ucapan. Robot hanya mengucapkan daftar ini (berurutan saat muncul, acak saat muncul lagi).')
+                                        ->helperText('Satu baris = satu ucapan tambahan. Nelaska juga otomatis menyapa menurut waktu, menyambut pengunjung, dan mengarahkan ke WhatsApp.')
                                         ->columnSpanFull(),
                                     DatePicker::make('mascot_starts_on')
                                         ->label('Mulai tampil')
