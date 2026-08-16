@@ -96,20 +96,30 @@
                     {{-- Bayangan hover --}}
                     <ellipse class="robot-shadow" cx="100" cy="205" rx="40" ry="7.5" fill="#94a3b8" opacity="0.32"/>
 
-                    {{-- Lengan stub (di belakang tubuh) — standby bawah --}}
-                    <g class="robot-arm robot-arm--left" style="transform-origin: 64px 130px;">
-                        <path d="M64,126 C52,132 48,152 50,172 C52,178 58,180 62,176 C66,160 66,142 64,126 Z" fill="url(#nelaskaArm)"/>
-                    </g>
-                    <g class="robot-arm robot-arm--right" style="transform-origin: 136px 130px;">
-                        <path d="M136,126 C148,132 152,152 150,172 C148,178 142,180 138,176 C134,160 134,142 136,126 Z" fill="url(#nelaskaArm)"/>
-                    </g>
-
                     {{-- Tubuh bulat --}}
                     <g filter="url(#nelaskaSoft)">
                         <ellipse cx="100" cy="148" rx="40" ry="44" fill="url(#nelaskaBody)"/>
                         <ellipse cx="100" cy="148" rx="40" ry="44" fill="url(#nelaskaBodySide)"/>
-                        <path d="M78,146 H122" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
-                        <path d="M84,158 H116" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+                        <text
+                            class="robot-name"
+                            x="100"
+                            y="154"
+                            text-anchor="middle"
+                            dominant-baseline="middle"
+                            font-family="Segoe UI, Helvetica Neue, Arial, sans-serif"
+                            font-size="9.5"
+                            font-weight="700"
+                            letter-spacing="1.6"
+                            fill="#64748b"
+                        >NELASKA</text>
+                    </g>
+
+                    {{-- Lengan di depan tubuh agar tetap terlihat saat melambai --}}
+                    <g class="robot-arm robot-arm--left" style="transform-origin: 62px 132px;">
+                        <path d="M62,128 C50,136 46,156 48,174 C50,180 56,182 60,178 C64,160 64,142 62,128 Z" fill="url(#nelaskaArm)" stroke="#e5e7eb" stroke-width="1"/>
+                    </g>
+                    <g class="robot-arm robot-arm--right" style="transform-origin: 138px 132px;">
+                        <path d="M138,128 C150,136 154,156 152,174 C150,180 144,182 140,178 C136,160 136,142 138,128 Z" fill="url(#nelaskaArm)" stroke="#e5e7eb" stroke-width="1"/>
                     </g>
 
                     {{-- Joint telinga --}}
@@ -123,12 +133,28 @@
                         <rect x="52" y="26" width="96" height="82" rx="28" fill="url(#nelaskaBody)"/>
                         <rect x="52" y="26" width="96" height="82" rx="28" fill="url(#nelaskaBodySide)"/>
                         <rect x="64" y="40" width="72" height="54" rx="18" fill="url(#nelaskaFace)"/>
-                        <rect x="64" y="40" width="72" height="54" rx="18" fill="url(#nelaskaGlow)" opacity="0.16" class="robot-face-glow"/>
+                        <rect x="64" y="40" width="72" height="54" rx="18" fill="url(#nelaskaGlow)" opacity="0.22" class="robot-face-glow"/>
 
                         <g class="robot-face">
-                            <path class="robot-eye" d="M76,58 Q86,48 96,58" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round"/>
-                            <path class="robot-eye" d="M104,58 Q114,48 124,58" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round"/>
-                            <path class="robot-mouth" d="M90,74 Q100,84 110,74" fill="none" stroke="#22d3ee" stroke-width="4.5" stroke-linecap="round"/>
+                            {{-- Mata: lapisan glow tebal + highlight --}}
+                            <g class="robot-eye robot-eye--left" style="transform-origin: 86px 56px;">
+                                <path d="M76,58 Q86,46 96,58" fill="none" stroke="#0891b2" stroke-width="8" stroke-linecap="round" opacity="0.35"/>
+                                <path d="M76,58 Q86,46 96,58" fill="none" stroke="#22d3ee" stroke-width="6" stroke-linecap="round"/>
+                                <path d="M78,57 Q86,48 94,57" fill="none" stroke="#ecfeff" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+                            </g>
+                            <g class="robot-eye robot-eye--right" style="transform-origin: 114px 56px;">
+                                <path d="M104,58 Q114,46 124,58" fill="none" stroke="#0891b2" stroke-width="8" stroke-linecap="round" opacity="0.35"/>
+                                <path d="M104,58 Q114,46 124,58" fill="none" stroke="#22d3ee" stroke-width="6" stroke-linecap="round"/>
+                                <path d="M106,57 Q114,48 122,57" fill="none" stroke="#ecfeff" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+                            </g>
+
+                            {{-- Mulut: senyum default + terbuka saat bicara --}}
+                            <g class="robot-mouth" style="transform-origin: 100px 76px;">
+                                <path class="robot-mouth-smile" d="M88,74 Q100,88 112,74" fill="none" stroke="#0891b2" stroke-width="7" stroke-linecap="round" opacity="0.35"/>
+                                <path class="robot-mouth-smile" d="M88,74 Q100,88 112,74" fill="none" stroke="#22d3ee" stroke-width="5.5" stroke-linecap="round"/>
+                                <path class="robot-mouth-smile" d="M90,75 Q100,85 110,75" fill="none" stroke="#ecfeff" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+                                <ellipse class="robot-mouth-open" cx="100" cy="78" rx="11" ry="7" fill="#22d3ee" opacity="0"/>
+                            </g>
                         </g>
                     </g>
                 </svg>
