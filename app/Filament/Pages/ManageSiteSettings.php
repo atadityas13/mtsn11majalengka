@@ -12,7 +12,6 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
@@ -221,25 +220,20 @@ class ManageSiteSettings extends Page
                                 ->columns(2),
                             Tab::make('Robot & Perayaan')
                                 ->schema([
-                                    Toggle::make('mascot_enabled')
-                                        ->label('Tampilkan Nelaska')
-                                        ->helperText('Robot Nelaska mengambang di atas tombol WhatsApp. Klik untuk menyembunyikan sementara; akan muncul lagi otomatis.')
-                                        ->inline(false)
-                                        ->columnSpanFull(),
                                     Textarea::make('mascot_message')
-                                        ->label('Daftar ucapan tambahan')
+                                        ->label('Pesan custom / perayaan')
                                         ->rows(5)
                                         ->maxLength(800)
-                                        ->helperText('Satu baris = satu ucapan tambahan. Nelaska juga otomatis menyapa menurut waktu, menyambut pengunjung, dan mengarahkan ke WhatsApp.')
+                                        ->helperText('Opsional. Satu baris = satu ucapan ekstra. Nelaska selalu tampil dengan sapaan otomatis; isi kolom ini hanya untuk pesan tambahan (mis. HUT RI).')
                                         ->columnSpanFull(),
                                     DatePicker::make('mascot_starts_on')
-                                        ->label('Mulai tampil')
+                                        ->label('Mulai pesan custom')
                                         ->native(false)
-                                        ->helperText('Kosongkan = langsung tampil saat diaktifkan'),
+                                        ->helperText('Periode pesan custom mulai ditampilkan. Kosongkan = pesan custom aktif terus (jika diisi).'),
                                     DatePicker::make('mascot_ends_on')
-                                        ->label('Selesai tampil')
+                                        ->label('Selesai pesan custom')
                                         ->native(false)
-                                        ->helperText('Kosongkan = tetap tampil sampai dimatikan'),
+                                        ->helperText('Akhir periode pesan custom. Kosongkan = tanpa batas akhir. Di luar periode, robot tetap tampil tanpa pesan custom.'),
                                 ])
                                 ->columns(2),
                         ])

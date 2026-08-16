@@ -134,22 +134,26 @@ class SiteSetting extends Model
         return $position !== '' ? $position : '50% 40%';
     }
 
-    public function mascotIsVisible(): bool
+    public function mascotCustomLines(): array
     {
-        if (! $this->mascot_enabled || blank($this->mascot_message)) {
-            return false;
+        if (blank($this->mascot_message)) {
+            return [];
         }
 
         $today = now()->startOfDay();
 
         if ($this->mascot_starts_on && $today->lt($this->mascot_starts_on->startOfDay())) {
-            return false;
+            return [];
         }
 
         if ($this->mascot_ends_on && $today->gt($this->mascot_ends_on->startOfDay())) {
-            return false;
+            return [];
         }
 
-        return true;
+        return collect(preg_split('/\r\n|\r|\n/', (string) $this->mascot_message))
+            ->map(fn (string $line) => trim($line))
+            ->filter()
+            ->values()
+            ->all();
     }
 }
