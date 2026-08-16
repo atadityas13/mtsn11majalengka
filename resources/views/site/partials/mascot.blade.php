@@ -23,11 +23,18 @@
             'Butuh info cepat? Klik tombol WhatsApp hijau di bawah ya!',
             'Sampai jumpa lagi — Nelaska selalu siap menyapa!',
         ])));
+
+        $frames = [
+            'idle' => asset('images/nelaska-idle.png'),
+            'wave' => asset('images/nelaska-wave.png'),
+            'talk' => asset('images/nelaska-talk.png'),
+            'point' => asset('images/nelaska-mascot.png'),
+        ];
     @endphp
 
     <div
         class="site-mascot no-print{{ $site->whatsappLink() ? ' site-mascot--above-wa' : '' }}"
-        x-data="siteMascot(@js($scriptMessages))"
+        x-data="siteMascot(@js($scriptMessages), @js($frames))"
         x-cloak
         x-show="visible"
         x-transition:enter="transition ease-out duration-300"
@@ -60,13 +67,13 @@
             aria-label="Sembunyikan Nelaska sementara"
         >
             <img
-                src="{{ asset('images/nelaska-mascot.png') }}"
+                :src="currentFrame"
                 alt="Nelaska"
                 width="160"
                 height="160"
                 class="site-mascot-img"
-                loading="lazy"
                 decoding="async"
+                draggable="false"
             >
         </button>
     </div>
