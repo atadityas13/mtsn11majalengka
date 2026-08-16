@@ -169,7 +169,7 @@
     </main>
 
     <footer class="no-print mt-auto bg-kemenag-dark text-white">
-        <div class="site-container grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div class="site-container grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr]">
             <div>
                 <div class="flex items-center gap-3">
                     @if ($site->kemenag_logo)
@@ -184,16 +184,19 @@
                 <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-gold">
                     Portal Madrasah · Kemenag RI
                 </p>
-                @php
-                    $stats = $siteVisitStats ?? [
-                        'today_visitors' => 0,
-                        'today_page_views' => 0,
-                        'total_visitors' => 0,
-                        'total_page_views' => 0,
-                    ];
-                @endphp
-                <div class="visitor-stats" aria-label="Statistik pengunjung situs">
-                    <p><span>Pengunjung hari ini:</span> <strong>{{ number_format($stats['today_visitors']) }}</strong></p>
+            </div>
+            @php
+                $stats = $siteVisitStats ?? [
+                    'today_visitors' => 0,
+                    'today_page_views' => 0,
+                    'total_visitors' => 0,
+                    'total_page_views' => 0,
+                ];
+            @endphp
+            <div class="visitor-stats" aria-label="Statistik pengunjung situs">
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-gold">Pengunjung</p>
+                <div class="mt-4 space-y-2 text-sm text-white/80">
+                    <p><span>Hari ini:</span> <strong>{{ number_format($stats['today_visitors']) }}</strong></p>
                     <p><span>Tayangan hari ini:</span> <strong>{{ number_format($stats['today_page_views']) }}</strong></p>
                     <p><span>Total pengunjung:</span> <strong>{{ number_format($stats['total_visitors']) }}</strong></p>
                     <p><span>Total tayangan:</span> <strong>{{ number_format($stats['total_page_views']) }}</strong></p>

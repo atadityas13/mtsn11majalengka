@@ -41,6 +41,7 @@ document.addEventListener('alpine:init', () => {
         hideTimer: null,
         idleTimer: null,
         speakToken: 0,
+        dismissing: false,
         reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
 
         get pendingText() {
@@ -50,7 +51,7 @@ document.addEventListener('alpine:init', () => {
         init() {
             setTimeout(() => this.playSequence(), 900);
             this.idleTimer = setInterval(() => {
-                if (this.visible && ! this.busy && Math.random() > 0.55) {
+                if (this.visible && ! this.busy && ! this.dismissing && Math.random() > 0.55) {
                     this.speakOne(this.randomMessage());
                 }
             }, 22000);
@@ -142,7 +143,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         async speakOne(text) {
-            if (this.busy || ! this.visible) {
+            if (this.busy || ! this.visible || this.dismissing) {
                 return;
             }
 
@@ -165,7 +166,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         async playSequence() {
-            if (this.busy || ! this.visible) {
+            if (this.busy || ! this.visible || this.dismissing) {
                 return;
             }
 
@@ -175,7 +176,7 @@ document.addEventListener('alpine:init', () => {
             this.listening = false;
 
             for (let i = 0; i < this.messages.length; i++) {
-                if (token !== this.speakToken || ! this.visible) {
+                if (token !== this.speakToken || ! this.visible || this.dismissing) {
                     return;
                 }
 
@@ -208,32 +209,37 @@ document.addEventListener('alpine:init', () => {
             this.clearSpeech();
         },
 
-        onTap() {
-            if (! this.visible) {
+        async onTap() {
+            if (! this.visible || this.dismissing) {
                 return;
             }
 
-            this.listening = true;
-            setTimeout(() => {
-                this.listening = false;
-            }, 250);
-
-            this.hideTemporarily();
-        },
-
-        hideTemporarily() {
-            this.speakToken++;
-            clearTimeout(this.typingTimer);
-            clearTimeout(this.sequenceTimer);
+            this.dismissing = true;
+            clearInterval(this.idleTimer);
+            this.idleTimer = null;
             clearTimeout(this.hideTimer);
 
-            this.clearSpeech();
-            this.visible = false;
+            const token = ++this.speakToken;
+            clearTimeout(this.typingTimer);
+            clearTimeout(this.sequenceTimer);
 
-            this.hideTimer = setTimeout(() => {
-                this.visible = true;
-                setTimeout(() => this.speakOne(this.randomMessage()), 400);
-            }, 18000);
+            this.busy = true;
+            this.talking = true;
+            this.listening = false;
+
+            const bye = 'Dadah, sampai jumpa lagi!';
+            const typed = await this.typeWriter(bye, token);
+            if (typed) {
+                await this.wait(Math.min(2200, this.readPause(bye)), token);
+            }
+
+            this.visible = false;
+            setTimeout(() => {
+                this.talking = false;
+                this.displayText = '';
+                this.fullText = '';
+                this.busy = false;
+            }, 520);
         },
     }));
 });

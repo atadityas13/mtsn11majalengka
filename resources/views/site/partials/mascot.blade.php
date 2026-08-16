@@ -28,12 +28,12 @@
     x-transition:enter="transition ease-out duration-300"
     x-transition:enter-start="opacity-0 translate-y-3"
     x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0 translate-y-2"
+    x-transition:leave="transition ease-in duration-500"
+    x-transition:leave-start="opacity-100 translate-x-0"
+    x-transition:leave-end="opacity-0 translate-x-28"
     role="complementary"
     aria-label="Nelaska, robot ucapan situs"
-    :class="{ 'is-talking': talking, 'is-listening': listening }"
+    :class="{ 'is-talking': talking, 'is-listening': listening, 'is-dismissing': dismissing }"
 >
         <div
             class="site-mascot-bubble"
@@ -54,7 +54,8 @@
             type="button"
             class="site-mascot-robot"
             @click="onTap()"
-            aria-label="Sembunyikan Nelaska sementara"
+            :disabled="dismissing"
+            aria-label="Ucapkan dadah dan sembunyikan Nelaska"
         >
             {{-- SVG mirip gradient AI robot (kepala layar + tubuh bulat + lengan gantung) --}}
             <div class="robot-root">

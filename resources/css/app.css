@@ -1024,21 +1024,20 @@
             bottom: 5.5rem;
         }
     }
-    .visitor-stats {
-        @apply mt-5 max-w-xs text-sm text-white/80;
-        line-height: 1.7;
-    }
-
     .visitor-stats p {
         @apply m-0;
     }
 
+    .visitor-stats .mt-4 p {
+        @apply flex flex-wrap items-baseline gap-x-1.5 leading-relaxed;
+    }
+
     .visitor-stats span {
-        @apply font-bold text-white;
+        @apply text-white/65;
     }
 
     .visitor-stats strong {
-        @apply font-normal text-white/85;
+        @apply font-bold text-white;
     }
 
     .social-follow-btn {
