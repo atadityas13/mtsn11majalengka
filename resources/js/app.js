@@ -315,21 +315,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('[data-count-up]').forEach((el) => {
         const target = Number(el.dataset.countUp || 0);
+        const suffix = el.dataset.countSuffix || '';
         if (!Number.isFinite(target) || target <= 0) {
             return;
         }
 
+        const format = (value) => String(value) + suffix;
+
         const run = () => {
             if (reduceMotion) {
-                el.textContent = String(target);
+                el.textContent = format(target);
                 return;
             }
-            const duration = 1100;
+            const duration = 3200;
             const start = performance.now();
             const tick = (now) => {
                 const progress = Math.min((now - start) / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                el.textContent = String(Math.round(target * eased));
+                const eased = 1 - Math.pow(1 - progress, 2.2);
+                el.textContent = format(Math.round(target * eased));
                 if (progress < 1) {
                     requestAnimationFrame(tick);
                 }

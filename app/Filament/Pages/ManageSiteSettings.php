@@ -88,9 +88,6 @@ class ManageSiteSettings extends Page
                                         ->disk('public')
                                         ->helperText('Tampil di bagian bawah beranda')
                                         ->columnSpanFull(),
-                                    TextInput::make('founded_year')
-                                        ->label('Tahun berdiri')
-                                        ->numeric(),
                                     TextInput::make('students_count')
                                         ->label('Jumlah siswa')
                                         ->numeric(),
@@ -100,6 +97,14 @@ class ManageSiteSettings extends Page
                                     TextInput::make('classes_count')
                                         ->label('Jumlah rombel')
                                         ->numeric(),
+                                    TextInput::make('alumni_count')
+                                        ->label('Jumlah lulusan (Alumni)')
+                                        ->numeric()
+                                        ->helperText('Ditampilkan di beranda sebagai angka + (mis. 2000+).'),
+                                    TextInput::make('founded_year')
+                                        ->label('Tahun berdiri')
+                                        ->numeric()
+                                        ->helperText('Opsional, untuk arsip identitas.'),
                                     FileUpload::make('logo')
                                         ->label('Logo madrasah (bisa diganti)')
                                         ->image()

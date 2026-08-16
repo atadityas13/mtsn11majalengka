@@ -53,16 +53,18 @@
 <section class="border-b border-kemenag/10 bg-white">
     <div class="site-container stagger grid grid-cols-2 gap-4 py-8 md:grid-cols-4 md:gap-6" x-reveal>
         @foreach ([
-            ['Siswa', $site->students_count, 'Peserta didik aktif'],
-            ['Guru', $site->teachers_count, 'Tenaga pendidik'],
-            ['Rombel', $site->classes_count, 'Kelas belajar'],
-            ['Berdiri', $site->founded_year, 'Tahun berdiri'],
-        ] as [$label, $value, $hint])
+            ['Siswa', $site->students_count, 'Peserta didik aktif', ''],
+            ['Guru', $site->teachers_count, 'Tenaga pendidik', ''],
+            ['Rombel', $site->classes_count, 'Kelas belajar', ''],
+            ['Alumni', $site->alumni_count ?: 2000, 'Lulusan hingga saat ini', '+'],
+        ] as [$label, $value, $hint, $suffix])
             @if ($value)
                 <div class="reveal rounded-2xl border border-kemenag/10 bg-surface px-4 py-5 text-center">
-                    <p class="font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl" @if ($label !== 'Berdiri') data-count-up="{{ (int) $value }}" @endif>
-                        {{ $label === 'Berdiri' ? $value : '0' }}
-                    </p>
+                    <p
+                        class="font-display text-3xl font-extrabold text-kemenag-deep md:text-4xl"
+                        data-count-up="{{ (int) $value }}"
+                        @if ($suffix !== '') data-count-suffix="{{ $suffix }}" @endif
+                    >0{{ $suffix }}</p>
                     <p class="mt-1 text-sm font-bold text-kemenag">{{ $label }}</p>
                     <p class="mt-1 text-xs text-muted">{{ $hint }}</p>
                 </div>
