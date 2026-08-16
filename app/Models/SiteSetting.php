@@ -45,6 +45,7 @@ class SiteSetting extends Model
         'youtube_url',
         'profile_video_url',
         'footer_text',
+        'userway_account_id',
     ];
 
     public static function current(): self

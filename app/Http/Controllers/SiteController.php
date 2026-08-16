@@ -56,20 +56,35 @@ class SiteController extends Controller
             $query->whereHas('category', fn ($builder) => $builder->where('slug', $categorySlug));
         }
 
+        $year = $request->integer('tahun') ?: null;
+        $month = $request->integer('bulan') ?: null;
+
+        if ($year && $month >= 1 && $month <= 12) {
+            $query->whereYear('published_at', $year)->whereMonth('published_at', $month);
+        }
+
+        $archivePage = max(0, $request->integer('arsip'));
+        $archives = Post::archiveMonths($archivePage);
+
         return view('site.posts.index', [
             'posts' => $query->paginate(9)->withQueryString(),
             'categories' => Category::active()->orderBy('name')->get(),
             'search' => $search ?? '',
             'activeCategory' => $categorySlug ?? '',
+            'activeYear' => $year,
+            'activeMonth' => $month,
+            'archives' => $archives,
         ]);
     }
 
-    public function post(string $slug): View
+    public function post(Request $request, string $slug): View
     {
         $post = Post::published()->with('category')->where('slug', $slug)->firstOrFail();
         $post->increment('views_count');
         PostViewDaily::recordView();
         $post->refresh();
+
+        $archivePage = max(0, $request->integer('arsip'));
 
         return view('site.posts.show', [
             'post' => $post,
@@ -102,6 +117,7 @@ class SiteController extends Controller
                 ->latest()
                 ->take(5)
                 ->get(),
+            'archives' => Post::archiveMonths($archivePage),
         ]);
     }
 

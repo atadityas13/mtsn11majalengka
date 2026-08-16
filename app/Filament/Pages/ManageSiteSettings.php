@@ -210,6 +210,11 @@ class ManageSiteSettings extends Page
                                         ->label('Teks footer')
                                         ->rows(2)
                                         ->columnSpanFull(),
+                                    TextInput::make('userway_account_id')
+                                        ->label('UserWay Account ID')
+                                        ->maxLength(120)
+                                        ->helperText('Dari dashboard userway.org. Widget aksesibilitas hanya tampil jika ID terisi.')
+                                        ->columnSpanFull(),
                                 ])
                                 ->columns(2),
                         ])

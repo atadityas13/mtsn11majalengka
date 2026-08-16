@@ -177,4 +177,38 @@ class Post extends Model
             ->values()
             ->all();
     }
+
+    /**
+     * Daftar bulan berita published, 6 per halaman (arsip=0,1,2…).
+     *
+     * @return array{months: \Illuminate\Support\Collection<int, object>, page: int, has_prev: bool, has_next: bool}
+     */
+    public static function archiveMonths(int $page = 0, int $perPage = 6): array
+    {
+        $page = max(0, $page);
+        $driver = static::query()->getConnection()->getDriverName();
+
+        $yearExpr = $driver === 'sqlite'
+            ? "cast(strftime('%Y', published_at) as integer)"
+            : 'YEAR(published_at)';
+        $monthExpr = $driver === 'sqlite'
+            ? "cast(strftime('%m', published_at) as integer)"
+            : 'MONTH(published_at)';
+
+        $all = static::published()
+            ->selectRaw("{$yearExpr} as year, {$monthExpr} as month, COUNT(*) as posts_count")
+            ->groupByRaw("{$yearExpr}, {$monthExpr}")
+            ->orderByRaw("{$yearExpr} DESC, {$monthExpr} DESC")
+            ->get();
+
+        $total = $all->count();
+        $months = $all->slice($page * $perPage, $perPage)->values();
+
+        return [
+            'months' => $months,
+            'page' => $page,
+            'has_prev' => $page > 0,
+            'has_next' => ($page + 1) * $perPage < $total,
+        ];
+    }
 }

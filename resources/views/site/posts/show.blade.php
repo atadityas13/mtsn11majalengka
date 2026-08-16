@@ -302,6 +302,13 @@
                     @endforelse
                 </div>
             </div>
+
+            @include('site.partials.archive-widget', [
+                'search' => '',
+                'activeCategory' => '',
+                'activeYear' => null,
+                'activeMonth' => null,
+            ])
         </aside>
     </div>
 </article>

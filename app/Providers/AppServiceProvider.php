@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\MenuItem;
 use App\Models\ServiceLink;
 use App\Models\SiteSetting;
+use App\Models\SiteVisit;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -47,6 +48,11 @@ class AppServiceProvider extends ServiceProvider
                     ->get()
             );
             $view->with('serviceLinks', ServiceLink::visible()->ordered()->get());
+            try {
+                $view->with('siteVisitCount', SiteVisit::totalCount());
+            } catch (\Throwable) {
+                $view->with('siteVisitCount', 0);
+            }
         });
     }
 }
