@@ -893,7 +893,7 @@
     }
 
     .robot-face {
-        filter: drop-shadow(0 0 6px rgb(34 211 238 / 0.85));
+        filter: drop-shadow(0 0 5px rgb(56 189 248 / 0.7));
     }
 
     .robot-name {
@@ -906,9 +906,12 @@
     }
 
     .robot-eye {
-        transform-box: fill-box;
-        transform-origin: center;
+        transform-box: view-box;
         animation: robot-blink 2.8s ease-in-out infinite;
+    }
+
+    .robot-pupil {
+        animation: eye-search 5s ease-in-out infinite;
     }
 
     .robot-arm {
@@ -917,34 +920,33 @@
     }
 
     .robot-arm--left {
-        transform-origin: 62px 132px;
+        transform-origin: 62px 128px;
         transform: rotate(0deg);
     }
 
     .robot-arm--right {
-        transform-origin: 138px 132px;
+        transform-origin: 138px 128px;
         transform: rotate(0deg);
     }
 
+    /* Dari gantung → angkat ke atas + melambai */
     .site-mascot.is-talking .robot-arm--left {
-        animation: robot-wave-left 1.05s ease-in-out infinite;
+        animation: robot-wave-up-left 1.05s ease-in-out infinite;
+    }
+
+    .site-mascot.is-talking .robot-arm--right {
+        animation: robot-wave-up-right 1.05s ease-in-out infinite;
+        animation-delay: 0.08s;
     }
 
     .robot-mouth {
         transform-box: fill-box;
         transform-origin: center;
+        transform: scaleX(1);
     }
 
-    .robot-mouth-open {
-        opacity: 0;
-    }
-
-    .site-mascot.is-talking .robot-mouth-smile {
-        animation: robot-talk-smile 0.55s ease-in-out infinite;
-    }
-
-    .site-mascot.is-talking .robot-mouth-open {
-        animation: robot-talk-open 0.55s ease-in-out infinite;
+    .site-mascot.is-talking .robot-mouth {
+        animation: robot-talk-bar 0.55s ease-in-out infinite;
     }
 
     @keyframes robot-hover {
@@ -958,40 +960,47 @@
     }
 
     @keyframes robot-face-pulse {
-        0%, 100% { opacity: 0.22; }
-        50% { opacity: 0.55; }
+        0%, 100% { opacity: 0.18; }
+        50% { opacity: 0.4; }
     }
 
-    @keyframes robot-wave-left {
-        0%, 100% { transform: rotate(-18deg) translate(-2px, -4px); }
-        50% { transform: rotate(-32deg) translate(-4px, -8px); }
+    @keyframes robot-wave-up-left {
+        0%, 100% { transform: rotate(108deg); }
+        50% { transform: rotate(128deg); }
     }
 
-    @keyframes robot-talk-smile {
-        0%, 100% { opacity: 1; transform: scaleY(1); }
-        50% { opacity: 0.15; transform: scaleY(0.55); }
+    @keyframes robot-wave-up-right {
+        0%, 100% { transform: rotate(-108deg); }
+        50% { transform: rotate(-128deg); }
     }
 
-    @keyframes robot-talk-open {
-        0%, 100% { opacity: 0; transform: scale(0.7); }
-        50% { opacity: 1; transform: scale(1); }
+    @keyframes robot-talk-bar {
+        0%, 100% { transform: scaleX(1); opacity: 0.75; }
+        50% { transform: scaleX(1.85); opacity: 1; }
     }
 
     @keyframes robot-blink {
-        0%, 42%, 50%, 100% { transform: scaleY(1); opacity: 1; }
-        46% { transform: scaleY(0.12); opacity: 0.85; }
+        0%, 42%, 52%, 100% { transform: scaleY(1); }
+        47% { transform: scaleY(0.08); }
+    }
+
+    @keyframes eye-search {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(1.4px, -0.8px); }
+        50% { transform: translate(-1px, 1px); }
+        75% { transform: translate(1px, 0.4px); }
     }
 
     @media (prefers-reduced-motion: reduce) {
         .robot-root,
         .robot-shadow,
         .robot-eye,
+        .robot-pupil,
         .robot-arm,
-        .robot-mouth-smile,
-        .robot-mouth-open,
+        .robot-mouth,
         .site-mascot.is-talking .robot-arm--left,
-        .site-mascot.is-talking .robot-mouth-smile,
-        .site-mascot.is-talking .robot-mouth-open,
+        .site-mascot.is-talking .robot-arm--right,
+        .site-mascot.is-talking .robot-mouth,
         .site-mascot.is-talking .robot-face-glow {
             animation: none !important;
         }
