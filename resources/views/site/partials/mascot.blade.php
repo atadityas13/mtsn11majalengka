@@ -59,96 +59,62 @@
             @click="onTap()"
             aria-label="Sembunyikan Nelaska sementara"
         >
-            <span class="site-mascot-glow" aria-hidden="true"></span>
-            <div class="robot-root" aria-hidden="true">
-                <svg viewBox="0 0 200 210" class="h-full w-full">
+            {{-- Siluet asli SIMPATISANS v3.2, aksen hijau madrasah --}}
+            <div class="robot-root-masterpiece">
+                <svg viewBox="0 0 200 200" class="h-full w-full" aria-hidden="true">
                     <defs>
-                        <linearGradient id="nelBody" x1="15%" y1="5%" x2="90%" y2="95%">
-                            <stop offset="0%" stop-color="#ffffff"/>
-                            <stop offset="45%" stop-color="#e2e8f0"/>
-                            <stop offset="100%" stop-color="#94a3b8"/>
+                        <linearGradient id="nelaskaGradMetallic" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#94a3b8;stop-opacity:1" />
                         </linearGradient>
-                        <linearGradient id="nelAccent" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#34d399"/>
-                            <stop offset="100%" stop-color="#0a7a3e"/>
-                        </linearGradient>
-                        <linearGradient id="nelGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#f8e7a0"/>
-                            <stop offset="100%" stop-color="#d4a017"/>
-                        </linearGradient>
-                        <radialGradient id="nelEyeGlow" cx="50%" cy="45%" r="55%">
-                            <stop offset="0%" stop-color="#7dd3fc"/>
-                            <stop offset="60%" stop-color="#22d3ee"/>
-                            <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"/>
+                        <radialGradient id="nelaskaEyeGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0ea5e9;stop-opacity:0" />
                         </radialGradient>
-                        <filter id="nelShadow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur in="SourceAlpha" stdDeviation="2.8"/>
-                            <feOffset dx="1" dy="3" result="o"/>
-                            <feComponentTransfer><feFuncA type="linear" slope="0.32"/></feComponentTransfer>
+                        <filter id="nelaskaSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                            <feOffset dx="2" dy="2" result="offsetblur" />
+                            <feComponentTransfer><feFuncA type="linear" slope="0.3"/></feComponentTransfer>
                             <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
                         </filter>
                     </defs>
 
-                    {{-- Hover pad --}}
-                    <ellipse class="robot-pad" cx="100" cy="198" rx="38" ry="6" fill="#0a7a3e" opacity="0.16"/>
-                    <ellipse class="robot-pad" cx="100" cy="196" rx="24" ry="3.5" fill="#38bdf8" opacity="0.28"/>
+                    <path d="M60,65 Q60,30 100,30 Q140,30 140,65 Q140,90 125,100 Q150,110 150,140 Q150,170 100,170 Q50,170 50,140 Q50,110 75,100 Q60,90 60,65"
+                          fill="url(#nelaskaGradMetallic)" stroke="#1e293b" stroke-width="1.5" filter="url(#nelaskaSoftShadow)" />
 
-                    {{-- Antenna --}}
-                    <path d="M100,36 L100,16" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>
-                    <circle class="robot-antenna" cx="100" cy="12" r="5.5" fill="url(#nelGold)"/>
-                    <circle class="robot-antenna" cx="100" cy="12" r="9" fill="#d4a017" opacity="0.22"/>
-
-                    {{-- Head --}}
-                    <path d="M68,58 Q68,30 100,28 Q132,30 132,58 Q132,78 118,86 Q132,90 132,108 Q132,128 100,130 Q68,128 68,108 Q68,90 82,86 Q68,78 68,58 Z"
-                          fill="url(#nelBody)" stroke="#1e293b" stroke-width="1.5" filter="url(#nelShadow)"/>
-
-                    {{-- Visor --}}
-                    <rect x="78" y="52" width="44" height="28" rx="12" fill="#0f172a" opacity="0.96"/>
-                    <rect x="82" y="55" width="36" height="6" rx="3" fill="#34d399" opacity="0.12"/>
-
-                    <g class="robot-eye" style="transform-origin: 90px 67px;">
-                        <circle cx="90" cy="67" r="6.5" fill="#67e8f9"/>
-                        <circle cx="90" cy="67" r="11" fill="url(#nelEyeGlow)"/>
-                        <circle class="robot-pupil" cx="91.5" cy="68" r="2.2" fill="#022c22"/>
+                    <rect x="72" y="55" width="56" height="32" rx="14" fill="#0f172a" opacity="0.95"/>
+                    <g class="robot-eye" style="transform-origin: 86px 71px;">
+                        <circle cx="86" cy="71" r="7" fill="#38bdf8" />
+                        <circle cx="86" cy="71" r="12" fill="url(#nelaskaEyeGlow)" />
+                        <circle class="robot-pupil" cx="88" cy="72" r="2.4" fill="#0f172a" />
                     </g>
-                    <g class="robot-eye" style="transform-origin: 110px 67px;">
-                        <circle cx="110" cy="67" r="6.5" fill="#67e8f9"/>
-                        <circle cx="110" cy="67" r="11" fill="url(#nelEyeGlow)"/>
-                        <circle class="robot-pupil" cx="111.5" cy="68" r="2.2" fill="#022c22"/>
+                    <g class="robot-eye" style="transform-origin: 114px 71px;">
+                        <circle cx="114" cy="71" r="7" fill="#38bdf8" />
+                        <circle cx="114" cy="71" r="12" fill="url(#nelaskaEyeGlow)" />
+                        <circle class="robot-pupil" cx="116" cy="72" r="2.4" fill="#0f172a" />
                     </g>
 
-                    <rect class="robot-mouth" x="90" y="88" width="20" height="3.5" rx="1.8" fill="#34d399" style="transform-origin: 100px 90px;"/>
+                    <rect x="88" y="90" width="24" height="3" rx="1.5" fill="#0a7a3e" class="robot-mouth" style="transform-origin: center;"/>
 
-                    {{-- Neck --}}
-                    <rect x="92" y="128" width="16" height="10" rx="3" fill="#94a3b8" stroke="#1e293b" stroke-width="1"/>
-
-                    {{-- Torso --}}
-                    <path d="M74,138 Q74,134 100,134 Q126,134 126,138 L122,168 Q122,176 100,178 Q78,176 78,168 Z"
-                          fill="url(#nelBody)" stroke="#1e293b" stroke-width="1.5" filter="url(#nelShadow)"/>
-                    <path d="M84,142 L116,142 L114,158 Q114,162 100,163 Q86,162 86,158 Z" fill="url(#nelAccent)" opacity="0.92"/>
-
-                    {{-- Chest core --}}
-                    <circle cx="100" cy="152" r="10" fill="#022c22"/>
-                    <circle class="robot-core" cx="100" cy="152" r="6" fill="#0a7a3e">
-                        <animate attributeName="opacity" values="1;0.45;1" dur="1.7s" repeatCount="indefinite"/>
-                        <animate attributeName="r" values="6;8;6" dur="1.7s" repeatCount="indefinite"/>
+                    <circle cx="100" cy="135" r="15" fill="#0f172a"/>
+                    <circle cx="100" cy="135" r="8" class="robot-core" fill="#0a7a3e">
+                        <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite" />
+                        <animate attributeName="r" values="8;11;8" dur="2s" repeatCount="indefinite" />
                     </circle>
-                    <circle cx="100" cy="152" r="9" fill="none" stroke="url(#nelGold)" stroke-width="1.4"/>
 
-                    {{-- Shoulders --}}
-                    <circle cx="72" cy="142" r="8" fill="url(#nelBody)" stroke="#1e293b" stroke-width="1.3"/>
-                    <circle cx="128" cy="142" r="8" fill="url(#nelBody)" stroke="#1e293b" stroke-width="1.3"/>
-                    <circle class="robot-led" cx="72" cy="142" r="2.8" fill="#22d3ee"/>
-                    <circle class="robot-led" cx="128" cy="142" r="2.8" fill="#22d3ee"/>
+                    <path d="M70,170 Q100,195 130,170" fill="#64748b" class="robot-hover-pod" />
+                    <rect x="85" y="188" width="30" height="5" rx="2.5" fill="#38bdf8" class="robot-hover-pod" opacity="0.7"/>
 
-                    {{-- Arms --}}
-                    <g style="transform-origin: 128px 142px;">
-                        <path d="M128,142 Q152,138 160,118" fill="none" stroke="#cbd5e1" stroke-width="10" stroke-linecap="round"/>
-                        <circle cx="160" cy="118" r="7" fill="#fff" stroke="#1e293b" stroke-width="1.5"/>
+                    <circle cx="60" cy="118" r="8" fill="url(#nelaskaGradMetallic)" stroke="#1e293b" stroke-width="1.5" />
+                    <circle cx="138" cy="118" r="8" fill="url(#nelaskaGradMetallic)" stroke="#1e293b" stroke-width="1.5" />
+
+                    <g style="transform-origin: 138px 118px;">
+                        <path d="M138,118 Q165,115 175,90" fill="none" stroke="#cbd5e1" stroke-width="12" stroke-linecap="round"/>
+                        <circle cx="175" cy="90" r="8" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
                     </g>
-                    <g class="robot-arm" style="transform-origin: 72px 142px;">
-                        <path d="M72,142 Q48,138 40,118" fill="none" stroke="#cbd5e1" stroke-width="10" stroke-linecap="round"/>
-                        <circle cx="40" cy="118" r="7" fill="#fff" stroke="#1e293b" stroke-width="1.5"/>
+                    <g class="robot-arm" style="transform-origin: 60px 118px;">
+                        <path d="M60,118 Q35,115 25,90" fill="none" stroke="#cbd5e1" stroke-width="12" stroke-linecap="round"/>
+                        <circle cx="25" cy="90" r="8" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
                     </g>
                 </svg>
             </div>
