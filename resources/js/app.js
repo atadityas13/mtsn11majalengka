@@ -26,6 +26,151 @@ document.addEventListener('alpine:init', () => {
         observer.observe(el);
         cleanup(() => observer.disconnect());
     });
+
+    Alpine.data('siteMascot', (messages = [], storageKey = 'site-mascot-dismissed') => ({
+        messages: Array.isArray(messages) && messages.length ? messages : ['Halo!'],
+        storageKey,
+        hidden: false,
+        talking: false,
+        listening: false,
+        busy: false,
+        displayText: '',
+        messageIndex: 0,
+        typingTimer: null,
+        sequenceTimer: null,
+        idleTimer: null,
+        reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+
+        init() {
+            try {
+                if (localStorage.getItem(this.storageKey) === '1') {
+                    this.hidden = true;
+                    return;
+                }
+            } catch (e) {}
+
+            setTimeout(() => this.playSequence(), 900);
+            this.idleTimer = setInterval(() => {
+                if (! this.hidden && ! this.busy && Math.random() > 0.55) {
+                    this.speakOne(this.randomMessage());
+                }
+            }, 22000);
+        },
+
+        destroy() {
+            clearInterval(this.typingTimer);
+            clearTimeout(this.sequenceTimer);
+            clearInterval(this.idleTimer);
+        },
+
+        randomMessage() {
+            return this.messages[Math.floor(Math.random() * this.messages.length)];
+        },
+
+        typeWriter(text) {
+            clearInterval(this.typingTimer);
+            this.displayText = '';
+
+            if (this.reduceMotion) {
+                this.displayText = text;
+                return;
+            }
+
+            let i = 0;
+            this.typingTimer = setInterval(() => {
+                if (i < text.length) {
+                    this.displayText += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(this.typingTimer);
+                }
+            }, 28);
+        },
+
+        speakOne(text) {
+            if (this.busy || this.hidden) {
+                return;
+            }
+
+            this.busy = true;
+            this.talking = true;
+            this.listening = false;
+            this.typeWriter(text);
+
+            const hold = Math.min(9000, 2200 + text.length * 45);
+            clearTimeout(this.sequenceTimer);
+            this.sequenceTimer = setTimeout(() => {
+                this.talking = false;
+                this.displayText = '';
+                this.busy = false;
+            }, hold);
+        },
+
+        playSequence() {
+            if (this.busy || this.hidden) {
+                return;
+            }
+
+            this.busy = true;
+            this.talking = true;
+            this.listening = false;
+            this.messageIndex = 0;
+            this.typeWriter(this.messages[0]);
+
+            const step = () => {
+                if (this.messageIndex < this.messages.length - 1) {
+                    this.messageIndex++;
+                    this.typeWriter(this.messages[this.messageIndex]);
+                    this.sequenceTimer = setTimeout(
+                        step,
+                        Math.min(8500, 2500 + this.messages[this.messageIndex].length * 50),
+                    );
+                } else {
+                    this.sequenceTimer = setTimeout(() => {
+                        this.talking = false;
+                        this.displayText = '';
+                        this.busy = false;
+                    }, 2500);
+                }
+            };
+
+            this.sequenceTimer = setTimeout(
+                step,
+                Math.min(8500, 2500 + this.messages[0].length * 50),
+            );
+        },
+
+        onTap() {
+            if (this.hidden) {
+                return;
+            }
+
+            this.listening = true;
+            setTimeout(() => {
+                this.listening = false;
+            }, 450);
+
+            if (this.busy) {
+                clearInterval(this.typingTimer);
+                clearTimeout(this.sequenceTimer);
+                this.busy = false;
+                this.talking = false;
+                this.displayText = '';
+            }
+
+            this.speakOne(this.randomMessage());
+        },
+
+        dismiss() {
+            this.hidden = true;
+            clearInterval(this.typingTimer);
+            clearTimeout(this.sequenceTimer);
+            clearInterval(this.idleTimer);
+            try {
+                localStorage.setItem(this.storageKey, '1');
+            } catch (e) {}
+        },
+    }));
 });
 
 window.Alpine = Alpine;

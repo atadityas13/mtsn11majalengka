@@ -834,7 +834,7 @@
     }
 
     .site-mascot-bubble {
-        @apply relative max-w-[14rem] rounded-2xl border border-kemenag/15 bg-white px-3 py-2.5 pr-7 text-xs font-semibold leading-snug text-kemenag-deep shadow-lg;
+        @apply relative max-w-[15rem] rounded-2xl border border-kemenag/15 bg-white px-3 py-2.5 pr-7 text-xs font-semibold leading-snug text-kemenag-deep shadow-lg;
     }
 
     .site-mascot-bubble::after {
@@ -852,10 +852,23 @@
         @apply absolute right-1.5 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-base leading-none text-muted transition hover:bg-kemenag-soft hover:text-kemenag;
     }
 
+    .site-mascot-hint {
+        @apply mt-1 text-[10px] font-medium text-muted;
+    }
+
     .site-mascot-robot {
         width: 6.25rem;
         height: 6.25rem;
-        pointer-events: none;
+        @apply cursor-pointer rounded-full border-0 bg-transparent p-0;
+        transition: transform 0.25s ease;
+    }
+
+    .site-mascot-robot:hover {
+        transform: scale(1.05);
+    }
+
+    .site-mascot.is-listening .site-mascot-robot {
+        transform: scale(1.08);
     }
 
     .robot-root-masterpiece {
@@ -870,7 +883,15 @@
         transform-origin: center;
     }
 
-    .robot-arm-active {
+    .robot-pupil {
+        animation: eye-search 5s ease-in-out infinite;
+    }
+
+    .robot-arm {
+        transform-origin: 20% 20%;
+    }
+
+    .site-mascot.is-talking .robot-arm {
         animation: robot-wave-natural 1.2s ease-in-out infinite;
     }
 
@@ -878,8 +899,12 @@
         animation: energy-glow 2s ease-in-out infinite;
     }
 
-    .robot-mouth-active {
-        animation: robot-talk-pulse 1s ease-in-out infinite;
+    .robot-mouth {
+        transform-origin: center;
+    }
+
+    .site-mascot.is-talking .robot-mouth {
+        animation: robot-talk-pulse 0.7s ease-in-out infinite;
     }
 
     .site-mascot--hut_ri .site-mascot-bubble {
@@ -925,12 +950,22 @@
         50% { opacity: 0.3; transform: scaleY(0.1); }
     }
 
+    @keyframes eye-search {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(1.5px, -1px); }
+        50% { transform: translate(-1px, 1px); }
+        75% { transform: translate(1px, 0.5px); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
         .robot-root-masterpiece,
         .robot-eye,
-        .robot-arm-active,
+        .robot-pupil,
+        .robot-arm,
         .robot-hover-pod,
-        .robot-mouth-active {
+        .robot-mouth,
+        .site-mascot.is-talking .robot-arm,
+        .site-mascot.is-talking .robot-mouth {
             animation: none !important;
         }
     }
@@ -946,7 +981,7 @@
         }
 
         .site-mascot-bubble {
-            @apply max-w-[11.5rem] text-[11px];
+            @apply max-w-[12rem] text-[11px];
         }
 
         .site-mascot--above-wa {

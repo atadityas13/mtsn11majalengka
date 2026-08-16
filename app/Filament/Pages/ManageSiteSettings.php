@@ -236,9 +236,9 @@ class ManageSiteSettings extends Page
                                         ->required(),
                                     Textarea::make('mascot_message')
                                         ->label('Teks ucapan')
-                                        ->rows(3)
-                                        ->maxLength(280)
-                                        ->helperText('Contoh: Dirgahayu Republik Indonesia ke-81!')
+                                        ->rows(4)
+                                        ->maxLength(500)
+                                        ->helperText('Satu baris = satu ucapan. Robot akan membacanya berurutan (efek ketik), plus sapaan otomatis sesuai waktu & tema.')
                                         ->columnSpanFull(),
                                     DatePicker::make('mascot_starts_on')
                                         ->label('Mulai tampil')
