@@ -192,7 +192,7 @@
                         'total_page_views' => 0,
                     ];
                 @endphp
-                <div class="visitor-stats mt-5" aria-label="Statistik pengunjung situs">
+                <div class="visitor-stats" aria-label="Statistik pengunjung situs">
                     <p><span>Pengunjung hari ini:</span> <strong>{{ number_format($stats['today_visitors']) }}</strong></p>
                     <p><span>Tayangan hari ini:</span> <strong>{{ number_format($stats['today_page_views']) }}</strong></p>
                     <p><span>Total pengunjung:</span> <strong>{{ number_format($stats['total_visitors']) }}</strong></p>

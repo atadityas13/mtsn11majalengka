@@ -825,8 +825,8 @@
     }
 
     .visitor-stats {
-        @apply max-w-xs rounded-md bg-[#e8e8e8] px-3 py-2.5 text-sm text-ink;
-        line-height: 1.55;
+        @apply mt-5 max-w-xs text-sm text-white/80;
+        line-height: 1.7;
     }
 
     .visitor-stats p {
@@ -834,11 +834,11 @@
     }
 
     .visitor-stats span {
-        @apply font-bold;
+        @apply font-bold text-white;
     }
 
     .visitor-stats strong {
-        @apply font-normal;
+        @apply font-normal text-white/85;
     }
 
     .social-follow-btn {
