@@ -34,12 +34,18 @@ document.addEventListener('alpine:init', () => {
         listening: false,
         busy: false,
         displayText: '',
+        fullText: '',
         messageIndex: 0,
         typingTimer: null,
         sequenceTimer: null,
         hideTimer: null,
         idleTimer: null,
+        speakToken: 0,
         reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+
+        get pendingText() {
+            return this.fullText.slice(this.displayText.length);
+        },
 
         init() {
             setTimeout(() => this.playSequence(), 900);
@@ -51,7 +57,8 @@ document.addEventListener('alpine:init', () => {
         },
 
         destroy() {
-            clearInterval(this.typingTimer);
+            this.speakToken++;
+            clearTimeout(this.typingTimer);
             clearTimeout(this.sequenceTimer);
             clearTimeout(this.hideTimer);
             clearInterval(this.idleTimer);
@@ -61,77 +68,144 @@ document.addEventListener('alpine:init', () => {
             return this.messages[Math.floor(Math.random() * this.messages.length)];
         },
 
-        typeWriter(text) {
-            clearInterval(this.typingTimer);
+        wait(ms, token) {
+            return new Promise((resolve) => {
+                this.sequenceTimer = setTimeout(() => {
+                    resolve(token === this.speakToken);
+                }, ms);
+            });
+        },
+
+        charDelay(ch, next) {
+            if (/[.!?]/.test(ch)) {
+                return 140;
+            }
+            if (/[,;:]/.test(ch)) {
+                return 90;
+            }
+            if (ch === ' ') {
+                return 42;
+            }
+            if (next === ' ') {
+                return 30;
+            }
+            return 22;
+        },
+
+        typeWriter(text, token) {
+            clearTimeout(this.typingTimer);
+            this.fullText = text;
             this.displayText = '';
 
             if (this.reduceMotion) {
                 this.displayText = text;
-                return;
+                return Promise.resolve(token === this.speakToken);
             }
 
-            let i = 0;
-            this.typingTimer = setInterval(() => {
-                if (i < text.length) {
-                    this.displayText += text.charAt(i);
+            return new Promise((resolve) => {
+                let i = 0;
+
+                const tick = () => {
+                    if (token !== this.speakToken) {
+                        resolve(false);
+                        return;
+                    }
+
+                    if (i >= text.length) {
+                        resolve(true);
+                        return;
+                    }
+
+                    const ch = text.charAt(i);
+                    this.displayText += ch;
                     i++;
-                } else {
-                    clearInterval(this.typingTimer);
-                }
-            }, 28);
-        },
-
-        speakOne(text) {
-            if (this.busy || ! this.visible) {
-                return;
-            }
-
-            this.busy = true;
-            this.talking = true;
-            this.listening = false;
-            this.typeWriter(text);
-
-            const hold = Math.min(9000, 2200 + text.length * 45);
-            clearTimeout(this.sequenceTimer);
-            this.sequenceTimer = setTimeout(() => {
-                this.talking = false;
-                this.displayText = '';
-                this.busy = false;
-            }, hold);
-        },
-
-        playSequence() {
-            if (this.busy || ! this.visible) {
-                return;
-            }
-
-            this.busy = true;
-            this.talking = true;
-            this.listening = false;
-            this.messageIndex = 0;
-            this.typeWriter(this.messages[0]);
-
-            const step = () => {
-                if (this.messageIndex < this.messages.length - 1) {
-                    this.messageIndex++;
-                    this.typeWriter(this.messages[this.messageIndex]);
-                    this.sequenceTimer = setTimeout(
-                        step,
-                        Math.min(8500, 2500 + this.messages[this.messageIndex].length * 50),
+                    this.typingTimer = setTimeout(
+                        tick,
+                        this.charDelay(ch, text.charAt(i)),
                     );
-                } else {
-                    this.sequenceTimer = setTimeout(() => {
-                        this.talking = false;
-                        this.displayText = '';
-                        this.busy = false;
-                    }, 2500);
-                }
-            };
+                };
 
-            this.sequenceTimer = setTimeout(
-                step,
-                Math.min(8500, 2500 + this.messages[0].length * 50),
-            );
+                tick();
+            });
+        },
+
+        readPause(text) {
+            const words = text.trim().split(/\s+/).filter(Boolean).length;
+            return Math.min(4200, 1400 + words * 260);
+        },
+
+        clearSpeech() {
+            this.talking = false;
+            this.displayText = '';
+            this.fullText = '';
+            this.busy = false;
+        },
+
+        async speakOne(text) {
+            if (this.busy || ! this.visible) {
+                return;
+            }
+
+            const token = ++this.speakToken;
+            this.busy = true;
+            this.talking = true;
+            this.listening = false;
+
+            const typed = await this.typeWriter(text, token);
+            if (! typed) {
+                return;
+            }
+
+            const still = await this.wait(this.readPause(text), token);
+            if (! still) {
+                return;
+            }
+
+            this.clearSpeech();
+        },
+
+        async playSequence() {
+            if (this.busy || ! this.visible) {
+                return;
+            }
+
+            const token = ++this.speakToken;
+            this.busy = true;
+            this.talking = true;
+            this.listening = false;
+
+            for (let i = 0; i < this.messages.length; i++) {
+                if (token !== this.speakToken || ! this.visible) {
+                    return;
+                }
+
+                this.messageIndex = i;
+                const text = this.messages[i];
+                const typed = await this.typeWriter(text, token);
+                if (! typed) {
+                    return;
+                }
+
+                const still = await this.wait(this.readPause(text), token);
+                if (! still) {
+                    return;
+                }
+
+                if (i < this.messages.length - 1) {
+                    this.displayText = '';
+                    this.fullText = '';
+                    const gap = await this.wait(320, token);
+                    if (! gap) {
+                        return;
+                    }
+                }
+            }
+
+            if (token !== this.speakToken) {
+                return;
+            }
+
+            this.clearSpeech();
         },
 
         onTap() {
@@ -148,13 +222,12 @@ document.addEventListener('alpine:init', () => {
         },
 
         hideTemporarily() {
-            clearInterval(this.typingTimer);
+            this.speakToken++;
+            clearTimeout(this.typingTimer);
             clearTimeout(this.sequenceTimer);
             clearTimeout(this.hideTimer);
 
-            this.talking = false;
-            this.busy = false;
-            this.displayText = '';
+            this.clearSpeech();
             this.visible = false;
 
             this.hideTimer = setTimeout(() => {

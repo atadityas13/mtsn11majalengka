@@ -42,7 +42,7 @@
     >
         <div
             class="site-mascot-bubble"
-            x-show="talking && displayText"
+            x-show="talking && fullText"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 translate-y-2 scale-95"
             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
@@ -50,7 +50,9 @@
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
         >
-            <p x-text="displayText"></p>
+            <p class="site-mascot-bubble-text">
+                <span x-text="displayText"></span><span class="site-mascot-bubble-pending" aria-hidden="true" x-text="pendingText"></span>
+            </p>
         </div>
 
         <button
@@ -59,62 +61,75 @@
             @click="onTap()"
             aria-label="Sembunyikan Nelaska sementara"
         >
-            {{-- Siluet asli SIMPATISANS v3.2, aksen hijau madrasah --}}
-            <div class="robot-root-masterpiece">
-                <svg viewBox="0 0 200 200" class="h-full w-full" aria-hidden="true">
+            {{-- SVG mirip gradient AI robot (kepala layar + tubuh bulat + lengan gantung) --}}
+            <div class="robot-root">
+                <svg viewBox="0 0 200 220" class="h-full w-full" aria-hidden="true">
                     <defs>
-                        <linearGradient id="nelaskaGradMetallic" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#94a3b8;stop-opacity:1" />
+                        <linearGradient id="nelaskaBody" x1="18%" y1="8%" x2="86%" y2="92%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="42%" stop-color="#f3f4f6"/>
+                            <stop offset="100%" stop-color="#d1d5db"/>
                         </linearGradient>
-                        <radialGradient id="nelaskaEyeGlow" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#0ea5e9;stop-opacity:0" />
+                        <linearGradient id="nelaskaBodySide" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#9ca3af" stop-opacity="0.35"/>
+                            <stop offset="35%" stop-color="#ffffff" stop-opacity="0"/>
+                            <stop offset="65%" stop-color="#ffffff" stop-opacity="0"/>
+                            <stop offset="100%" stop-color="#9ca3af" stop-opacity="0.28"/>
+                        </linearGradient>
+                        <linearGradient id="nelaskaFace" x1="50%" y1="0%" x2="50%" y2="100%">
+                            <stop offset="0%" stop-color="#1f2937"/>
+                            <stop offset="100%" stop-color="#0b1220"/>
+                        </linearGradient>
+                        <linearGradient id="nelaskaArm" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="100%" stop-color="#c4c9d1"/>
+                        </linearGradient>
+                        <radialGradient id="nelaskaGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#67e8f9" stop-opacity="0.9"/>
+                            <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
                         </radialGradient>
-                        <filter id="nelaskaSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-                            <feOffset dx="2" dy="2" result="offsetblur" />
-                            <feComponentTransfer><feFuncA type="linear" slope="0.3"/></feComponentTransfer>
-                            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+                        <filter id="nelaskaSoft" x="-25%" y="-25%" width="150%" height="150%">
+                            <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.18"/>
                         </filter>
                     </defs>
 
-                    <path d="M60,65 Q60,30 100,30 Q140,30 140,65 Q140,90 125,100 Q150,110 150,140 Q150,170 100,170 Q50,170 50,140 Q50,110 75,100 Q60,90 60,65"
-                          fill="url(#nelaskaGradMetallic)" stroke="#1e293b" stroke-width="1.5" filter="url(#nelaskaSoftShadow)" />
+                    {{-- Bayangan hover --}}
+                    <ellipse class="robot-shadow" cx="100" cy="205" rx="40" ry="7.5" fill="#94a3b8" opacity="0.32"/>
 
-                    <rect x="72" y="55" width="56" height="32" rx="14" fill="#0f172a" opacity="0.95"/>
-                    <g class="robot-eye" style="transform-origin: 86px 71px;">
-                        <circle cx="86" cy="71" r="7" fill="#38bdf8" />
-                        <circle cx="86" cy="71" r="12" fill="url(#nelaskaEyeGlow)" />
-                        <circle class="robot-pupil" cx="88" cy="72" r="2.4" fill="#0f172a" />
+                    {{-- Lengan stub (di belakang tubuh) — standby bawah --}}
+                    <g class="robot-arm robot-arm--left" style="transform-origin: 64px 130px;">
+                        <path d="M64,126 C52,132 48,152 50,172 C52,178 58,180 62,176 C66,160 66,142 64,126 Z" fill="url(#nelaskaArm)"/>
                     </g>
-                    <g class="robot-eye" style="transform-origin: 114px 71px;">
-                        <circle cx="114" cy="71" r="7" fill="#38bdf8" />
-                        <circle cx="114" cy="71" r="12" fill="url(#nelaskaEyeGlow)" />
-                        <circle class="robot-pupil" cx="116" cy="72" r="2.4" fill="#0f172a" />
+                    <g class="robot-arm robot-arm--right" style="transform-origin: 136px 130px;">
+                        <path d="M136,126 C148,132 152,152 150,172 C148,178 142,180 138,176 C134,160 134,142 136,126 Z" fill="url(#nelaskaArm)"/>
                     </g>
 
-                    <rect x="88" y="90" width="24" height="3" rx="1.5" fill="#0a7a3e" class="robot-mouth" style="transform-origin: center;"/>
-
-                    <circle cx="100" cy="135" r="15" fill="#0f172a"/>
-                    <circle cx="100" cy="135" r="8" class="robot-core" fill="#0a7a3e">
-                        <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite" />
-                        <animate attributeName="r" values="8;11;8" dur="2s" repeatCount="indefinite" />
-                    </circle>
-
-                    <path d="M70,170 Q100,195 130,170" fill="#64748b" class="robot-hover-pod" />
-                    <rect x="85" y="188" width="30" height="5" rx="2.5" fill="#38bdf8" class="robot-hover-pod" opacity="0.7"/>
-
-                    <circle cx="60" cy="118" r="8" fill="url(#nelaskaGradMetallic)" stroke="#1e293b" stroke-width="1.5" />
-                    <circle cx="138" cy="118" r="8" fill="url(#nelaskaGradMetallic)" stroke="#1e293b" stroke-width="1.5" />
-
-                    <g style="transform-origin: 138px 118px;">
-                        <path d="M138,118 Q165,115 175,90" fill="none" stroke="#cbd5e1" stroke-width="12" stroke-linecap="round"/>
-                        <circle cx="175" cy="90" r="8" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+                    {{-- Tubuh bulat --}}
+                    <g filter="url(#nelaskaSoft)">
+                        <ellipse cx="100" cy="148" rx="40" ry="44" fill="url(#nelaskaBody)"/>
+                        <ellipse cx="100" cy="148" rx="40" ry="44" fill="url(#nelaskaBodySide)"/>
+                        <path d="M78,146 H122" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+                        <path d="M84,158 H116" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
                     </g>
-                    <g class="robot-arm" style="transform-origin: 60px 118px;">
-                        <path d="M60,118 Q35,115 25,90" fill="none" stroke="#cbd5e1" stroke-width="12" stroke-linecap="round"/>
-                        <circle cx="25" cy="90" r="8" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+
+                    {{-- Joint telinga --}}
+                    <circle cx="50" cy="64" r="10" fill="url(#nelaskaBody)"/>
+                    <circle cx="150" cy="64" r="10" fill="url(#nelaskaBody)"/>
+                    <circle cx="50" cy="64" r="5" fill="#d1d5db"/>
+                    <circle cx="150" cy="64" r="5" fill="#d1d5db"/>
+
+                    {{-- Kepala + layar wajah --}}
+                    <g filter="url(#nelaskaSoft)">
+                        <rect x="52" y="26" width="96" height="82" rx="28" fill="url(#nelaskaBody)"/>
+                        <rect x="52" y="26" width="96" height="82" rx="28" fill="url(#nelaskaBodySide)"/>
+                        <rect x="64" y="40" width="72" height="54" rx="18" fill="url(#nelaskaFace)"/>
+                        <rect x="64" y="40" width="72" height="54" rx="18" fill="url(#nelaskaGlow)" opacity="0.16" class="robot-face-glow"/>
+
+                        <g class="robot-face">
+                            <path class="robot-eye" d="M76,58 Q86,48 96,58" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round"/>
+                            <path class="robot-eye" d="M104,58 Q114,48 124,58" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round"/>
+                            <path class="robot-mouth" d="M90,74 Q100,84 110,74" fill="none" stroke="#22d3ee" stroke-width="4.5" stroke-linecap="round"/>
+                        </g>
                     </g>
                 </svg>
             </div>
