@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
 Route::get('/', [SiteController::class, 'home'])->name('home');
 Route::get('/berita', [SiteController::class, 'posts'])->name('posts.index');

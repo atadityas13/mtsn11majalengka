@@ -1,2 +1,4 @@
 User-agent: *
 Disallow:
+
+Sitemap: https://mtsn11majalengka.sch.id/sitemap.xml
