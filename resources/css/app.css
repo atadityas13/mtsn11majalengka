@@ -1053,6 +1053,14 @@
         @apply min-w-0;
     }
 
+    .footer-contact-item--email > a {
+        white-space: nowrap;
+    }
+
+    .footer-contact-social {
+        overflow-x: auto;
+    }
+
     .social-follow-btn {
         @apply inline-flex h-11 w-11 items-center justify-center rounded-none bg-transparent p-0 shadow-none transition;
     }

@@ -170,7 +170,7 @@
     </main>
 
     <footer class="no-print mt-auto bg-kemenag-dark text-white">
-        <div class="site-container grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr]">
+        <div class="site-container grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1.25fr]">
             <div>
                 <div class="flex items-center gap-3">
                     @if ($site->kemenag_logo)
@@ -229,7 +229,7 @@
                     @endforelse
                 </div>
             </div>
-            <div>
+            <div class="footer-contact-social min-w-0">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-gold">Kontak</p>
                 <div class="footer-contact mt-4 space-y-3 text-sm text-white/80">
                     @if ($site->address)
@@ -253,9 +253,9 @@
                         </p>
                     @endif
                     @if ($site->email)
-                        <p class="footer-contact-item">
+                        <p class="footer-contact-item footer-contact-item--email">
                             <i class="bi bi-envelope-fill" aria-hidden="true"></i>
-                            <a href="mailto:{{ $site->email }}" class="hover:text-white hover:underline break-all">{{ $site->email }}</a>
+                            <a href="mailto:{{ $site->email }}" class="hover:text-white hover:underline">{{ $site->email }}</a>
                         </p>
                     @endif
                     @if ($site->whatsappLink())
@@ -265,9 +265,8 @@
                         </a>
                     @endif
                 </div>
-            </div>
-            <div>
-                <p class="text-xs font-bold uppercase tracking-[0.18em] text-gold">Ikuti kami</p>
+
+                <p class="mt-8 text-xs font-bold uppercase tracking-[0.18em] text-gold">Ikuti kami</p>
                 <div class="social-follow-grid">
                     @if ($site->facebook_url)
                         <a href="{{ $site->facebook_url }}" target="_blank" rel="noopener" class="social-follow-btn" aria-label="Facebook">
