@@ -71,7 +71,7 @@ class PostForm
                             ])
                             // Lampiran gambar di editor dinonaktifkan sementara agar create berita stabil di hosting.
                             ->fileAttachments(false)
-                            ->helperText('Gunakan Enter untuk paragraf baru. Gambar sampul diisi di kanan. Blok “Baca juga” otomatis di akhir isi berita.'),
+                            ->helperText('Gunakan Enter untuk paragraf baru. Gambar sampul diisi di kanan. “Baca juga” otomatis: berita sebelumnya & sesudahnya di antar paragraf, berita terbaru di akhir.'),
                     ])
                     ->columns(2),
                 Section::make('Publikasi')

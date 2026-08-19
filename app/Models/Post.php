@@ -86,18 +86,111 @@ class Post extends Model
                 ->implode('');
         }
 
-        $latestOther = static::query()
+        return $this->injectBacaJugaBlocks($html);
+    }
+
+    /**
+     * Baca juga: berita sebelumnya & sesudahnya disisip di antar paragraf;
+     * berita terbaru (selain artikel ini) selalu di akhir.
+     */
+    public function bacaJugaPosts(): array
+    {
+        $latest = static::query()
             ->published()
             ->whereKeyNot($this->getKey())
             ->latest('published_at')
             ->first();
 
-        if ($latestOther) {
-            // Di akhir isi berita agar tidak memotong daftar/paragraf.
-            $html .= view('components.baca-juga', ['post' => $latestOther])->render();
+        $previous = static::query()
+            ->published()
+            ->where('published_at', '<', $this->published_at)
+            ->when($latest, fn (Builder $q) => $q->whereKeyNot($latest->getKey()))
+            ->latest('published_at')
+            ->first();
+
+        $next = static::query()
+            ->published()
+            ->where('published_at', '>', $this->published_at)
+            ->when($latest, fn (Builder $q) => $q->whereKeyNot($latest->getKey()))
+            ->oldest('published_at')
+            ->first();
+
+        $result = [];
+
+        if ($previous) {
+            $result['previous'] = $previous;
         }
 
-        return $html;
+        if ($next) {
+            $result['next'] = $next;
+        }
+
+        if ($latest) {
+            $result['latest'] = $latest;
+        }
+
+        return $result;
+    }
+
+    protected function injectBacaJugaBlocks(string $html): string
+    {
+        $posts = $this->bacaJugaPosts();
+
+        if ($posts === []) {
+            return $html;
+        }
+
+        $midPosts = collect($posts)->except('latest')->values();
+        $latest = $posts['latest'] ?? null;
+        $insertedIds = [];
+
+        $units = preg_split('/(?<=<\/p>)/i', $html, -1, PREG_SPLIT_NO_EMPTY) ?: [$html];
+        $n = count($units);
+        $insertAfter = [];
+
+        if ($midPosts->isNotEmpty() && $n >= 2) {
+            if ($midPosts->count() === 1) {
+                $positions = [max(0, (int) floor($n / 2) - 1)];
+            } else {
+                $positions = [
+                    max(0, (int) floor($n / 3) - 1),
+                    max(0, (int) floor((2 * $n) / 3) - 1),
+                ];
+            }
+
+            $positions = array_values(array_unique($positions));
+
+            foreach ($midPosts->values() as $i => $post) {
+                $after = $positions[$i] ?? ($n - 1);
+                while (isset($insertAfter[$after]) && $after < $n - 1) {
+                    $after++;
+                }
+                $insertAfter[$after] = view('components.baca-juga', ['post' => $post])->render();
+                $insertedIds[$post->getKey()] = true;
+            }
+        }
+
+        $out = '';
+        foreach ($units as $i => $unit) {
+            $out .= $unit;
+            if (isset($insertAfter[$i])) {
+                $out .= $insertAfter[$i];
+            }
+        }
+
+        // Konten pendek (< 2 paragraf): taruh mid sebelum blok terbaru di akhir.
+        foreach ($midPosts as $post) {
+            if (isset($insertedIds[$post->getKey()])) {
+                continue;
+            }
+            $out .= view('components.baca-juga', ['post' => $post])->render();
+        }
+
+        if ($latest) {
+            $out .= view('components.baca-juga', ['post' => $latest])->render();
+        }
+
+        return $out;
     }
 
     public function bestRelatedPost(): ?self
