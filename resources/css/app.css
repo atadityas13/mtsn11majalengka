@@ -1040,6 +1040,19 @@
         @apply font-bold text-white;
     }
 
+    .footer-contact-item {
+        @apply m-0 flex items-start gap-2.5 leading-relaxed;
+    }
+
+    .footer-contact-item > i {
+        @apply mt-0.5 shrink-0 text-base leading-none text-gold;
+    }
+
+    .footer-contact-item > span,
+    .footer-contact-item > a {
+        @apply min-w-0;
+    }
+
     .social-follow-btn {
         @apply inline-flex h-11 w-11 items-center justify-center rounded-none bg-transparent p-0 shadow-none transition;
     }

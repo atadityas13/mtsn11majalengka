@@ -32,6 +32,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root {
@@ -230,12 +231,38 @@
             </div>
             <div>
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-gold">Kontak</p>
-                <div class="mt-4 space-y-2 text-sm text-white/80">
-                    @if ($site->address)<p>{{ $site->address }}</p>@endif
-                    @if ($site->phone)<p>{{ $site->phone }}</p>@endif
-                    @if ($site->email)<p>{{ $site->email }}</p>@endif
+                <div class="footer-contact mt-4 space-y-3 text-sm text-white/80">
+                    @if ($site->address)
+                        <p class="footer-contact-item">
+                            <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                            @if ($maps = $site->mapsLink())
+                                <a href="{{ $maps }}" target="_blank" rel="noopener" class="hover:text-white hover:underline">{{ $site->address }}</a>
+                            @else
+                                <span>{{ $site->address }}</span>
+                            @endif
+                        </p>
+                    @endif
+                    @if ($site->phone)
+                        <p class="footer-contact-item">
+                            <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+                            @if ($tel = $site->phoneTelHref())
+                                <a href="{{ $tel }}" class="hover:text-white hover:underline">{{ $site->phone }}</a>
+                            @else
+                                <span>{{ $site->phone }}</span>
+                            @endif
+                        </p>
+                    @endif
+                    @if ($site->email)
+                        <p class="footer-contact-item">
+                            <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+                            <a href="mailto:{{ $site->email }}" class="hover:text-white hover:underline break-all">{{ $site->email }}</a>
+                        </p>
+                    @endif
                     @if ($site->whatsappLink())
-                        <a href="{{ $site->whatsappLink() }}" target="_blank" rel="noopener" class="inline-flex font-semibold text-gold hover:underline">Chat WhatsApp</a>
+                        <a href="{{ $site->whatsappLink() }}" target="_blank" rel="noopener" class="footer-contact-item font-semibold text-gold hover:underline">
+                            <i class="bi bi-whatsapp" aria-hidden="true"></i>
+                            <span>Chat WhatsApp</span>
+                        </a>
                     @endif
                 </div>
             </div>

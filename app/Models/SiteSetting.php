@@ -112,6 +112,54 @@ class SiteSetting extends Model
         return 'https://wa.me/'.$number.'?text='.urlencode($text);
     }
 
+    public function phoneTelHref(): ?string
+    {
+        if (blank($this->phone)) {
+            return null;
+        }
+
+        $digits = preg_replace('/[^\d+]/', '', (string) $this->phone);
+
+        return $digits !== '' ? 'tel:'.$digits : null;
+    }
+
+    /**
+     * Link buka Google Maps dari embed yang diisi admin, atau pencarian alamat.
+     */
+    public function mapsLink(): ?string
+    {
+        $embed = trim((string) $this->map_embed_url);
+
+        if ($embed !== '') {
+            if (preg_match('/[?&]q=([^&]+)/i', $embed, $matches)) {
+                return 'https://www.google.com/maps/search/?api=1&query='.$matches[1];
+            }
+
+            // Koordinat dari URL embed Google Maps (?pb=...!3dLAT!4dLNG / !2dLNG!3dLAT)
+            if (preg_match('/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/', $embed, $matches)) {
+                return 'https://www.google.com/maps/search/?api=1&query='.rawurlencode($matches[1].','.$matches[2]);
+            }
+
+            if (preg_match('/!2d(-?\d+\.\d+)!3d(-?\d+\.\d+)/', $embed, $matches)) {
+                return 'https://www.google.com/maps/search/?api=1&query='.rawurlencode($matches[2].','.$matches[1]);
+            }
+
+            if (preg_match('#https?://(?:www\.)?google\.[^/]+/maps/place/([^/\"\'?\s]+)#i', $embed, $matches)) {
+                return 'https://www.google.com/maps/search/?api=1&query='.$matches[1];
+            }
+
+            if (preg_match('#https?://maps\.app\.goo\.gl/[A-Za-z0-9]+#i', $embed, $matches)) {
+                return $matches[0];
+            }
+        }
+
+        if (filled($this->address)) {
+            return 'https://www.google.com/maps/search/?api=1&query='.rawurlencode($this->address);
+        }
+
+        return null;
+    }
+
     public function youtubeEmbedUrl(): ?string
     {
         if (blank($this->profile_video_url)) {
