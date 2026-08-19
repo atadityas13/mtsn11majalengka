@@ -1040,6 +1040,17 @@
         @apply font-bold text-white;
     }
 
+    .footer-contact-col {
+        overflow: visible;
+        position: relative;
+        z-index: 2;
+    }
+
+    .footer-social-col {
+        position: relative;
+        z-index: 1;
+    }
+
     .footer-contact-item {
         @apply m-0 flex items-start gap-2.5 leading-relaxed;
     }
@@ -1053,12 +1064,14 @@
         @apply min-w-0;
     }
 
-    .footer-contact-item--email > a {
-        white-space: nowrap;
+    /* Satu baris; boleh menabrak ke kolom Ikuti kami di kanan */
+    .footer-contact-item--email {
+        overflow: visible;
     }
 
-    .footer-contact-social {
-        overflow-x: auto;
+    .footer-contact-item--email > a {
+        min-width: max-content;
+        white-space: nowrap;
     }
 
     .social-follow-btn {
