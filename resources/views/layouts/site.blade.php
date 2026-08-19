@@ -257,6 +257,11 @@
                             <img src="{{ asset('images/social/youtube.png') }}" alt="YouTube" width="40" height="40" loading="lazy">
                         </a>
                     @endif
+                    @if ($site->tiktok_url)
+                        <a href="{{ $site->tiktok_url }}" target="_blank" rel="noopener" class="social-follow-btn" aria-label="TikTok">
+                            <img src="{{ asset('images/social/tiktok.svg') }}" alt="TikTok" width="40" height="40" loading="lazy">
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

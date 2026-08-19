@@ -212,6 +212,7 @@ class ManageSiteSettings extends Page
                                     TextInput::make('facebook_url')->label('Facebook'),
                                     TextInput::make('instagram_url')->label('Instagram'),
                                     TextInput::make('youtube_url')->label('YouTube channel'),
+                                    TextInput::make('tiktok_url')->label('TikTok'),
                                     TextInput::make('profile_video_url')
                                         ->label('Video profil (YouTube URL)')
                                         ->helperText('Tempel link YouTube — bisa diganti kapan saja')

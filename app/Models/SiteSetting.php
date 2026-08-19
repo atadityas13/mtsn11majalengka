@@ -45,6 +45,7 @@ class SiteSetting extends Model
         'facebook_url',
         'instagram_url',
         'youtube_url',
+        'tiktok_url',
         'profile_video_url',
         'footer_text',
         'userway_account_id',
