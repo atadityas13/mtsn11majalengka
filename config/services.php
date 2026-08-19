@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'youtube' => [
+        // Opsional: isi untuk ambil deskripsi + tanggal tayang asli dari YouTube Data API.
+        'key' => env('YOUTUBE_DATA_API_KEY'),
+    ],
+
 ];
