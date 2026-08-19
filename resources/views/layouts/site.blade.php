@@ -259,7 +259,16 @@
                     @endif
                     @if ($site->tiktok_url)
                         <a href="{{ $site->tiktok_url }}" target="_blank" rel="noopener" class="social-follow-btn" aria-label="TikTok">
-                            <img src="{{ asset('images/social/tiktok.png') }}" alt="TikTok" width="40" height="40" loading="lazy">
+                            <img
+                                src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/tiktok.png"
+                                alt="TikTok"
+                                width="40"
+                                height="40"
+                                loading="lazy"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                                onerror="this.onerror=null;this.src='{{ asset('images/social/tiktok.png') }}'"
+                            >
                         </a>
                     @endif
                 </div>
