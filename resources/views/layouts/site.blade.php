@@ -181,9 +181,22 @@
                 </div>
                 <p class="mt-4 font-display text-2xl font-extrabold">{{ $site->school_name }}</p>
                 <p class="mt-3 max-w-md text-sm leading-relaxed text-white/70">{{ $site->footer_text ?: $site->tagline }}</p>
-                <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-gold">
-                    Portal Madrasah · Kemenag RI
-                </p>
+                <div class="mt-5 flex flex-wrap items-center gap-2">
+                    @if (filled($site->npsn))
+                        <a
+                            href="https://referensi.data.kemendikdasmen.go.id/pendidikan/npsn/{{ urlencode($site->npsn) }}"
+                            target="_blank"
+                            rel="noopener"
+                            class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-gold transition hover:bg-white/15 hover:underline"
+                        >NPSN: {{ $site->npsn }}</a>
+                    @endif
+                    <a
+                        href="https://emis.kemenag.go.id/"
+                        target="_blank"
+                        rel="noopener"
+                        class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-gold transition hover:bg-white/15 hover:underline"
+                    >NSM{{ filled($site->nsm) ? ': '.$site->nsm : ':' }}</a>
+                </div>
             </div>
             @php
                 $stats = $siteVisitStats ?? [

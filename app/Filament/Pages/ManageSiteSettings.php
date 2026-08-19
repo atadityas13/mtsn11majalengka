@@ -75,6 +75,10 @@ class ManageSiteSettings extends Page
                                     TextInput::make('npsn')
                                         ->label('NPSN')
                                         ->maxLength(50),
+                                    TextInput::make('nsm')
+                                        ->label('NSM')
+                                        ->maxLength(50)
+                                        ->helperText('Nomor Statistik Madrasah. Link footer mengarah ke EMIS Kemenag.'),
                                     TextInput::make('accreditation_label')
                                         ->label('Label akreditasi')
                                         ->maxLength(100),
