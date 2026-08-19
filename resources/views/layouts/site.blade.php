@@ -241,7 +241,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-gold">Ikuti kami</p>
-                <div class="mt-4 flex flex-wrap gap-3">
+                <div class="social-follow-grid">
                     @if ($site->facebook_url)
                         <a href="{{ $site->facebook_url }}" target="_blank" rel="noopener" class="social-follow-btn" aria-label="Facebook">
                             <img src="{{ asset('images/social/facebook.png') }}" alt="Facebook" width="40" height="40" loading="lazy">
@@ -259,7 +259,7 @@
                     @endif
                     @if ($site->tiktok_url)
                         <a href="{{ $site->tiktok_url }}" target="_blank" rel="noopener" class="social-follow-btn" aria-label="TikTok">
-                            <img src="{{ asset('images/social/tiktok.svg') }}" alt="TikTok" width="40" height="40" loading="lazy">
+                            <img src="{{ asset('images/social/tiktok.png') }}" alt="TikTok" width="40" height="40" loading="lazy">
                         </a>
                     @endif
                 </div>

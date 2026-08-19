@@ -1041,19 +1041,26 @@
     }
 
     .social-follow-btn {
-        @apply inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm transition;
+        @apply inline-flex h-11 w-11 items-center justify-center rounded-none bg-transparent p-0 shadow-none transition;
     }
 
     .social-follow-btn img {
         display: block;
-        width: 2.15rem;
-        height: 2.15rem;
+        width: 2.5rem;
+        height: 2.5rem;
         object-fit: contain;
     }
 
     .social-follow-btn:hover {
-        transform: translateY(-2px) scale(1.04);
-        box-shadow: 0 10px 22px rgb(0 0 0 / 0.22);
+        transform: translateY(-2px) scale(1.06);
+        box-shadow: none;
+        filter: brightness(1.08);
+    }
+
+    .social-follow-grid {
+        @apply mt-4 grid grid-cols-2 gap-3;
+        width: max-content;
+        max-width: 100%;
     }
 
     .layanan-apps {
