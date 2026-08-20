@@ -45,29 +45,35 @@
         x-show="guiding"
         x-transition.opacity.duration.200ms
         class="push-guide"
+        :class="guideBottom ? 'push-guide--bottom' : 'push-guide--top'"
         role="dialog"
         aria-modal="true"
         aria-label="Petunjuk izinkan notifikasi"
     >
         <div class="push-guide-blur" aria-hidden="true"></div>
 
-        <div class="push-guide-beam" aria-hidden="true"></div>
-
-        <div class="push-guide-hint">
-            <div class="push-guide-arrow" aria-hidden="true">
-                <span class="push-guide-arrow-line"></span>
-                <span class="push-guide-arrow-head">
-                    <i class="bi bi-caret-up-fill"></i>
-                </span>
+        <div class="push-guide-spot">
+            {{-- Desktop: panah ke atas menuju dialog kiri-atas --}}
+            <div class="push-guide-arrow push-guide-arrow--up" x-show="! guideBottom" aria-hidden="true">
+                <i class="bi bi-caret-up-fill"></i>
+                <span class="push-guide-arrow-shaft"></span>
             </div>
-            <p class="push-guide-title">Satu langkah lagi</p>
-            <p class="push-guide-text">
-                Lihat ke <strong>atas browser</strong>, lalu klik
-                <span class="push-guide-pill">Izinkan</span>
-                atau
-                <span class="push-guide-pill">Allow</span>
-            </p>
-            <p class="push-guide-note">Halaman diredupkan sementara sampai Anda memilih.</p>
+
+            <div class="push-guide-hint">
+                <p class="push-guide-title">Satu langkah lagi</p>
+                <p class="push-guide-text">
+                    Klik
+                    <span class="push-guide-pill">Izinkan</span>
+                    /
+                    <span class="push-guide-pill">Allow</span>
+                </p>
+            </div>
+
+            {{-- Mobile: panah ke bawah menuju dialog bawah --}}
+            <div class="push-guide-arrow push-guide-arrow--down" x-show="guideBottom" x-cloak aria-hidden="true">
+                <span class="push-guide-arrow-shaft"></span>
+                <i class="bi bi-caret-down-fill"></i>
+            </div>
         </div>
     </div>
 </div>

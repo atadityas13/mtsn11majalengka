@@ -4,6 +4,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('pushPrompt', (config = {}) => ({
         visible: false,
         guiding: false,
+        guideBottom: false,
         busy: false,
         error: '',
         publicKey: null,
@@ -12,6 +13,14 @@ document.addEventListener('alpine:init', () => {
         subscribeUrl: config.subscribeUrl,
         unsubscribeUrl: config.unsubscribeUrl,
         csrf: config.csrf || document.querySelector('meta[name="csrf-token"]')?.content || '',
+
+        detectGuidePlacement() {
+            // Di Chrome mobile, dialog izin biasanya di bawah; di desktop di atas (dekat address bar).
+            const coarse = window.matchMedia('(pointer: coarse)').matches;
+            const narrow = window.matchMedia('(max-width: 768px)').matches;
+            const mobileUa = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+            this.guideBottom = coarse || narrow || mobileUa;
+        },
 
         async init() {
             if (! ('Notification' in window) || ! ('serviceWorker' in navigator) || ! ('PushManager' in window)) {
@@ -84,6 +93,7 @@ document.addEventListener('alpine:init', () => {
 
                 // Jika belum pernah diminta, tampilkan petunjuk + blur sambil dialog browser muncul.
                 if (Notification.permission === 'default') {
+                    this.detectGuidePlacement();
                     this.guiding = true;
                     this.lockPage();
                     // Biarkan overlay sempat tampil sebelum dialog sistem.

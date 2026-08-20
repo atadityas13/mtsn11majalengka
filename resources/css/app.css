@@ -865,61 +865,77 @@
     }
 
     .push-guide {
-        @apply fixed inset-0 z-[80] flex flex-col items-center;
+        @apply fixed inset-0 z-[80];
         pointer-events: none;
     }
 
     .push-guide-blur {
-        @apply absolute inset-0 bg-ink/55 backdrop-blur-[3px];
-        animation: push-guide-fade 0.35s ease both;
+        @apply absolute inset-0 bg-ink/50 backdrop-blur-[2px];
+        animation: push-guide-fade 0.3s ease both;
     }
 
-    .push-guide-beam {
-        position: absolute;
-        top: 0;
-        left: 12%;
-        width: min(320px, 70vw);
-        height: 140px;
-        background: radial-gradient(ellipse at top, rgb(255 255 255 / 0.35), transparent 70%);
-        animation: push-guide-pulse 1.4s ease-in-out infinite;
-        pointer-events: none;
+    /* Titik fokusatan petunjuk (desktop = dekat dialog kiri-atas, mobile = dekat dialog bawah) */
+    .push-guide-spot {
+        @apply absolute z-[1] flex w-[min(17rem,calc(100%-1.25rem))] flex-col items-center;
+    }
+
+    .push-guide--top .push-guide-spot {
+        /* Di bawah area dialog Chrome (kiri-atas), panah mengarah ke dialog */
+        top: 6.5rem;
+        left: 0.85rem;
+        align-items: flex-start;
+    }
+
+    .push-guide--bottom .push-guide-spot {
+        /* Di atas sheet Izinkan Chrome Android */
+        left: 50%;
+        bottom: 8.25rem;
+        transform: translateX(-50%);
+        align-items: center;
     }
 
     .push-guide-hint {
-        @apply relative z-[1] mt-24 w-[min(22rem,calc(100%-1.5rem))] rounded-2xl border border-white/25 bg-white px-5 py-4 text-center shadow-[0_18px_50px_rgb(0_0_0_/_0.28)];
-        animation: push-guide-float 1.6s ease-in-out infinite;
-        pointer-events: none;
+        @apply w-full rounded-2xl border border-white/30 bg-white px-4 py-3 text-center shadow-[0_14px_40px_rgb(0_0_0_/_0.28)];
+    }
+
+    .push-guide--top .push-guide-hint {
+        text-align: left;
     }
 
     .push-guide-arrow {
-        @apply mx-auto mb-2 flex flex-col items-center text-kemenag;
+        @apply flex flex-col items-center text-kemenag;
+        filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.35));
     }
 
-    .push-guide-arrow-line {
-        @apply mb-0.5 block h-10 w-1 rounded-full bg-kemenag;
-        animation: push-guide-bounce 1s ease-in-out infinite;
-        transform-origin: bottom center;
+    .push-guide-arrow i {
+        @apply text-4xl leading-none;
     }
 
-    .push-guide-arrow-head {
-        @apply -mt-2 text-3xl leading-none;
-        animation: push-guide-bounce 1s ease-in-out infinite;
+    .push-guide-arrow-shaft {
+        @apply block w-1.5 rounded-full bg-kemenag;
+        height: 2.75rem;
+    }
+
+    .push-guide-arrow--up {
+        @apply mb-1 ml-10;
+        animation: push-guide-bounce-up 0.95s ease-in-out infinite;
+    }
+
+    .push-guide-arrow--down {
+        @apply mt-2;
+        animation: push-guide-bounce-down 0.95s ease-in-out infinite;
     }
 
     .push-guide-title {
-        @apply font-display text-lg font-bold text-ink;
+        @apply font-display text-base font-bold text-ink;
     }
 
     .push-guide-text {
-        @apply mt-1 text-sm leading-relaxed text-muted;
+        @apply mt-1 text-sm leading-snug text-muted;
     }
 
     .push-guide-pill {
         @apply inline-flex items-center rounded-md bg-kemenag-soft px-1.5 py-0.5 text-xs font-bold text-kemenag-deep;
-    }
-
-    .push-guide-note {
-        @apply mt-2 text-[11px] text-muted/80;
     }
 
     @keyframes push-guide-fade {
@@ -927,29 +943,19 @@
         to { opacity: 1; }
     }
 
-    @keyframes push-guide-bounce {
+    @keyframes push-guide-bounce-up {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+        50% { transform: translateY(-8px); }
     }
 
-    @keyframes push-guide-float {
+    @keyframes push-guide-bounce-down {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(6px); }
+        50% { transform: translateY(8px); }
     }
 
-    @keyframes push-guide-pulse {
-        0%, 100% { opacity: 0.55; }
-        50% { opacity: 1; }
-    }
-
-    @media (max-width: 640px) {
-        .push-guide-beam {
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .push-guide-hint {
-            @apply mt-16;
+    @media (max-width: 420px) {
+        .push-guide--bottom .push-guide-spot {
+            bottom: 7.5rem;
         }
     }
 
