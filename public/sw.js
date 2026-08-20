@@ -1,16 +1,46 @@
-/* Self-cleanup: hapus cache lama lalu unregister service worker. */
-self.addEventListener('install', (event) => {
-    self.skipWaiting();
+/* global self, clients */
+self.addEventListener('push', (event) => {
+    let data = {
+        title: 'MTsN 11 Majalengka',
+        body: 'Ada informasi baru di website.',
+        url: '/',
+        icon: '/favicon.ico',
+    };
+
+    try {
+        if (event.data) {
+            data = { ...data, ...event.data.json() };
+        }
+    } catch (e) {
+        // ignore malformed payload
+    }
+
+    event.waitUntil(
+        self.registration.showNotification(data.title || 'Notifikasi', {
+            body: data.body || '',
+            icon: data.icon || '/favicon.ico',
+            badge: data.icon || '/favicon.ico',
+            data: { url: data.url || '/' },
+            vibrate: [120, 60, 120],
+        })
+    );
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const target = (event.notification.data && event.notification.data.url) || '/';
+
     event.waitUntil(
-        (async () => {
-            const keys = await caches.keys();
-            await Promise.all(keys.map((key) => caches.delete(key)));
-            await self.registration.unregister();
-            const clients = await self.clients.matchAll({ type: 'window' });
-            clients.forEach((client) => client.navigate(client.url));
-        })()
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if ('focus' in client) {
+                    client.navigate(target);
+                    return client.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow(target);
+            }
+        })
     );
 });

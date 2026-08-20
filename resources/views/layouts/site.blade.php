@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', $site->school_name)</title>
     <meta name="description" content="@yield('description', $site->tagline)">
     <meta name="theme-color" content="{{ $site->primary_color ?: '#0a7a3e' }}">
@@ -305,6 +306,7 @@
     </footer>
 
     @include('site.partials.mascot')
+    @include('site.partials.push-prompt')
 
     @if ($wa = $site->whatsappLink())
         <a href="{{ $wa }}" target="_blank" rel="noopener" class="wa-float no-print" aria-label="Chat WhatsApp">
@@ -327,17 +329,5 @@
         </noscript>
     @endif
 
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.getRegistrations().then((registrations) => {
-                    registrations.forEach((registration) => registration.unregister());
-                });
-                if (window.caches) {
-                    caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
-                }
-            });
-        }
-    </script>
 </body>
 </html>

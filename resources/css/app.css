@@ -819,6 +819,46 @@
         animation: float-soft 5s ease-in-out infinite;
     }
 
+    .push-prompt {
+        @apply fixed inset-x-0 bottom-0 z-[60] p-3 sm:p-4 pointer-events-none;
+    }
+
+    .push-prompt-card {
+        @apply pointer-events-auto mx-auto flex max-w-xl flex-col gap-3 rounded-2xl border border-kemenag/15 bg-white/95 p-4 shadow-[0_12px_40px_rgb(20_32_26_/_0.18)] backdrop-blur-md sm:flex-row sm:items-center;
+    }
+
+    .push-prompt-icon {
+        @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-kemenag text-lg text-white;
+    }
+
+    .push-prompt-title {
+        @apply font-display text-base font-bold text-ink;
+    }
+
+    .push-prompt-text {
+        @apply mt-0.5 text-sm leading-snug text-muted;
+    }
+
+    .push-prompt-error {
+        @apply mt-1 text-xs text-red-600;
+    }
+
+    .push-prompt-actions {
+        @apply flex shrink-0 flex-row gap-2 sm:flex-col;
+    }
+
+    .push-prompt-btn {
+        @apply inline-flex items-center justify-center rounded-xl px-3.5 py-2 text-sm font-semibold transition;
+    }
+
+    .push-prompt-btn--primary {
+        @apply bg-kemenag text-white hover:bg-kemenag-deep disabled:opacity-60;
+    }
+
+    .push-prompt-btn--ghost {
+        @apply border border-kemenag/15 bg-white text-ink/80 hover:bg-kemenag-soft disabled:opacity-60;
+    }
+
     .wa-float:hover {
         transform: translateY(-3px) scale(1.04);
         filter: brightness(1.05);

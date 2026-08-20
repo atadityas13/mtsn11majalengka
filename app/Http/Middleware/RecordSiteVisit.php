@@ -17,7 +17,16 @@ class RecordSiteVisit
             return $response;
         }
 
-        if ($request->is('admin', 'admin/*', 'livewire/*', 'up', 'manifest.webmanifest')) {
+        if ($request->is(
+            'admin',
+            'admin/*',
+            'livewire/*',
+            'up',
+            'manifest.webmanifest',
+            'sitemap.xml',
+            'sw.js',
+            'push/*',
+        )) {
             return $response;
         }
 

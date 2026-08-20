@@ -92,21 +92,6 @@ class AdminPanelProvider extends PanelProvider
                     'variant' => 'admin',
                     'schoolName' => SiteSetting::current()->school_name,
                 ]),
-            )
-            ->renderHook(
-                PanelsRenderHook::BODY_END,
-                fn (): string => <<<'HTML'
-                    <script>
-                        if ('serviceWorker' in navigator) {
-                            navigator.serviceWorker.getRegistrations().then((registrations) => {
-                                registrations.forEach((registration) => registration.unregister());
-                            });
-                            if (window.caches) {
-                                caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
-                            }
-                        }
-                    </script>
-                    HTML
             );
     }
 }

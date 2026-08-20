@@ -14,6 +14,7 @@ class Announcement extends Model
         'published_on',
         'is_pinned',
         'is_published',
+        'push_sent_at',
     ];
 
     protected function casts(): array
@@ -22,6 +23,7 @@ class Announcement extends Model
             'published_on' => 'date',
             'is_pinned' => 'boolean',
             'is_published' => 'boolean',
+            'push_sent_at' => 'datetime',
         ];
     }
 

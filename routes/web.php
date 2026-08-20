@@ -1,10 +1,15 @@
 <?php
 
+use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+
+Route::get('/push/config', [PushSubscriptionController::class, 'config'])->name('push.config');
+Route::post('/push/subscribe', [PushSubscriptionController::class, 'store'])->name('push.subscribe');
+Route::post('/push/unsubscribe', [PushSubscriptionController::class, 'destroy'])->name('push.unsubscribe');
 
 Route::get('/', [SiteController::class, 'home'])->name('home');
 Route::get('/berita', [SiteController::class, 'posts'])->name('posts.index');

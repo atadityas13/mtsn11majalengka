@@ -1,6 +1,130 @@
 import Alpine from 'alpinejs';
 
 document.addEventListener('alpine:init', () => {
+    Alpine.data('pushPrompt', (config = {}) => ({
+        visible: false,
+        busy: false,
+        error: '',
+        publicKey: null,
+        registration: null,
+        configUrl: config.configUrl,
+        subscribeUrl: config.subscribeUrl,
+        unsubscribeUrl: config.unsubscribeUrl,
+        csrf: config.csrf || document.querySelector('meta[name="csrf-token"]')?.content || '',
+
+        async init() {
+            if (! ('Notification' in window) || ! ('serviceWorker' in navigator) || ! ('PushManager' in window)) {
+                return;
+            }
+
+            if (sessionStorage.getItem('push_prompt_dismissed') === '1') {
+                return;
+            }
+
+            if (Notification.permission === 'denied') {
+                return;
+            }
+
+            try {
+                const res = await fetch(this.configUrl, { headers: { Accept: 'application/json' } });
+                const data = await res.json();
+                if (! data.enabled || ! data.publicKey) {
+                    return;
+                }
+                this.publicKey = data.publicKey;
+            } catch (e) {
+                return;
+            }
+
+            this.registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+            await navigator.serviceWorker.ready;
+
+            const existing = await this.registration.pushManager.getSubscription();
+            if (existing) {
+                // Pastikan server punya subscription (mis. setelah ganti device DB).
+                try {
+                    await this.persistSubscription(existing);
+                } catch (e) {
+                    // ignore
+                }
+                return;
+            }
+
+            // Tawarkan setiap kunjungan baru (session), sedikit ditunda supaya tidak mengganggu load.
+            setTimeout(() => {
+                this.visible = true;
+            }, 1800);
+        },
+
+        dismiss() {
+            this.visible = false;
+            sessionStorage.setItem('push_prompt_dismissed', '1');
+        },
+
+        async subscribe() {
+            this.busy = true;
+            this.error = '';
+
+            try {
+                if (! this.registration) {
+                    this.registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+                    await navigator.serviceWorker.ready;
+                }
+
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                    this.error = permission === 'denied'
+                        ? 'Izin notifikasi diblokir di browser. Aktifkan lewat pengaturan situs.'
+                        : 'Izin notifikasi belum diberikan.';
+                    this.busy = false;
+                    return;
+                }
+
+                const subscription = await this.registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: this.urlBase64ToUint8Array(this.publicKey),
+                });
+
+                await this.persistSubscription(subscription);
+                this.visible = false;
+                sessionStorage.setItem('push_prompt_dismissed', '1');
+            } catch (e) {
+                this.error = 'Gagal mengaktifkan notifikasi. Coba refresh halaman.';
+            } finally {
+                this.busy = false;
+            }
+        },
+
+        async persistSubscription(subscription) {
+            const payload = subscription.toJSON();
+            const res = await fetch(this.subscribeUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': this.csrf,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (! res.ok) {
+                throw new Error('subscribe failed');
+            }
+        },
+
+        urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const raw = window.atob(base64);
+            const output = new Uint8Array(raw.length);
+            for (let i = 0; i < raw.length; i++) {
+                output[i] = raw.charCodeAt(i);
+            }
+            return output;
+        },
+    }));
+
     Alpine.directive('reveal', (el, { expression }, { cleanup }) => {
         el.classList.add(expression || 'reveal');
 

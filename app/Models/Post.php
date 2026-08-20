@@ -24,6 +24,7 @@ class Post extends Model
         'published_at',
         'is_published',
         'views_count',
+        'push_sent_at',
     ];
 
     protected function casts(): array
@@ -32,6 +33,7 @@ class Post extends Model
             'published_at' => 'datetime',
             'is_published' => 'boolean',
             'views_count' => 'integer',
+            'push_sent_at' => 'datetime',
         ];
     }
 

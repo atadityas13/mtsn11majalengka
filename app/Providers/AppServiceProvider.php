@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Announcement;
 use App\Models\MenuItem;
+use App\Models\Post;
 use App\Models\ServiceLink;
 use App\Models\SiteSetting;
 use App\Models\SiteVisit;
+use App\Observers\ContentPushObserver;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
         config([
             'livewire.temporary_file_upload.max_upload_time' => 180,
         ]);
+
+        Post::observe(ContentPushObserver::class);
+        Announcement::observe(ContentPushObserver::class);
 
         View::composer(['layouts.site', 'site.*'], function ($view): void {
             $view->with('site', SiteSetting::current());
