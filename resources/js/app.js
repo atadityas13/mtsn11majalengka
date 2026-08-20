@@ -15,11 +15,9 @@ document.addEventListener('alpine:init', () => {
         csrf: config.csrf || document.querySelector('meta[name="csrf-token"]')?.content || '',
 
         detectGuidePlacement() {
-            // Di Chrome mobile, dialog izin biasanya di bawah; di desktop di atas (dekat address bar).
-            const coarse = window.matchMedia('(pointer: coarse)').matches;
-            const narrow = window.matchMedia('(max-width: 768px)').matches;
-            const mobileUa = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
-            this.guideBottom = coarse || narrow || mobileUa;
+            // Chrome desktop & Android modern: dialog izin di atas (dekat address bar).
+            // Arahkan panah ke atas di semua perangkat.
+            this.guideBottom = false;
         },
 
         async init() {

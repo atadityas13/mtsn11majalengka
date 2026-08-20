@@ -820,7 +820,15 @@
     }
 
     .push-prompt {
-        @apply fixed inset-x-0 bottom-0 z-[60] p-3 sm:p-4 pointer-events-none;
+        @apply fixed inset-x-0 z-[60] p-3 sm:p-4 pointer-events-none;
+        /* Naikkan di mobile supaya tidak tertutup tombol aksesibilitas / WA */
+        bottom: 4.75rem;
+    }
+
+    @media (min-width: 640px) {
+        .push-prompt {
+            bottom: 1rem;
+        }
     }
 
     .push-prompt-card {
@@ -880,18 +888,36 @@
     }
 
     .push-guide--top .push-guide-spot {
-        /* Di bawah area dialog Chrome (kiri-atas), panah mengarah ke dialog */
-        top: 6.5rem;
-        left: 0.85rem;
+        /* Di bawah dialog izin, panah mengarah ke atas ke dialog */
+        top: 7.25rem;
+        left: 0.75rem;
         align-items: flex-start;
     }
 
     .push-guide--bottom .push-guide-spot {
-        /* Di atas sheet Izinkan Chrome Android */
         left: 50%;
         bottom: 8.25rem;
         transform: translateX(-50%);
         align-items: center;
+    }
+
+    @media (max-width: 640px) {
+        .push-guide--top .push-guide-spot {
+            top: 7.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            align-items: center;
+            width: min(18rem, calc(100% - 1.25rem));
+        }
+
+        .push-guide--top .push-guide-hint {
+            text-align: center;
+        }
+
+        .push-guide--top .push-guide-arrow--up {
+            margin-left: 0;
+            align-self: center;
+        }
     }
 
     .push-guide-hint {
