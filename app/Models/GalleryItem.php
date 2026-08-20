@@ -13,6 +13,7 @@ class GalleryItem extends Model
         'caption',
         'sort_order',
         'is_published',
+        'push_sent_at',
     ];
 
     protected function casts(): array
@@ -20,6 +21,7 @@ class GalleryItem extends Model
         return [
             'sort_order' => 'integer',
             'is_published' => 'boolean',
+            'push_sent_at' => 'datetime',
         ];
     }
 

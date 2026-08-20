@@ -14,6 +14,7 @@ class Download extends Model
         'category',
         'download_count',
         'is_published',
+        'push_sent_at',
     ];
 
     protected function casts(): array
@@ -21,6 +22,7 @@ class Download extends Model
         return [
             'download_count' => 'integer',
             'is_published' => 'boolean',
+            'push_sent_at' => 'datetime',
         ];
     }
 

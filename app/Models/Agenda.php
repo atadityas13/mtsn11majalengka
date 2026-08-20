@@ -14,6 +14,7 @@ class Agenda extends Model
         'starts_at',
         'ends_at',
         'is_published',
+        'push_sent_at',
     ];
 
     protected function casts(): array
@@ -22,6 +23,7 @@ class Agenda extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'is_published' => 'boolean',
+            'push_sent_at' => 'datetime',
         ];
     }
 

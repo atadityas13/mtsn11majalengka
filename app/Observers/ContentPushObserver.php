@@ -2,9 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Announcement;
-use App\Models\Post;
 use App\Services\WebPushService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 class ContentPushObserver
@@ -13,9 +12,13 @@ class ContentPushObserver
     {
     }
 
-    public function saved(Post|Announcement $model): void
+    public function saved(Model $model): void
     {
         if (! $this->webPush->isConfigured()) {
+            return;
+        }
+
+        if (! in_array($model::class, WebPushService::notifiableModels(), true)) {
             return;
         }
 
@@ -27,13 +30,7 @@ class ContentPushObserver
                     return;
                 }
 
-                if ($fresh instanceof Post) {
-                    app(WebPushService::class)->notifyPost($fresh);
-                }
-
-                if ($fresh instanceof Announcement) {
-                    app(WebPushService::class)->notifyAnnouncement($fresh);
-                }
+                app(WebPushService::class)->notifyModel($fresh);
             })->afterResponse();
         } catch (\Throwable $e) {
             Log::warning('webpush.dispatch_failed', ['message' => $e->getMessage()]);

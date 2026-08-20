@@ -18,6 +18,7 @@ class Video extends Model
         'sort_order',
         'is_published',
         'published_at',
+        'push_sent_at',
     ];
 
     protected function casts(): array
@@ -26,6 +27,7 @@ class Video extends Model
             'sort_order' => 'integer',
             'is_published' => 'boolean',
             'published_at' => 'datetime',
+            'push_sent_at' => 'datetime',
         ];
     }
 

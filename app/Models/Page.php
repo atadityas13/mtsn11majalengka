@@ -16,12 +16,14 @@ class Page extends Model
         'body',
         'hero_image',
         'is_published',
+        'push_sent_at',
     ];
 
     protected function casts(): array
     {
         return [
             'is_published' => 'boolean',
+            'push_sent_at' => 'datetime',
         ];
     }
 

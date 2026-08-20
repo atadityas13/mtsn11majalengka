@@ -15,6 +15,7 @@ class StaffMember extends Model
         'phone',
         'sort_order',
         'is_published',
+        'push_sent_at',
     ];
 
     protected function casts(): array
@@ -22,6 +23,7 @@ class StaffMember extends Model
         return [
             'sort_order' => 'integer',
             'is_published' => 'boolean',
+            'push_sent_at' => 'datetime',
         ];
     }
 

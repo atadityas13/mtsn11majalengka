@@ -12,8 +12,10 @@ use App\Models\Announcement;
 use App\Models\Comment;
 use App\Models\ContactMessage;
 use App\Models\Post;
+use App\Models\PushSubscription;
 use App\Models\SiteVisit;
 use App\Models\User;
+use App\Services\WebPushService;
 use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -98,6 +100,12 @@ class SiteStatsOverview extends StatsOverviewWidget
                 ->descriptionIcon(Heroicon::OutlinedMegaphone)
                 ->color('success')
                 ->url(AnnouncementResource::getUrl('index')),
+            Stat::make('Subscriber notifikasi', number_format($this->subscriberCount()))
+                ->description(app(WebPushService::class)->isConfigured()
+                    ? 'Browser yang mengikuti kabar situs'
+                    : 'VAPID belum dikonfigurasi di .env')
+                ->descriptionIcon(Heroicon::OutlinedBellAlert)
+                ->color('warning'),
         ];
 
         $user = Auth::user();
@@ -110,5 +118,14 @@ class SiteStatsOverview extends StatsOverviewWidget
         }
 
         return $stats;
+    }
+
+    protected function subscriberCount(): int
+    {
+        try {
+            return PushSubscription::query()->count();
+        } catch (\Throwable) {
+            return 0;
+        }
     }
 }

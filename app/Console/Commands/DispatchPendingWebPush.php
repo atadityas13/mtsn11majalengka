@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Announcement;
-use App\Models\Post;
 use App\Services\WebPushService;
 use Illuminate\Console\Command;
 
@@ -11,7 +9,7 @@ class DispatchPendingWebPush extends Command
 {
     protected $signature = 'webpush:dispatch-pending';
 
-    protected $description = 'Kirim push untuk berita/pengumuman yang sudah tayang tapi belum dinotifikasi';
+    protected $description = 'Kirim push untuk konten yang sudah tayang tapi belum dinotifikasi';
 
     public function handle(WebPushService $webPush): int
     {
@@ -21,29 +19,22 @@ class DispatchPendingWebPush extends Command
             return self::SUCCESS;
         }
 
-        $posts = Post::query()
-            ->published()
-            ->whereNull('push_sent_at')
-            ->orderBy('id')
-            ->get();
+        $total = 0;
 
-        foreach ($posts as $post) {
-            $webPush->notifyPost($post);
-            $this->line('Post #'.$post->id);
+        foreach (WebPushService::notifiableModels() as $class) {
+            $items = $class::query()
+                ->whereNull('push_sent_at')
+                ->orderBy('id')
+                ->get();
+
+            foreach ($items as $item) {
+                $webPush->notifyModel($item);
+                $total++;
+                $this->line(class_basename($class).' #'.$item->getKey());
+            }
         }
 
-        $announcements = Announcement::query()
-            ->published()
-            ->whereNull('push_sent_at')
-            ->orderBy('id')
-            ->get();
-
-        foreach ($announcements as $announcement) {
-            $webPush->notifyAnnouncement($announcement);
-            $this->line('Announcement #'.$announcement->id);
-        }
-
-        $this->info('Selesai: '.$posts->count().' berita, '.$announcements->count().' pengumuman.');
+        $this->info('Selesai memproses '.$total.' item.');
 
         return self::SUCCESS;
     }

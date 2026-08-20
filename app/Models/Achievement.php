@@ -16,6 +16,7 @@ class Achievement extends Model
         'description',
         'sort_order',
         'is_published',
+        'push_sent_at',
     ];
 
     protected function casts(): array
@@ -24,6 +25,7 @@ class Achievement extends Model
             'achieved_on' => 'date',
             'sort_order' => 'integer',
             'is_published' => 'boolean',
+            'push_sent_at' => 'datetime',
         ];
     }
 

@@ -5,6 +5,7 @@ self.addEventListener('push', (event) => {
         body: 'Ada informasi baru di website.',
         url: '/',
         icon: '/favicon.ico',
+        image: null,
     };
 
     try {
@@ -15,14 +16,21 @@ self.addEventListener('push', (event) => {
         // ignore malformed payload
     }
 
+    const options = {
+        body: data.body || '',
+        icon: data.icon || '/favicon.ico',
+        badge: '/favicon.ico',
+        data: { url: data.url || '/' },
+        vibrate: [120, 60, 120],
+    };
+
+    // Gambar besar (cover berita/galeri) — didukung Chrome/Android; diabaikan browser lain.
+    if (data.image) {
+        options.image = data.image;
+    }
+
     event.waitUntil(
-        self.registration.showNotification(data.title || 'Notifikasi', {
-            body: data.body || '',
-            icon: data.icon || '/favicon.ico',
-            badge: data.icon || '/favicon.ico',
-            data: { url: data.url || '/' },
-            vibrate: [120, 60, 120],
-        })
+        self.registration.showNotification(data.title || 'Notifikasi', options)
     );
 });
 
