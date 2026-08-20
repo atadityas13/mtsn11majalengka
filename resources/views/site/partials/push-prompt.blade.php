@@ -53,8 +53,8 @@
         <div class="push-guide-blur" aria-hidden="true"></div>
 
         <div class="push-guide-spot">
-            {{-- Desktop: panah ke atas menuju dialog kiri-atas --}}
-            <div class="push-guide-arrow push-guide-arrow--up" x-show="! guideBottom" aria-hidden="true">
+            {{-- Panah selalu ke atas (dialog browser di atas) --}}
+            <div class="push-guide-arrow push-guide-arrow--up" aria-hidden="true">
                 <i class="bi bi-caret-up-fill"></i>
                 <span class="push-guide-arrow-shaft"></span>
             </div>
@@ -67,12 +67,6 @@
                     /
                     <span class="push-guide-pill">Allow</span>
                 </p>
-            </div>
-
-            {{-- Mobile: panah ke bawah menuju dialog bawah --}}
-            <div class="push-guide-arrow push-guide-arrow--down" x-show="guideBottom" x-cloak aria-hidden="true">
-                <span class="push-guide-arrow-shaft"></span>
-                <i class="bi bi-caret-down-fill"></i>
             </div>
         </div>
     </div>

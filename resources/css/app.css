@@ -882,42 +882,24 @@
         animation: push-guide-fade 0.3s ease both;
     }
 
-    /* Titik fokusatan petunjuk (desktop = dekat dialog kiri-atas, mobile = dekat dialog bawah) */
+    /* Titik penempatan petunjuk */
     .push-guide-spot {
         @apply absolute z-[1] flex w-[min(17rem,calc(100%-1.25rem))] flex-col items-center;
     }
 
+    /* Desktop: sedikit ke kanan & ke bawah agar panah mengarah ke dialog Allow */
     .push-guide--top .push-guide-spot {
-        /* Di bawah dialog izin, panah mengarah ke atas ke dialog */
-        top: 7.25rem;
-        left: 0.75rem;
+        top: 8.75rem;
+        left: 3.25rem;
         align-items: flex-start;
     }
 
+    /* Mobile: kartu di bawah, panah di atas kartu mengarah ke dialog atas */
     .push-guide--bottom .push-guide-spot {
         left: 50%;
-        bottom: 8.25rem;
+        bottom: 5.5rem;
         transform: translateX(-50%);
         align-items: center;
-    }
-
-    @media (max-width: 640px) {
-        .push-guide--top .push-guide-spot {
-            top: 7.75rem;
-            left: 50%;
-            transform: translateX(-50%);
-            align-items: center;
-            width: min(18rem, calc(100% - 1.25rem));
-        }
-
-        .push-guide--top .push-guide-hint {
-            text-align: center;
-        }
-
-        .push-guide--top .push-guide-arrow--up {
-            margin-left: 0;
-            align-self: center;
-        }
     }
 
     .push-guide-hint {
@@ -943,13 +925,21 @@
     }
 
     .push-guide-arrow--up {
-        @apply mb-1 ml-10;
+        @apply mb-1;
         animation: push-guide-bounce-up 0.95s ease-in-out infinite;
     }
 
-    .push-guide-arrow--down {
-        @apply mt-2;
-        animation: push-guide-bounce-down 0.95s ease-in-out infinite;
+    .push-guide--top .push-guide-arrow--up {
+        margin-left: 2.75rem;
+    }
+
+    .push-guide--bottom .push-guide-arrow--up {
+        margin-left: 0;
+        align-self: center;
+    }
+
+    .push-guide--bottom .push-guide-arrow-shaft {
+        height: 3.25rem;
     }
 
     .push-guide-title {
@@ -974,17 +964,11 @@
         50% { transform: translateY(-8px); }
     }
 
-    @keyframes push-guide-bounce-down {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(8px); }
-    }
-
     @media (max-width: 420px) {
         .push-guide--bottom .push-guide-spot {
-            bottom: 7.5rem;
+            bottom: 5rem;
         }
     }
-
     .wa-float:hover {
         transform: translateY(-3px) scale(1.04);
         filter: brightness(1.05);

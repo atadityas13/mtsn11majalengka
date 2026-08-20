@@ -15,9 +15,11 @@ document.addEventListener('alpine:init', () => {
         csrf: config.csrf || document.querySelector('meta[name="csrf-token"]')?.content || '',
 
         detectGuidePlacement() {
-            // Chrome desktop & Android modern: dialog izin di atas (dekat address bar).
-            // Arahkan panah ke atas di semua perangkat.
-            this.guideBottom = false;
+            // Desktop: petunjuk dekat dialog kiri-atas.
+            // Mobile: kartu di bawah (aman dari FAB), panah tetap ke atas menuju dialog.
+            const narrow = window.matchMedia('(max-width: 768px)').matches;
+            const mobileUa = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+            this.guideBottom = narrow || mobileUa;
         },
 
         async init() {
