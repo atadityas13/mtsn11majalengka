@@ -859,6 +859,100 @@
         @apply border border-kemenag/15 bg-white text-ink/80 hover:bg-kemenag-soft disabled:opacity-60;
     }
 
+    html.push-guide-active,
+    body.push-guide-active {
+        overflow: hidden;
+    }
+
+    .push-guide {
+        @apply fixed inset-0 z-[80] flex flex-col items-center;
+        pointer-events: none;
+    }
+
+    .push-guide-blur {
+        @apply absolute inset-0 bg-ink/55 backdrop-blur-[3px];
+        animation: push-guide-fade 0.35s ease both;
+    }
+
+    .push-guide-beam {
+        position: absolute;
+        top: 0;
+        left: 12%;
+        width: min(320px, 70vw);
+        height: 140px;
+        background: radial-gradient(ellipse at top, rgb(255 255 255 / 0.35), transparent 70%);
+        animation: push-guide-pulse 1.4s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .push-guide-hint {
+        @apply relative z-[1] mt-24 w-[min(22rem,calc(100%-1.5rem))] rounded-2xl border border-white/25 bg-white px-5 py-4 text-center shadow-[0_18px_50px_rgb(0_0_0_/_0.28)];
+        animation: push-guide-float 1.6s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .push-guide-arrow {
+        @apply mx-auto mb-2 flex flex-col items-center text-kemenag;
+    }
+
+    .push-guide-arrow-line {
+        @apply mb-0.5 block h-10 w-1 rounded-full bg-kemenag;
+        animation: push-guide-bounce 1s ease-in-out infinite;
+        transform-origin: bottom center;
+    }
+
+    .push-guide-arrow-head {
+        @apply -mt-2 text-3xl leading-none;
+        animation: push-guide-bounce 1s ease-in-out infinite;
+    }
+
+    .push-guide-title {
+        @apply font-display text-lg font-bold text-ink;
+    }
+
+    .push-guide-text {
+        @apply mt-1 text-sm leading-relaxed text-muted;
+    }
+
+    .push-guide-pill {
+        @apply inline-flex items-center rounded-md bg-kemenag-soft px-1.5 py-0.5 text-xs font-bold text-kemenag-deep;
+    }
+
+    .push-guide-note {
+        @apply mt-2 text-[11px] text-muted/80;
+    }
+
+    @keyframes push-guide-fade {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes push-guide-bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @keyframes push-guide-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(6px); }
+    }
+
+    @keyframes push-guide-pulse {
+        0%, 100% { opacity: 0.55; }
+        50% { opacity: 1; }
+    }
+
+    @media (max-width: 640px) {
+        .push-guide-beam {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .push-guide-hint {
+            @apply mt-16;
+        }
+    }
+
     .wa-float:hover {
         transform: translateY(-3px) scale(1.04);
         filter: brightness(1.05);

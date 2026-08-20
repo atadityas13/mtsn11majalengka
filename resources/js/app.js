@@ -3,6 +3,7 @@ import Alpine from 'alpinejs';
 document.addEventListener('alpine:init', () => {
     Alpine.data('pushPrompt', (config = {}) => ({
         visible: false,
+        guiding: false,
         busy: false,
         error: '',
         publicKey: null,
@@ -41,7 +42,6 @@ document.addEventListener('alpine:init', () => {
 
             const existing = await this.registration.pushManager.getSubscription();
             if (existing) {
-                // Pastikan server punya subscription (mis. setelah ganti device DB).
                 try {
                     await this.persistSubscription(existing);
                 } catch (e) {
@@ -50,7 +50,6 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
-            // Tawarkan setiap kunjungan baru (session), sedikit ditunda supaya tidak mengganggu load.
             setTimeout(() => {
                 this.visible = true;
             }, 1800);
@@ -58,7 +57,19 @@ document.addEventListener('alpine:init', () => {
 
         dismiss() {
             this.visible = false;
+            this.guiding = false;
+            this.unlockPage();
             sessionStorage.setItem('push_prompt_dismissed', '1');
+        },
+
+        lockPage() {
+            document.documentElement.classList.add('push-guide-active');
+            document.body.classList.add('push-guide-active');
+        },
+
+        unlockPage() {
+            document.documentElement.classList.remove('push-guide-active');
+            document.body.classList.remove('push-guide-active');
         },
 
         async subscribe() {
@@ -71,11 +82,24 @@ document.addEventListener('alpine:init', () => {
                     await navigator.serviceWorker.ready;
                 }
 
+                // Jika belum pernah diminta, tampilkan petunjuk + blur sambil dialog browser muncul.
+                if (Notification.permission === 'default') {
+                    this.guiding = true;
+                    this.lockPage();
+                    // Biarkan overlay sempat tampil sebelum dialog sistem.
+                    await new Promise((resolve) => setTimeout(resolve, 280));
+                }
+
                 const permission = await Notification.requestPermission();
+
+                this.guiding = false;
+                this.unlockPage();
+
                 if (permission !== 'granted') {
+                    this.visible = true;
                     this.error = permission === 'denied'
                         ? 'Izin notifikasi diblokir di browser. Aktifkan lewat pengaturan situs.'
-                        : 'Izin notifikasi belum diberikan.';
+                        : 'Izin belum diberikan. Silakan coba lagi dan pilih Izinkan/Allow.';
                     this.busy = false;
                     return;
                 }
@@ -89,6 +113,9 @@ document.addEventListener('alpine:init', () => {
                 this.visible = false;
                 sessionStorage.setItem('push_prompt_dismissed', '1');
             } catch (e) {
+                this.guiding = false;
+                this.unlockPage();
+                this.visible = true;
                 this.error = 'Gagal mengaktifkan notifikasi. Coba refresh halaman.';
             } finally {
                 this.busy = false;
